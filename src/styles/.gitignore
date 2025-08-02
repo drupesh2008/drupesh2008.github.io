@@ -1,0 +1,4 @@
+# Ignore compiled CSS files
+*.css.map
+*.scss.map
+.DS_Store 

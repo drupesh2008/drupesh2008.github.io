@@ -1,0 +1,4 @@
+# Ignore temporary content files
+*.tmp
+*.temp
+.DS_Store 
