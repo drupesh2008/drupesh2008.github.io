@@ -76,7 +76,7 @@ const Skills = () => {
   ]
 
   return (
-    <motion.div className={styles.skillsSection} variants={fadeInUp}>
+    <motion.div className={styles.skillsSection} id="skills" variants={fadeInUp}>
       <h3 className={styles.sectionTitle}>Skills & Technologies</h3>
       <div className={styles.skillsGrid}>
         {skillCategories.map((category) => (

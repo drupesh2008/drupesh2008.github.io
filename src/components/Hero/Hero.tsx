@@ -41,9 +41,9 @@ const Hero = () => {
             </button>
             <button
               className={styles.navTab}
-              onClick={() => scrollToSection('projects')}
+              onClick={() => scrollToSection('skills')}
             >
-              Projects
+              Skills
             </button>
             <button
               className={styles.navTab}
@@ -88,7 +88,10 @@ const Hero = () => {
           </motion.div>
 
           <motion.div className={styles.actions} variants={fadeInUp}>
-            <button className={styles.primaryButton}>
+            <button 
+              className={styles.primaryButton}
+              onClick={() => scrollToSection('current-work')}
+            >
               View Projects
             </button>
             <button 

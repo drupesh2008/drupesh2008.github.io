@@ -37,21 +37,19 @@
   line-height: 1.6;
 }
 
-.content {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 3rem;
-  align-items: start;
-  margin-bottom: 3rem;
-}
-
-/* Journey Section */
+/* Journey Section - Full Width */
 .journey {
   background: white;
   padding: 2rem;
   border-radius: 20px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   position: relative;
+  margin-bottom: 3rem;
+}
+
+/* Skills Wrapper - Full Width */
+.skillsWrapper {
+  margin-bottom: 3rem;
 }
 
 .sectionTitle {
@@ -144,24 +142,19 @@
   margin-top: 0.5rem;
 }
 
-/* Right Column */
-.rightColumn {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-}
-
-/* Current Work Section */
+/* Current Work Section - Separate Section */
 .currentWork {
   background: white;
-  padding: 1.5rem;
+  padding: 2rem;
   border-radius: 20px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  margin-top: 3rem;
 }
 
 .workGrid {
   display: grid;
-  gap: 1rem;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
 }
 
 .workCard {
@@ -319,17 +312,16 @@
 
 /* Responsive Design */
 @media (max-width: 1024px) {
-  .content {
-    grid-template-columns: 1fr;
-    gap: 2rem;
-  }
-  
   .journey {
     margin-bottom: 2rem;
   }
   
-  .rightColumn {
-    gap: 1.5rem;
+  .skillsWrapper {
+    margin-bottom: 2rem;
+  }
+  
+  .workGrid {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -370,6 +362,11 @@
   
   .timelineDate {
     align-self: flex-end;
+  }
+  
+  .workGrid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
   }
   
   .workCard {

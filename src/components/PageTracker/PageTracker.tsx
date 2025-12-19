@@ -8,7 +8,7 @@ const PageTracker = () => {
   const [activeSection, setActiveSection] = useState('hero')
 
   useEffect(() => {
-    const sections = ['hero', 'about', 'experience', 'projects', 'blog', 'contact']
+    const sections = ['hero', 'about', 'experience', 'skills', 'blog', 'contact']
     
     const handleScroll = () => {
       const scrollPosition = window.scrollY + window.innerHeight / 2
@@ -33,7 +33,7 @@ const PageTracker = () => {
     { id: 'hero', label: 'Home' },
     { id: 'about', label: 'About' },
     { id: 'experience', label: 'Experience' },
-    { id: 'projects', label: 'Projects' },
+    { id: 'skills', label: 'Skills' },
     { id: 'blog', label: 'Blog' },
     { id: 'contact', label: 'Contact' }
   ]
