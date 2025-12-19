@@ -37,7 +37,7 @@ const About = () => {
 
         <div className={styles.content}>
           {/* Journey Section */}
-          <motion.div className={styles.journey} variants={slideInLeft}>
+          <motion.div className={styles.journey} id="experience" variants={slideInLeft}>
             <h3 className={styles.sectionTitle}>My Journey</h3>
             <div className={styles.timeline}>
               <motion.div 
