@@ -12,6 +12,10 @@ const Hero = () => {
     }
   }
 
+  const handleResumeDownload = () => {
+    window.open('/Rupesh_Resume_SSE.pdf', '_blank')
+  }
+
   return (
     <section className={styles.hero} id="hero">
       <motion.div
@@ -87,7 +91,10 @@ const Hero = () => {
             <button className={styles.primaryButton}>
               View Projects
             </button>
-            <button className={styles.secondaryButton}>
+            <button 
+              className={styles.secondaryButton}
+              onClick={handleResumeDownload}
+            >
               Download Resume
             </button>
           </motion.div>

@@ -50,7 +50,10 @@ const About = () => {
               >
                 <div className={styles.timelineDot}></div>
                 <div className={styles.timelineContent}>
-                  <h4>Started own venture - CLAY</h4>
+                  <div className={styles.timelineHeader}>
+                    <h4><strong>CLAY</strong> - Started own venture</h4>
+                    <span className={styles.timelineDate}>Jan 2017 - Aug 2019</span>
+                  </div>
                   <p>CLAY was a location-based social networking platform, allowing people at the same location to connect without numbers or social profiles exchange for quick conversations - be it asking for help or exchanging info at places like "Which food is best here at a given Brewery".</p>
                 </div>
               </motion.div>
@@ -65,7 +68,10 @@ const About = () => {
               >
                 <div className={styles.timelineDot}></div>
                 <div className={styles.timelineContent}>
-                  <h4>IoT Women Safety App</h4>
+                  <div className={styles.timelineHeader}>
+                    <h4><strong>IoT</strong> - Women Safety App</h4>
+                    <span className={styles.timelineDate}>Aug 2018 - Jan 2019</span>
+                  </div>
                   <p>Developed an IoT-enabled Women Safety App with patent, showcasing my passion for impactful technology.</p>
                 </div>
               </motion.div>
@@ -80,7 +86,10 @@ const About = () => {
               >
                 <div className={styles.timelineDot}></div>
                 <div className={styles.timelineContent}>
-                  <h4>Digital Hearing Aid Project</h4>
+                  <div className={styles.timelineHeader}>
+                    <h4><strong>Digital Hearing</strong> - Healthcare Innovation</h4>
+                    <span className={styles.timelineDate}>Jan 2019 - July 2019</span>
+                  </div>
                   <p>Collaborated with AIIMS Raipur to create an affordable version of Digital Hearing Aid, demonstrating healthcare innovation.</p>
                 </div>
               </motion.div>
@@ -95,7 +104,10 @@ const About = () => {
               >
                 <div className={styles.timelineDot}></div>
                 <div className={styles.timelineContent}>
-                  <h4>Deloitte Experience</h4>
+                  <div className={styles.timelineHeader}>
+                    <h4><strong>Deloitte</strong></h4>
+                    <span className={styles.timelineDate}>Aug 2019 - Jan 2020</span>
+                  </div>
                   <p>Gained valuable experience at Deloitte, working in a collaborative environment with exceptional culture and learning from industry-leading practices.</p>
                 </div>
               </motion.div>
@@ -110,7 +122,10 @@ const About = () => {
               >
                 <div className={styles.timelineDot}></div>
                 <div className={styles.timelineContent}>
-                  <h4>Geospatial Innovation</h4>
+                  <div className={styles.timelineHeader}>
+                    <h4><strong>LocationIQ</strong> - Geospatial Innovation</h4>
+                    <span className={styles.timelineDate}>Jan 2020 - Aug 2022</span>
+                  </div>
                   <p>Worked on Maps, Geocoders, Routing, and developed algorithms for back-tracing cell/wifi tower locations using IoT logs.</p>
                 </div>
               </motion.div>
@@ -125,7 +140,10 @@ const About = () => {
               >
                 <div className={styles.timelineDot}></div>
                 <div className={styles.timelineContent}>
-                  <h4>SpaceTech - Edge Computing</h4>
+                  <div className={styles.timelineHeader}>
+                    <h4><strong>SkyServe</strong> - SpaceTech - Edge Computing</h4>
+                    <span className={styles.timelineDate}>Sept 2022 - Sept 2024</span>
+                  </div>
                   <p>Went beyond Earth to solve problems in SpaceTech, working on Edge computing in Satellites, Earth Observation, and Remote Sensing.</p>
                 </div>
               </motion.div>
@@ -140,7 +158,10 @@ const About = () => {
               >
                 <div className={styles.timelineDot}></div>
                 <div className={styles.timelineContent}>
-                  <h4>Current - Hiring Solutions</h4>
+                  <div className={styles.timelineHeader}>
+                    <h4><strong>SeekOut</strong> - Hiring Solutions</h4>
+                    <span className={styles.timelineDate}>Nov 2024 - Current</span>
+                  </div>
                   <p>Working as Senior Software Developer in hiring space, building efficient tools to hire the right talent for organizations.</p>
                 </div>
               </motion.div>

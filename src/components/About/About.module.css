@@ -105,17 +105,43 @@
   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
 }
 
+.timelineHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  gap: 1rem;
+}
+
 .timelineContent h4 {
   font-size: 1.1rem;
   font-weight: 600;
   color: #2d3748;
-  margin-bottom: 0.5rem;
+  margin: 0;
+  flex: 1;
+}
+
+.timelineContent h4 strong {
+  font-weight: 700;
+}
+
+.timelineDate {
+  display: inline-block;
+  font-size: 0.85rem;
+  color: #667eea;
+  font-weight: 500;
+  padding: 0.25rem 0.75rem;
+  background: rgba(102, 126, 234, 0.1);
+  border-radius: 12px;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .timelineContent p {
   color: #4a5568;
   line-height: 1.6;
   font-size: 0.95rem;
+  margin-top: 0.5rem;
 }
 
 /* Right Column */
@@ -334,6 +360,16 @@
     left: 6px;
     width: 16px;
     height: 16px;
+  }
+  
+  .timelineHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .timelineDate {
+    align-self: flex-end;
   }
   
   .workCard {
