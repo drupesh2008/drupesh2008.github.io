@@ -15,7 +15,9 @@ const Skills = () => {
         { name: "C++", badge: "https://img.shields.io/badge/-C++-00599C?style=flat-square&logo=c%2B%2B&logoColor=white" },
         { name: "PHP", badge: "https://img.shields.io/badge/-PHP-777BB4?style=flat-square&logo=php&logoColor=white" },
         { name: "C#", badge: "https://img.shields.io/badge/-C%23-239120?style=flat-square&logo=c-sharp&logoColor=white" },
-        { name: "Java", badge: "https://img.shields.io/badge/-Java-007396?style=flat-square&logo=openjdk&logoColor=white" }
+        { name: "Java", badge: "https://img.shields.io/badge/-Java-007396?style=flat-square&logo=openjdk&logoColor=white" },
+        { name: "React", badge: "https://img.shields.io/badge/-React-61DAFB?style=flat-square&logo=react&logoColor=black" },
+        { name: ".NET 8", badge: "https://img.shields.io/badge/-.NET%208-512BD4?style=flat-square&logo=dotnet&logoColor=white" }
       ]
     },
     {
@@ -24,7 +26,22 @@ const Skills = () => {
         { name: "MySQL", badge: "https://img.shields.io/badge/-MySQL-4479A1?style=flat-square&logo=mysql&logoColor=white" },
         { name: "PostgreSQL", badge: "https://img.shields.io/badge/-PostgreSQL-336791?style=flat-square&logo=postgresql&logoColor=white" },
         { name: "Redis", badge: "https://img.shields.io/badge/-Redis-DC382D?style=flat-square&logo=redis&logoColor=white" },
-        { name: "GeoParquet", badge: "https://img.shields.io/badge/-GeoParquet-4B32C3?style=flat-square&logo=apache-parquet&logoColor=white" }
+        { name: "Azure Cosmos DB", badge: "https://img.shields.io/badge/-Azure%20Cosmos%20DB-0078D4?style=flat-square&logo=azure-cosmos-db&logoColor=white" }
+      ]
+    },
+    {
+      title: "AI/ML Stack",
+      skills: [
+        { name: "OpenCV", badge: "https://img.shields.io/badge/-OpenCV-5C3EE8?style=flat-square&logo=opencv&logoColor=white" },
+        { name: "TensorFlow", badge: "https://img.shields.io/badge/-TensorFlow-FF6F00?style=flat-square&logo=tensorflow&logoColor=white" },
+        { name: "PyTorch", badge: "https://img.shields.io/badge/-PyTorch-EE4C2C?style=flat-square&logo=pytorch&logoColor=white" },
+        { name: "scikit-learn", badge: "https://img.shields.io/badge/-scikit--learn-F7931E?style=flat-square&logo=scikit-learn&logoColor=white" },
+        { name: "NumPy", badge: "https://img.shields.io/badge/-NumPy-013243?style=flat-square&logo=numpy&logoColor=white" },
+        { name: "LLM", badge: "https://img.shields.io/badge/-LLM-412991?style=flat-square&logo=openai&logoColor=white" },
+        { name: "Image Processing", badge: "https://img.shields.io/badge/-Image%20Processing-4285F4?style=flat-square&logo=google-cloud&logoColor=white" },
+        { name: "Speech-to-Text", badge: "https://img.shields.io/badge/-Speech--to--Text-4285F4?style=flat-square&logo=google-cloud&logoColor=white" },
+        { name: "Text-to-Speech", badge: "https://img.shields.io/badge/-Text--to--Speech-4285F4?style=flat-square&logo=google-cloud&logoColor=white" },
+        { name: "Voice Agents", badge: "https://img.shields.io/badge/-Voice%20Agents-61DAFB?style=flat-square&logo=react&logoColor=black" }
       ]
     },
     {
@@ -59,6 +76,7 @@ const Skills = () => {
         { name: "GDAL", badge: "https://img.shields.io/badge/-GDAL-5CAE58?style=flat-square&logo=gdal&logoColor=white" },
         { name: "H3", badge: "https://img.shields.io/badge/-H3-2C3E50?style=flat-square&logo=uber&logoColor=white" },
         { name: "GeoPandas", badge: "https://img.shields.io/badge/-GeoPandas-306998?style=flat-square&logo=pandas&logoColor=white" },
+        { name: "GeoParquet", badge: "https://img.shields.io/badge/-GeoParquet-4B32C3?style=flat-square&logo=apache-parquet&logoColor=white" },
         { name: "Nominatim", badge: "https://img.shields.io/badge/-Nominatim-7EBC6F?style=flat-square&logo=openstreetmap&logoColor=white" },
         { name: "OpenStreetMap", badge: "https://img.shields.io/badge/-OpenStreetMap-7EBC6F?style=flat-square&logo=openstreetmap&logoColor=white" },
         { name: "Libpostal", badge: "https://img.shields.io/badge/-Libpostal-FF6B6B?style=flat-square&logo=location&logoColor=white" }
