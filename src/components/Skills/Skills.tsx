@@ -79,11 +79,12 @@ const Skills = () => {
     <motion.div className={styles.skillsSection} variants={fadeInUp}>
       <h3 className={styles.sectionTitle}>Skills & Technologies</h3>
       <div className={styles.skillsGrid}>
-        {skillCategories.map((category, categoryIndex) => (
+        {skillCategories.map((category) => (
           <div key={category.title} className={styles.skillCategory}>
             <h4 className={styles.categoryTitle}>{category.title}</h4>
             <div className={styles.skillBadges}>
               {category.skills.map((skill) => (
+                // eslint-disable-next-line @next/next/no-img-element
                 <img 
                   key={skill.name}
                   src={skill.badge}

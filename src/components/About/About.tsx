@@ -54,7 +54,7 @@ const About = () => {
                     <h4><strong>CLAY</strong> - Started own venture</h4>
                     <span className={styles.timelineDate}>Jan 2017 - Aug 2019</span>
                   </div>
-                  <p>CLAY was a location-based social networking platform, allowing people at the same location to connect without numbers or social profiles exchange for quick conversations - be it asking for help or exchanging info at places like "Which food is best here at a given Brewery".</p>
+                  <p>CLAY was a location-based social networking platform, allowing people at the same location to connect without numbers or social profiles exchange for quick conversations - be it asking for help or exchanging info at places like &quot;Which food is best here at a given Brewery&quot;.</p>
                 </div>
               </motion.div>
               
@@ -172,7 +172,7 @@ const About = () => {
           <div className={styles.rightColumn}>
             {/* Current Work Section */}
             <motion.div className={styles.currentWork} variants={slideInRight}>
-              <h3 className={styles.sectionTitle}>What I'm Working On</h3>
+              <h3 className={styles.sectionTitle}>What I&apos;m Working On</h3>
               <div className={styles.workGrid}>
                 <div className={styles.workCard}>
                   <h4><span className={styles.workIcon}>🎯</span> SeekOut SPOT</h4>
@@ -181,7 +181,7 @@ const About = () => {
                 
                 <div className={styles.workCard}>
                   <h4><span className={styles.workIcon}>🤖</span> PitchBot - Voice Agent Platform</h4>
-                  <p>Built PitchBot, an AI-driven platform that transforms static content into dynamic, interactive voice agents. Architected a real-time voice pipeline using Deepgram for low-latency speech-to-text transcription, Cartesia's Sonic TTS for ultra-realistic text-to-speech generation, and Pipecat for orchestrating the entire voice agent workflow. The system handles live user interactions with minimal latency, demonstrating expertise in integrating advanced voice technologies, API authentication, and real-time processing pipelines for scalable conversational AI systems.</p>
+                  <p>Built PitchBot, an AI-driven platform that transforms static content into dynamic, interactive voice agents. Architected a real-time voice pipeline using Deepgram for low-latency speech-to-text transcription, Cartesia&apos;s Sonic TTS for ultra-realistic text-to-speech generation, and Pipecat for orchestrating the entire voice agent workflow. The system handles live user interactions with minimal latency, demonstrating expertise in integrating advanced voice technologies, API authentication, and real-time processing pipelines for scalable conversational AI systems.</p>
                 </div>
                 
                 <div className={styles.workCard}>

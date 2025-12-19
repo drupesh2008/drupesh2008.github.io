@@ -63,7 +63,7 @@ const Hero = () => {
         {/* Main Content */}
         <motion.div className={styles.content} variants={fadeInUp}>
           <motion.h1 className={styles.name} variants={textReveal}>
-            Hi there, I'm{' '}
+            Hi there, I&apos;m{' '}
             <span className={styles.highlight}>D Rupesh Kumar</span>
           </motion.h1>
 
