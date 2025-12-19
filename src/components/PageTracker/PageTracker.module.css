@@ -1,0 +1,146 @@
+.pageTracker {
+  position: fixed;
+  right: 2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1000;
+}
+
+.trackerContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(10px);
+  border-radius: 25px;
+  padding: 1.5rem 1rem;
+  border: 2px solid rgba(102, 126, 234, 0.3);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+}
+
+.trackerItemWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.trackerItem {
+  position: relative;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.trackerDot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.7);
+  border: 2px solid rgba(102, 126, 234, 0.5);
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.trackerItem:hover .trackerDot {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(102, 126, 234, 0.8);
+  transform: scale(1.1);
+  box-shadow: 0 2px 12px rgba(102, 126, 234, 0.4);
+}
+
+.trackerItem.active .trackerDot {
+  background: linear-gradient(45deg, #ffd700, #ffed4e);
+  border-color: rgba(255, 215, 0, 0.8);
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.6), 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.trackerLine {
+  width: 2px;
+  height: 20px;
+  background: linear-gradient(180deg, rgba(102, 126, 234, 0.4), rgba(102, 126, 234, 0.2));
+  border-radius: 1px;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .pageTracker {
+    right: 1rem;
+  }
+  
+  .trackerContainer {
+    padding: 1.25rem 0.75rem;
+    gap: 0.375rem;
+  }
+  
+  .trackerDot {
+    width: 10px;
+    height: 10px;
+  }
+  
+  .trackerLine {
+    height: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .pageTracker {
+    position: fixed;
+    bottom: 1rem;
+    right: 50%;
+    transform: translateX(50%);
+    top: auto;
+  }
+  
+  .trackerContainer {
+    flex-direction: row;
+    gap: 0.25rem;
+    padding: 0.75rem 1.25rem;
+    border-radius: 20px;
+  }
+  
+  .trackerItemWrapper {
+    flex-direction: row;
+    gap: 0.25rem;
+  }
+  
+  .trackerDot {
+    width: 8px;
+    height: 8px;
+  }
+  
+  .trackerLine {
+    width: 20px;
+    height: 2px;
+    background: linear-gradient(90deg, rgba(102, 126, 234, 0.4), rgba(102, 126, 234, 0.2));
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
+  }
+}
+
+@media (max-width: 480px) {
+  .trackerContainer {
+    padding: 0.5rem 1rem;
+    gap: 0.125rem;
+  }
+  
+  .trackerItemWrapper {
+    gap: 0.125rem;
+  }
+  
+  .trackerDot {
+    width: 6px;
+    height: 6px;
+  }
+  
+  .trackerLine {
+    width: 16px;
+    height: 1px;
+  }
+} 

@@ -1,16 +1,13 @@
-import Image from "next/image";
+import Hero from '@/components/Hero'
+import About from '@/components/About'
+import PageTracker from '@/components/PageTracker'
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <h1 className="text-4xl font-bold">
-          Portfolio Website
-        </h1>
-        <p className="text-lg mt-4">
-          Coming Soon...
-        </p>
-      </div>
+    <main>
+      <Hero />
+      <About />
+      <PageTracker />
     </main>
   )
 }
