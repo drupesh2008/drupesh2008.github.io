@@ -94,7 +94,14 @@ const Skills = () => {
   ]
 
   return (
-    <motion.div className={styles.skillsSection} id="skills" variants={fadeInUp}>
+    <motion.div 
+      className={styles.skillsSection} 
+      id="skills" 
+      variants={fadeInUp}
+      initial="initial"
+      whileInView="animate"
+      viewport={{ once: true, amount: 0.2 }}
+    >
       <h3 className={styles.sectionTitle}>Skills & Technologies</h3>
       <div className={styles.skillsGrid}>
         {skillCategories.map((category) => (

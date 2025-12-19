@@ -28,15 +28,15 @@ const About = () => {
         whileInView="animate"
         viewport={{ once: true, amount: 0.3 }}
       >
-        <motion.div className={styles.header} variants={fadeInUp}>
-          <h2 className={styles.title}>About Me</h2>
-          <p className={styles.subtitle}>
-            Developer with 6+ years of professional experience and a passion for solving real-world problems
-          </p>
-        </motion.div>
-
         {/* Journey Section - Full Width */}
-        <motion.div className={styles.journey} id="experience" variants={slideInLeft}>
+        <motion.div 
+          className={styles.journey} 
+          id="experience" 
+          variants={slideInLeft}
+          initial="initial"
+          whileInView="animate"
+          viewport={{ once: true, amount: 0.2 }}
+        >
           <h3 className={styles.sectionTitle}>My Journey</h3>
           <div className={styles.timeline}>
             <motion.div 
@@ -168,12 +168,25 @@ const About = () => {
         </motion.div>
 
         {/* Skills Section - Full Width */}
-        <motion.div className={styles.skillsWrapper} variants={fadeInUp}>
+        <motion.div 
+          className={styles.skillsWrapper} 
+          variants={fadeInUp}
+          initial="initial"
+          whileInView="animate"
+          viewport={{ once: true, amount: 0.2 }}
+        >
           <Skills />
         </motion.div>
 
         {/* What I'm Working On Section - Separate Section */}
-        <motion.div className={styles.currentWork} id="current-work" variants={fadeInUp}>
+        <motion.div 
+          className={styles.currentWork} 
+          id="current-work" 
+          variants={fadeInUp}
+          initial="initial"
+          whileInView="animate"
+          viewport={{ once: true, amount: 0.2 }}
+        >
           <h3 className={styles.sectionTitle}>What I&apos;m Working On</h3>
           <div className={styles.workGrid}>
             <div className={styles.workCard}>

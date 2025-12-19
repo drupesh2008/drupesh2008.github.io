@@ -1,0 +1,249 @@
+.contact {
+  padding: 3rem 0;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  display: flex;
+  align-items: center;
+}
+
+.container {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.title {
+  font-size: clamp(2rem, 4vw, 2.5rem);
+  font-weight: 700;
+  color: #2d3748;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.subtitle {
+  font-size: clamp(0.95rem, 1.5vw, 1.1rem);
+  color: #4a5568;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.5;
+}
+
+.contactCard {
+  background: white;
+  padding: 2rem;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.interestsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.interestCard {
+  background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.25rem;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.interestCard:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  border-color: #667eea;
+}
+
+.icon {
+  font-size: 2rem;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.interestTitle {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #2d3748;
+  margin-bottom: 0.5rem;
+}
+
+.interestDescription {
+  color: #4a5568;
+  line-height: 1.5;
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+.contactButtons {
+  text-align: center;
+  padding-top: 1.5rem;
+  border-top: 2px solid #e2e8f0;
+}
+
+.contactTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #2d3748;
+  margin-bottom: 1rem;
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.linkedInButton,
+.emailButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 25px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.linkedInButton {
+  background: linear-gradient(45deg, #0077b5, #00a0dc);
+  color: white;
+  box-shadow: 0 4px 15px rgba(0, 119, 181, 0.3);
+}
+
+.linkedInButton:hover {
+  box-shadow: 0 8px 25px rgba(0, 119, 181, 0.4);
+}
+
+.emailButton {
+  background: linear-gradient(45deg, #ffd700, #ffed4e);
+  color: #2d3748;
+  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+}
+
+.emailButton:hover {
+  box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
+}
+
+.buttonIcon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .contact {
+    padding: 2.5rem 0;
+  }
+  
+  .container {
+    padding: 0 1rem;
+  }
+  
+  .header {
+    margin-bottom: 1.5rem;
+  }
+  
+  .contactCard {
+    padding: 1.5rem;
+  }
+  
+  .interestsGrid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .interestCard {
+    padding: 1rem;
+  }
+  
+  .icon {
+    font-size: 1.75rem;
+    margin-bottom: 0.4rem;
+  }
+  
+  .interestTitle {
+    font-size: 0.9rem;
+  }
+  
+  .interestDescription {
+    font-size: 0.8rem;
+  }
+  
+  .contactButtons {
+    padding-top: 1.25rem;
+  }
+  
+  .contactTitle {
+    font-size: 1.1rem;
+    margin-bottom: 0.875rem;
+  }
+  
+  .buttonGroup {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .linkedInButton,
+  .emailButton {
+    width: 100%;
+    justify-content: center;
+    padding: 0.7rem 1.25rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .contact {
+    padding: 2rem 0;
+  }
+  
+  .title {
+    font-size: 1.75rem;
+  }
+  
+  .subtitle {
+    font-size: 0.9rem;
+  }
+  
+  .contactCard {
+    padding: 1.25rem;
+  }
+  
+  .interestCard {
+    padding: 0.875rem;
+  }
+  
+  .icon {
+    font-size: 1.5rem;
+  }
+  
+  .interestTitle {
+    font-size: 0.85rem;
+  }
+  
+  .interestDescription {
+    font-size: 0.75rem;
+  }
+  
+  .contactTitle {
+    font-size: 1rem;
+  }
+}
+
