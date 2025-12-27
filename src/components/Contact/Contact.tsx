@@ -71,7 +71,7 @@ const Contact = () => {
             <h3 className={styles.contactTitle}>Get In Touch</h3>
             <div className={styles.buttonGroup}>
               <motion.a
-                href="https://www.linkedin.com/in/drupesh2008"
+                href="https://in.linkedin.com/in/d-rupesh-kumar"
                 target="_blank"
                 rel="noopener noreferrer"
                 className={styles.linkedInButton}
