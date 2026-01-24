@@ -2,9 +2,26 @@
 
 import { motion } from 'framer-motion'
 import { fadeInUp, staggerContainer } from '@/animations/variants'
+import { event } from '@/lib/gtag'
 import styles from './Contact.module.css'
 
 const Contact = () => {
+  const handleLinkedInClick = () => {
+    event({
+      action: 'click',
+      category: 'contact',
+      label: 'linkedin_profile'
+    })
+  }
+
+  const handleEmailClick = () => {
+    event({
+      action: 'click',
+      category: 'contact',
+      label: 'email_contact'
+    })
+  }
+
   const interests = [
     {
       icon: '💡',
@@ -75,6 +92,7 @@ const Contact = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 className={styles.linkedInButton}
+                onClick={handleLinkedInClick}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
@@ -94,6 +112,7 @@ const Contact = () => {
               <motion.a
                 href="mailto:drupesh2008@gmail.com"
                 className={styles.emailButton}
+                onClick={handleEmailClick}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >

@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
+import { event } from '@/lib/gtag'
 import styles from './PageTracker.module.css'
 
 const PageTracker = () => {
@@ -78,6 +79,13 @@ const PageTracker = () => {
   ]
 
   const scrollToSection = (sectionId: string) => {
+    // Track page tracker navigation
+    event({
+      action: 'click',
+      category: 'navigation',
+      label: `page_tracker_${sectionId}`
+    })
+    
     const element = document.getElementById(sectionId)
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' })

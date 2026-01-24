@@ -2,10 +2,18 @@
 
 import { motion } from 'framer-motion'
 import { fadeInUp, staggerContainer, textReveal } from '@/animations/variants'
+import { event } from '@/lib/gtag'
 import styles from './Hero.module.css'
 
 const Hero = () => {
   const scrollToSection = (sectionId: string) => {
+    // Track navigation click
+    event({
+      action: 'click',
+      category: 'navigation',
+      label: `hero_nav_${sectionId}`
+    })
+    
     const element = document.getElementById(sectionId)
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' })
@@ -13,7 +21,25 @@ const Hero = () => {
   }
 
   const handleResumeDownload = () => {
+    // Track resume download
+    event({
+      action: 'download',
+      category: 'file',
+      label: 'resume_pdf'
+    })
+    
     window.open('/Rupesh_Resume_SSE.pdf', '_blank')
+  }
+
+  const handleViewProjects = () => {
+    // Track view projects click
+    event({
+      action: 'click',
+      category: 'engagement',
+      label: 'view_projects_hero_cta'
+    })
+    
+    scrollToSection('current-work')
   }
 
   return (
@@ -90,7 +116,7 @@ const Hero = () => {
           <motion.div className={styles.actions} variants={fadeInUp}>
             <button 
               className={styles.primaryButton}
-              onClick={() => scrollToSection('current-work')}
+              onClick={handleViewProjects}
             >
               View Projects
             </button>
