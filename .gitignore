@@ -44,3 +44,7 @@ next-env.d.ts
 spec_sheet.md
 dev_timeline.md
 ANALYTICS_SETUP.md
+/reference_data
+
+# Pencil design files
+*.pen
