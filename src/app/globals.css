@@ -1,29 +1,107 @@
-/* Reset and base styles */
+/* ========================================
+   Design System - Dark Theme
+   ======================================== */
+
+/* Reset */
 * {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
 }
 
+/* Design Tokens */
+:root {
+  /* Backgrounds */
+  --bg-primary: #0a0a1a;
+  --bg-secondary: #0f0f23;
+  --bg-tertiary: #1a1a2e;
+
+  /* Accents */
+  --accent-primary: #64ffda;
+  --accent-secondary: #7c3aed;
+  --accent-tertiary: #f59e0b;
+
+  /* Glassmorphism */
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-bg-hover: rgba(255, 255, 255, 0.08);
+
+  /* Text */
+  --text-primary: #e2e8f0;
+  --text-secondary: rgba(255, 255, 255, 0.6);
+  --text-tertiary: rgba(255, 255, 255, 0.4);
+
+  /* Gradients */
+  --gradient-accent: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  --gradient-glow: linear-gradient(135deg, rgba(100, 255, 218, 0.2), rgba(124, 58, 237, 0.2));
+
+  /* Shadows */
+  --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.3);
+  --shadow-glow-teal: 0 0 20px rgba(100, 255, 218, 0.15);
+  --shadow-glow-violet: 0 0 20px rgba(124, 58, 237, 0.15);
+
+  /* Spacing */
+  --section-padding: clamp(4rem, 8vw, 8rem);
+  --container-max: 1200px;
+  --container-padding: clamp(1rem, 4vw, 2rem);
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-base: 300ms ease;
+  --transition-slow: 500ms ease;
+
+  /* Border radius */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+
+  /* Orbital Ring */
+  --ring-hero-size: 400px;
+  --ring-compressed-size: 180px;
+  --ring-stroke: rgba(100, 255, 218, 0.2);
+  --ring-stroke-compressed: rgba(100, 255, 218, 0.13);
+  --ring-panel-width: 280px;
+  --node-active: #64ffda;
+  --node-inactive: rgba(255, 255, 255, 0.3);
+
+  /* Tag accent backgrounds */
+  --tag-teal-bg: rgba(100, 255, 218, 0.08);
+  --tag-teal-border: rgba(100, 255, 218, 0.2);
+  --tag-violet-bg: rgba(124, 58, 237, 0.08);
+  --tag-violet-border: rgba(124, 58, 237, 0.2);
+  --tag-amber-bg: rgba(245, 158, 11, 0.08);
+  --tag-amber-border: rgba(245, 158, 11, 0.2);
+
+  /* Content panel */
+  --panel-border: rgba(255, 255, 255, 0.05);
+  --card-bg: rgba(255, 255, 255, 0.05);
+  --card-border: rgba(255, 255, 255, 0.1);
+
+  /* Mobile nav */
+  --mobile-nav-bg: #0F172A;
+  --mobile-nav-height: 64px;
+}
+
+/* Force dark color scheme */
+html {
+  color-scheme: dark;
+}
+
 html,
 body {
   max-width: 100vw;
-  overflow-x: hidden;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  height: 100vh;
+  overflow: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  color: var(--text-primary);
+  background: var(--bg-primary);
+  height: 100vh;
 }
 
 a {
@@ -31,23 +109,55 @@ a {
   text-decoration: none;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
+/* Smooth scrolling (for internal panel scrolling) */
+html {
+  scroll-behavior: auto;
+}
+
+/* Selection color */
+::selection {
+  background: rgba(100, 255, 218, 0.2);
+  color: var(--accent-primary);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Glassmorphism utility */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
-}
 
-/* CSS Variables for theming */
-:root {
-  --background-start-rgb: 255, 255, 255;
-  --background-end-rgb: 255, 255, 255;
-  --foreground-rgb: 0, 0, 0;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-    --foreground-rgb: 255, 255, 255;
+  html {
+    scroll-behavior: auto;
   }
 }

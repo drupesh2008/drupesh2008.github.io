@@ -1,249 +1,152 @@
-.contact {
-  padding: 3rem 0;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+.wrapper {
   display: flex;
-  align-items: center;
-}
-
-.container {
-  max-width: 1200px;
-  width: 100%;
-  margin: 0 auto;
-  padding: 0 2rem;
+  flex-direction: column;
+  gap: 32px;
 }
 
 .header {
-  text-align: center;
-  margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .title {
-  font-size: clamp(2rem, 4vw, 2.5rem);
+  font-size: 32px;
   font-weight: 700;
-  color: #2d3748;
-  margin-bottom: 0.5rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--text-primary);
+}
+
+.underline {
+  width: 60px;
+  height: 3px;
+  background: var(--accent-primary);
+  border-radius: 2px;
 }
 
 .subtitle {
-  font-size: clamp(0.95rem, 1.5vw, 1.1rem);
-  color: #4a5568;
-  max-width: 600px;
-  margin: 0 auto;
-  line-height: 1.5;
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.6);
 }
 
-.contactCard {
-  background: white;
-  padding: 2rem;
-  border-radius: 20px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+/* Section labels */
+.interestsSection,
+.socialSection {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
+.sectionLabel {
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent-primary);
+  letter-spacing: 2px;
+}
+
+.sectionLabelViolet {
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent-secondary);
+  letter-spacing: 2px;
+}
+
+/* Interest cards */
 .interestsGrid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1rem;
-  margin-bottom: 2rem;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
 }
 
 .interestCard {
-  background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  padding: 1.25rem;
-  transition: all 0.3s ease;
-  text-align: center;
-}
-
-.interestCard:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-  border-color: #667eea;
-}
-
-.icon {
-  font-size: 2rem;
-  display: block;
-  margin-bottom: 0.5rem;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: all 0.2s ease;
 }
 
 .interestTitle {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: #2d3748;
-  margin-bottom: 0.5rem;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
 }
 
 .interestDescription {
-  color: #4a5568;
-  line-height: 1.5;
-  font-size: 0.85rem;
-  margin: 0;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.4;
 }
 
-.contactButtons {
-  text-align: center;
-  padding-top: 1.5rem;
-  border-top: 2px solid #e2e8f0;
-}
-
-.contactTitle {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #2d3748;
-  margin-bottom: 1rem;
-}
-
-.buttonGroup {
+/* Social buttons */
+.socialButtons {
   display: flex;
-  gap: 1.5rem;
-  justify-content: center;
-  flex-wrap: wrap;
+  gap: 16px;
 }
 
-.linkedInButton,
-.emailButton {
+.linkedinBtn,
+.emailBtn,
+.githubBtn {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  border-radius: 25px;
-  font-size: 0.95rem;
+  gap: 10px;
+  padding: 14px 24px;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
   font-weight: 600;
   text-decoration: none;
-  transition: all 0.3s ease;
   cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-.linkedInButton {
-  background: linear-gradient(45deg, #0077b5, #00a0dc);
-  color: white;
-  box-shadow: 0 4px 15px rgba(0, 119, 181, 0.3);
+.linkedinBtn {
+  background: var(--accent-primary);
+  color: var(--bg-primary);
 }
 
-.linkedInButton:hover {
-  box-shadow: 0 8px 25px rgba(0, 119, 181, 0.4);
+.emailBtn {
+  background: transparent;
+  color: var(--accent-primary);
+  border: 1px solid var(--accent-primary);
 }
 
-.emailButton {
-  background: linear-gradient(45deg, #ffd700, #ffed4e);
-  color: #2d3748;
-  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+.githubBtn {
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.emailButton:hover {
-  box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
-}
-
-.buttonIcon {
-  width: 18px;
-  height: 18px;
-  flex-shrink: 0;
-}
-
-/* Responsive Design */
 @media (max-width: 768px) {
-  .contact {
-    padding: 2.5rem 0;
+  .title {
+    font-size: 24px;
   }
-  
-  .container {
-    padding: 0 1rem;
+
+  .underline {
+    width: 40px;
   }
-  
-  .header {
-    margin-bottom: 1.5rem;
-  }
-  
-  .contactCard {
-    padding: 1.5rem;
-  }
-  
+
   .interestsGrid {
-    grid-template-columns: 1fr;
-    gap: 0.75rem;
-    margin-bottom: 1.5rem;
+    grid-template-columns: 1fr 1fr;
   }
-  
-  .interestCard {
-    padding: 1rem;
-  }
-  
-  .icon {
-    font-size: 1.75rem;
-    margin-bottom: 0.4rem;
-  }
-  
-  .interestTitle {
-    font-size: 0.9rem;
-  }
-  
-  .interestDescription {
-    font-size: 0.8rem;
-  }
-  
-  .contactButtons {
-    padding-top: 1.25rem;
-  }
-  
-  .contactTitle {
-    font-size: 1.1rem;
-    margin-bottom: 0.875rem;
-  }
-  
-  .buttonGroup {
+
+  .socialButtons {
     flex-direction: column;
-    gap: 0.75rem;
   }
-  
-  .linkedInButton,
-  .emailButton {
-    width: 100%;
+
+  .linkedinBtn,
+  .emailBtn,
+  .githubBtn {
     justify-content: center;
-    padding: 0.7rem 1.25rem;
-    font-size: 0.9rem;
+    padding: 12px 20px;
   }
 }
 
 @media (max-width: 480px) {
-  .contact {
-    padding: 2rem 0;
-  }
-  
-  .title {
-    font-size: 1.75rem;
-  }
-  
-  .subtitle {
-    font-size: 0.9rem;
-  }
-  
-  .contactCard {
-    padding: 1.25rem;
-  }
-  
-  .interestCard {
-    padding: 0.875rem;
-  }
-  
-  .icon {
-    font-size: 1.5rem;
-  }
-  
-  .interestTitle {
-    font-size: 0.85rem;
-  }
-  
-  .interestDescription {
-    font-size: 0.75rem;
-  }
-  
-  .contactTitle {
-    font-size: 1rem;
+  .interestsGrid {
+    grid-template-columns: 1fr;
   }
 }
-

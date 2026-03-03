@@ -1,12 +1,25 @@
 import type { Metadata } from "next";
+import { Inter, JetBrains_Mono } from 'next/font/google';
 import Script from 'next/script';
 import { GA_TRACKING_ID } from '@/lib/gtag';
 import Analytics from '@/components/Analytics';
 import "./globals.css";
 
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+  display: 'swap',
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ['latin'],
+  variable: '--font-mono',
+  display: 'swap',
+});
+
 export const metadata: Metadata = {
   title: "D Rupesh Kumar - Portfolio",
-  description: "Personal portfolio website showcasing projects and skills",
+  description: "Senior Software Engineer with 7+ years building systems across SpaceTech, Geospatial, and HR Tech.",
 };
 
 export default function RootLayout({
@@ -15,9 +28,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable}`}>
       <head>
-        {/* Google Analytics - only load if tracking ID is available */}
         {GA_TRACKING_ID && (
           <>
             <Script
@@ -35,7 +47,7 @@ export default function RootLayout({
           </>
         )}
       </head>
-      <body>
+      <body className={inter.className}>
         <Analytics />
         {children}
       </body>

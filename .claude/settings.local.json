@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(claude mcp:*)",
+      "WebFetch(domain:github.com)",
+      "Bash(npm run:*)",
+      "Bash(npx next:*)",
+      "Bash(ls:*)",
+      "Bash(./node_modules/.bin/next build:*)",
+      "Bash(npm install lucide-react)",
+      "mcp__plugin_chrome-devtools-mcp_chrome-devtools__navigate_page",
+      "mcp__plugin_chrome-devtools-mcp_chrome-devtools__take_screenshot",
+      "mcp__plugin_chrome-devtools-mcp_chrome-devtools__take_snapshot",
+      "mcp__plugin_chrome-devtools-mcp_chrome-devtools__hover",
+      "mcp__plugin_chrome-devtools-mcp_chrome-devtools__evaluate_script",
+      "mcp__plugin_chrome-devtools-mcp_chrome-devtools__click",
+      "mcp__plugin_chrome-devtools-mcp_chrome-devtools__resize_page",
+      "mcp__plugin_chrome-devtools-mcp_chrome-devtools__emulate",
+      "Bash(xargs cat:*)"
+    ]
+  }
+}
