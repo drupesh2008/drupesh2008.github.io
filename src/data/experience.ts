@@ -9,10 +9,27 @@ export interface CompanyExperience {
 
 export const experiences: CompanyExperience[] = [
   {
+    id: "motilaloswal",
+    company: "Motilal Oswal Financial Services",
+    role: "Senior Vice President — Engineering",
+    period: "Apr 2026 — Present",
+    bullets: [
+      "Leading agentic AI development across cross-functional teams at one of India's largest financial services firms, setting up the processes and workflows that help teams move faster without breaking things",
+      "Driving a large-scale re-architecture to modernize critical infrastructure, replacing legacy pipelines with scalable, cloud-native systems built for modern fintech",
+      "Re-architecting legacy platforms to a modern stack in record time using agentic engineering, shipping products for millions of users and improving existing system performance by up to 80%",
+    ],
+    techTags: [
+      { name: "Agentic AI", color: "teal" },
+      { name: "LLMs", color: "violet" },
+      { name: "Cloud-Native", color: "teal" },
+      { name: "Fintech", color: "amber" },
+    ],
+  },
+  {
     id: "seekout",
     company: "SeekOut",
     role: "Sr. Software Engineer",
-    period: "Nov 2024 — Present",
+    period: "Nov 2024 — Mar 2026",
     bullets: [
       "Building agentic AI recruiting backend for SPOT, serving 750+ enterprise customers including Microsoft, Uber, and DocuSign",
       "Architected PitchBot voice pipeline using Deepgram, Cartesia Sonic, and Pipecat for AI-generated voice agents",

@@ -19,7 +19,7 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: "D Rupesh Kumar - Portfolio",
-  description: "Senior Software Engineer with 7+ years building systems across SpaceTech, Geospatial, and HR Tech.",
+  description: "Senior Software Engineer with 7+ years building systems across SpaceTech, Geospatial, HR Tech, and FinTech.",
 };
 
 export default function RootLayout({
