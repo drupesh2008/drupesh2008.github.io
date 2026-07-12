@@ -71,7 +71,7 @@ export const journeyEntries: JourneyEntry[] = [
     title: "Motilal Oswal — SVP, Engineering",
     period: "2026 — Present",
     description:
-      "Leading agentic AI and a large-scale re-architecture of legacy platforms to a modern, cloud-native stack at one of India's largest financial services firms — shipping products for millions of users and improving system performance by up to 80%.",
+      "Built the e-KYC platform onboarding millions of retail customers, lead agentic AI across teams, and re-architected legacy platforms into a modern, cloud-native stack at one of India's largest financial services firms — improving system performance by up to 80%.",
     badge: { text: "CURRENT", color: "teal" },
     dotColor: "teal",
     dotGlow: true,

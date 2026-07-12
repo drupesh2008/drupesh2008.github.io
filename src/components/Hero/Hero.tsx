@@ -91,7 +91,7 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
           transition={{ delay: 1.35, duration: 0.7 }}
         >
-          Senior Software Engineer
+          Senior Vice President, Engineering
         </motion.p>
 
         <motion.p
@@ -100,10 +100,9 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.55, duration: 0.7 }}
         >
-          Building production systems across{' '}
-          <span className={styles.accentTeal}>SpaceTech</span>,{' '}
-          <span className={styles.accentViolet}>Geospatial</span>, and{' '}
-          <span className={styles.accentAmber}>FinTech</span>
+          Building <span className={styles.accentTeal}>agentic AI</span> and the{' '}
+          <span className={styles.accentAmber}>fintech platforms</span> that onboard millions —
+          from satellite edge to a <span className={styles.accentViolet}>billion requests a day</span>
         </motion.p>
 
         <motion.div

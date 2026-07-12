@@ -43,15 +43,15 @@ function About() {
       </div>
 
       <p className={styles.lead}>
-        I&apos;m a Senior Software Engineer and engineering leader with 7+ years shipping
-        production systems where AI meets hard infrastructure.
+        I&apos;m an engineering leader and hands-on builder with 7+ years shipping production
+        systems where AI meets hard infrastructure.
       </p>
       <p className={styles.body}>
-        Today I&apos;m SVP of Engineering at Motilal Oswal, leading agentic AI and
-        re-architecting legacy fintech platforms into modern, cloud-native systems. Before that
-        I built agentic AI for hiring at SeekOut, an ML-Ops platform for satellite edge computing
-        as a founding engineer at Skyserve, and geolocation APIs serving a billion requests a day
-        at LocationIQ.
+        Today I&apos;m SVP of Engineering at Motilal Oswal, where I built the e-KYC platform that
+        onboards millions of retail customers, lead agentic AI across teams, and am re-architecting
+        legacy fintech systems into a modern, cloud-native stack. Before that I built agentic AI for
+        hiring at SeekOut, an ML-Ops platform for satellite edge computing as a founding engineer at
+        Skyserve, and geolocation APIs serving a billion requests a day at LocationIQ.
       </p>
 
       <div className={styles.stats}>
