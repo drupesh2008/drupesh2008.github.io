@@ -19,6 +19,14 @@ const STARS = [
   { x: 92, y: 26 },
 ]
 
+// Domains worked directly in — shown as keyword chips with a short hook each.
+const DOMAINS: { name: string; note: string; color: 'accentTeal' | 'accentViolet' | 'accentAmber' }[] = [
+  { name: 'FinTech', note: 'e-KYC', color: 'accentTeal' },
+  { name: 'SpaceTech', note: 'edge computing', color: 'accentViolet' },
+  { name: 'Geospatial', note: 'location without GPS', color: 'accentAmber' },
+  { name: 'HR Tech', note: 'sourcing', color: 'accentTeal' },
+]
+
 export default function Hero() {
   return (
     <section id="home" className={styles.hero}>
@@ -100,16 +108,29 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.55, duration: 0.7 }}
         >
-          Building <span className={styles.accentTeal}>agentic AI</span> and the{' '}
-          <span className={styles.accentAmber}>fintech platforms</span> that onboard millions —
-          from satellite edge to a <span className={styles.accentViolet}>billion requests a day</span>
+          Using <span className={styles.accentTeal}>agentic AI</span> to build fintech platforms
+          that onboard millions — in record time.
         </motion.p>
+
+        <motion.div
+          className={styles.domains}
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.72, duration: 0.7 }}
+        >
+          {DOMAINS.map((d) => (
+            <span key={d.name} className={styles.domain}>
+              <span className={styles[d.color]}>{d.name}</span>
+              {d.note ? <span className={styles.domainNote}>{d.note}</span> : null}
+            </span>
+          ))}
+        </motion.div>
 
         <motion.div
           className={styles.ctas}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.75, duration: 0.6 }}
+          transition={{ delay: 1.9, duration: 0.6 }}
         >
           <button className={styles.ctaPrimary} onClick={() => scrollToSection('experience')}>
             View My Work
