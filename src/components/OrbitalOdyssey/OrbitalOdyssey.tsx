@@ -5,7 +5,7 @@ import SmoothScroll from '@/components/SmoothScroll'
 import SiteNav from '@/components/SiteNav'
 import Hero from '@/components/Hero'
 import { FadeUp } from '@/components/motion'
-import WorkExperience from '@/components/WorkExperience/WorkExperience'
+import HorizontalExperience from '@/components/HorizontalExperience'
 import Journey from '@/components/Journey/Journey'
 import Skills from '@/components/Skills/Skills'
 import Projects from '@/components/Projects/Projects'
@@ -76,9 +76,7 @@ export default function OrbitalOdyssey() {
         <Section id="about">
           <About />
         </Section>
-        <Section id="experience">
-          <WorkExperience />
-        </Section>
+        <HorizontalExperience />
         <Section id="journey">
           <Journey />
         </Section>

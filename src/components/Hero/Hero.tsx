@@ -55,7 +55,7 @@ export default function Hero() {
         <div className={styles.lower}>
           <FadeUp className={styles.statement} delay={0.32}>
             Using <span className={styles.accent}>agentic AI</span> to build fintech platforms that
-            onboard millions — in record time.
+            onboard millions.
           </FadeUp>
 
           <div className={styles.lowerRight}>
