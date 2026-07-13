@@ -1,168 +1,96 @@
 'use client'
 
-import { motion } from 'framer-motion'
-import { ChevronDown } from 'lucide-react'
-import { scrollToSection } from '@/components/SmoothScroll/lenisInstance'
+import { useRef } from 'react'
+import { motion, useScroll, useTransform } from 'framer-motion'
+import { Reveal, FadeUp, Magnetic, Marquee } from '@/components/motion'
+import { scrollToSection } from '@/components/SmoothScroll'
 import styles from './Hero.module.css'
 
-const NAME = 'D Rupesh Kumar'
-const CHARS = NAME.split('')
-
-// Decorative constellation drawn behind the name (viewBox coords, 0-100 x 0-80).
-const STARS = [
-  { x: 8, y: 24 },
-  { x: 21, y: 58 },
-  { x: 34, y: 30 },
-  { x: 49, y: 66 },
-  { x: 64, y: 28 },
-  { x: 79, y: 56 },
-  { x: 92, y: 26 },
+const DOMAINS = [
+  { name: 'FinTech', note: 'e-KYC' },
+  { name: 'SpaceTech', note: 'edge computing' },
+  { name: 'Geospatial', note: 'location without GPS' },
+  { name: 'HR Tech', note: 'sourcing' },
 ]
 
-// Domains worked directly in — shown as keyword chips with a short hook each.
-const DOMAINS: { name: string; note: string; color: 'accentTeal' | 'accentViolet' | 'accentAmber' }[] = [
-  { name: 'FinTech', note: 'e-KYC', color: 'accentTeal' },
-  { name: 'SpaceTech', note: 'edge computing', color: 'accentViolet' },
-  { name: 'Geospatial', note: 'location without GPS', color: 'accentAmber' },
-  { name: 'HR Tech', note: 'sourcing', color: 'accentTeal' },
+const MARQUEE = [
+  'Agentic AI',
+  'e-KYC',
+  'Satellite edge',
+  '1B requests / day',
+  'Voice AI',
+  'Geospatial',
+  '50M profiles',
 ]
 
 export default function Hero() {
-  return (
-    <section id="home" className={styles.hero}>
-      <svg
-        className={styles.constellation}
-        viewBox="0 0 100 80"
-        preserveAspectRatio="none"
-        aria-hidden="true"
-      >
-        <motion.polyline
-          points={STARS.map((s) => `${s.x},${s.y}`).join(' ')}
-          fill="none"
-          stroke="rgba(100,255,218,0.22)"
-          strokeWidth="0.14"
-          initial={{ pathLength: 0, opacity: 0 }}
-          animate={{ pathLength: 1, opacity: 1 }}
-          transition={{ delay: 0.3, duration: 1.8, ease: 'easeInOut' }}
-        />
-        {STARS.map((s, i) => (
-          <motion.circle
-            key={i}
-            cx={s.x}
-            cy={s.y}
-            r="0.55"
-            fill="#64ffda"
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{ opacity: [0, 1, 0.55], scale: 1 }}
-            transition={{ delay: 0.2 + i * 0.12, duration: 1.4, ease: 'easeOut' }}
-          />
-        ))}
-      </svg>
+  const ref = useRef<HTMLElement>(null)
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] })
+  const contentY = useTransform(scrollYProgress, [0, 1], [0, -60])
+  const contentOpacity = useTransform(scrollYProgress, [0, 0.75], [1, 0])
 
-      <div className={styles.inner}>
-        <motion.span
-          className={styles.hello}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.15, duration: 1 }}
-        >
-          {'// hello world'}
-        </motion.span>
+  return (
+    <section id="home" className={styles.hero} ref={ref}>
+      <motion.div className={styles.inner} style={{ y: contentY, opacity: contentOpacity }}>
+        <FadeUp className={styles.eyebrow} delay={0.1}>
+          <span className={styles.dot} /> Senior Vice President, Engineering — Motilal Oswal
+        </FadeUp>
 
         <h1 className={styles.name}>
-          <span className="srOnly">{NAME}</span>
-          <span aria-hidden="true" className={styles.nameChars}>
-            {CHARS.map((ch, i) => (
-              <motion.span
-                key={i}
-                className={ch === ' ' ? styles.space : styles.char}
-                initial={{ opacity: 0, y: 26, filter: 'blur(14px)' }}
-                animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                transition={{ delay: 0.45 + i * 0.055, duration: 0.6, ease: [0.2, 0.8, 0.2, 1] }}
-              >
-                {ch === ' ' ? ' ' : ch}
-              </motion.span>
-            ))}
+          <span className="srOnly">D Rupesh Kumar</span>
+          <span aria-hidden="true">
+            <Reveal onMount delay={0.05}>D Rupesh</Reveal>
+            <Reveal onMount delay={0.13}>Kumar</Reveal>
           </span>
         </h1>
 
-        <motion.div
-          className={styles.underline}
-          initial={{ scaleX: 0, opacity: 0 }}
-          animate={{ scaleX: 1, opacity: 1 }}
-          transition={{ delay: 1.2, duration: 0.9, ease: 'easeOut' }}
-        />
+        <div className={styles.lower}>
+          <FadeUp className={styles.statement} delay={0.32}>
+            Using <span className={styles.accent}>agentic AI</span> to build fintech platforms that
+            onboard millions — in record time.
+          </FadeUp>
 
-        <motion.p
-          className={styles.title}
-          initial={{ opacity: 0, y: 16, filter: 'blur(8px)' }}
-          animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-          transition={{ delay: 1.35, duration: 0.7 }}
-        >
-          Senior Vice President, Engineering
-        </motion.p>
+          <div className={styles.lowerRight}>
+            <FadeUp className={styles.domains} delay={0.42}>
+              {DOMAINS.map((d) => (
+                <span key={d.name} className={styles.domain}>
+                  <span className={styles.domainName}>{d.name}</span>
+                  <span className={styles.domainNote}>{d.note}</span>
+                </span>
+              ))}
+            </FadeUp>
 
-        <motion.p
-          className={styles.tagline}
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.55, duration: 0.7 }}
-        >
-          Using <span className={styles.accentTeal}>agentic AI</span> to build fintech platforms
-          that onboard millions — in record time.
-        </motion.p>
+            <FadeUp className={styles.ctas} delay={0.5}>
+              <Magnetic>
+                <button className={styles.ctaPrimary} onClick={() => scrollToSection('experience')}>
+                  View my work
+                </button>
+              </Magnetic>
+              <Magnetic>
+                <a
+                  className={styles.ctaSecondary}
+                  href="/Rupesh_Resume_SSE.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Résumé
+                </a>
+              </Magnetic>
+            </FadeUp>
+          </div>
+        </div>
+      </motion.div>
 
-        <motion.div
-          className={styles.domains}
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.72, duration: 0.7 }}
-        >
-          {DOMAINS.map((d) => (
-            <span key={d.name} className={styles.domain}>
-              <span className={styles[d.color]}>{d.name}</span>
-              {d.note ? <span className={styles.domainNote}>{d.note}</span> : null}
+      <div className={styles.marquee} aria-hidden="true">
+        <Marquee baseVelocity={2.4}>
+          {MARQUEE.map((m, i) => (
+            <span key={i} className={styles.marqueeItem}>
+              {m}
+              <span className={styles.marqueeStar}>✳</span>
             </span>
           ))}
-        </motion.div>
-
-        <motion.div
-          className={styles.ctas}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.9, duration: 0.6 }}
-        >
-          <button className={styles.ctaPrimary} onClick={() => scrollToSection('experience')}>
-            View My Work
-          </button>
-          <a
-            className={styles.ctaSecondary}
-            href="/Rupesh_Resume_SSE.pdf"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Resume
-          </a>
-        </motion.div>
+        </Marquee>
       </div>
-
-      <motion.button
-        className={styles.scrollCue}
-        onClick={() => scrollToSection('about')}
-        aria-label="Scroll to explore"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 2.1, duration: 0.8 }}
-      >
-        <span>SCROLL</span>
-        <motion.span
-          className={styles.chev}
-          animate={{ y: [0, 6, 0] }}
-          transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
-        >
-          <ChevronDown size={18} />
-        </motion.span>
-      </motion.button>
     </section>
   )
 }

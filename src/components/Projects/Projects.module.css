@@ -11,8 +11,10 @@
 }
 
 .title {
-  font-size: 32px;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 3.2rem);
   font-weight: 700;
+  letter-spacing: -0.02em;
   color: var(--text-primary);
 }
 
@@ -26,7 +28,7 @@
 .subtitle {
   font-size: 14px;
   font-style: italic;
-  color: rgba(255, 255, 255, 0.3);
+  color: var(--ink-3);
 }
 
 .grid {
@@ -51,19 +53,19 @@
 }
 
 .lockIcon {
-  color: rgba(255, 255, 255, 0.1);
+  color: rgba(20, 20, 26, 0.22);
 }
 
 .projectName {
   font-size: 16px;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.3);
+  color: var(--ink-3);
 }
 
 .teaser {
   font-size: 12px;
   font-style: italic;
-  color: rgba(255, 255, 255, 0.15);
+  color: rgba(20, 20, 26, 0.4);
   line-height: 1.5;
 }
 

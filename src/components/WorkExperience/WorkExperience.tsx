@@ -6,9 +6,9 @@ import { cardStaggerIn, cardReveal } from '@/animations/variants'
 import styles from './WorkExperience.module.css'
 
 const TAG_COLORS = {
-  teal: { bg: 'var(--tag-teal-bg)', border: 'var(--tag-teal-border)', text: 'var(--accent-primary)' },
-  violet: { bg: 'var(--tag-violet-bg)', border: 'var(--tag-violet-border)', text: '#a78bfa' },
-  amber: { bg: 'var(--tag-amber-bg)', border: 'var(--tag-amber-border)', text: 'var(--accent-tertiary)' },
+  teal: { bg: 'var(--tag-teal-bg)', border: 'var(--tag-teal-border)', text: 'var(--c-teal)' },
+  violet: { bg: 'var(--tag-violet-bg)', border: 'var(--tag-violet-border)', text: 'var(--c-violet)' },
+  amber: { bg: 'var(--tag-amber-bg)', border: 'var(--tag-amber-border)', text: 'var(--c-amber)' },
 }
 
 export default function WorkExperience() {
@@ -30,7 +30,7 @@ export default function WorkExperience() {
             key={company.id}
             className={styles.card}
             variants={cardReveal}
-            whileHover={{ y: -4, boxShadow: '0 8px 30px rgba(0,0,0,0.3)' }}
+            whileHover={{ y: -4, boxShadow: '0 14px 34px rgba(20,20,26,0.10)' }}
           >
             <div className={styles.cardHeader}>
               <div className={styles.cardHeaderLeft}>

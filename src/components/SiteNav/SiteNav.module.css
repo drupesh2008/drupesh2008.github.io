@@ -1,0 +1,97 @@
+.progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--accent);
+  transform-origin: 0 50%;
+  z-index: 100;
+}
+
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: clamp(1rem, 2.4vh, 1.5rem) var(--container-padding);
+  border-bottom: 1px solid transparent;
+  transition: background var(--transition-base), backdrop-filter var(--transition-base),
+    border-color var(--transition-base);
+}
+.navScrolled {
+  background: rgba(244, 241, 234, 0.72);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom-color: var(--hairline);
+}
+
+.mark {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.05rem;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+.links {
+  display: flex;
+  align-items: center;
+  gap: clamp(1rem, 2vw, 2rem);
+}
+
+.link {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: var(--ink-2);
+  transition: color var(--transition-fast);
+  position: relative;
+  padding: 0.2rem 0;
+}
+.link:hover {
+  color: var(--ink);
+}
+.linkActive {
+  color: var(--ink);
+}
+.linkActive::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -3px;
+  height: 1.5px;
+  background: var(--accent);
+}
+
+.resume {
+  border: 1px solid var(--hairline-strong);
+  border-radius: var(--radius-full);
+  padding: 0.5rem 1.1rem;
+  font-size: 0.9rem;
+  color: var(--ink);
+  transition: background var(--transition-base), color var(--transition-base), border-color var(--transition-base);
+}
+.resume:hover {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+
+@media (max-width: 720px) {
+  .link {
+    display: none;
+  }
+  .markName {
+    font-size: 0.98rem;
+  }
+}

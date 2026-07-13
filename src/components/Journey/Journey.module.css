@@ -11,8 +11,10 @@
 }
 
 .title {
-  font-size: 32px;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 3.2rem);
   font-weight: 700;
+  letter-spacing: -0.02em;
   color: var(--text-primary);
 }
 
@@ -51,13 +53,13 @@
 }
 
 .dotGlow {
-  box-shadow: 0 0 8px rgba(100, 255, 218, 0.4), 0 0 16px rgba(100, 255, 218, 0.2);
+  box-shadow: 0 0 0 4px var(--accent-soft);
 }
 
 .connector {
   width: 2px;
   flex: 1;
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--hairline-strong);
   margin-top: 8px;
 }
 
@@ -99,7 +101,7 @@
 
 .description {
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--ink-2);
   line-height: 1.5;
   margin-top: 2px;
 }
