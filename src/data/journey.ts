@@ -61,9 +61,17 @@ export const journeyEntries: JourneyEntry[] = [
   {
     id: "seekout",
     title: "SeekOut — Senior SWE",
-    period: "2024 — Present",
+    period: "2024 — 2026",
     description:
-      "Architecting agentic AI for hiring at scale. Built PitchBot voice pipeline (Deepgram/Cartesia/Pipecat), re-engineered GitHub indexing for ~50M profiles, and improved profile matching accuracy from 45% to 89%.",
+      "Architected agentic AI for hiring at scale. Built PitchBot voice pipeline (Deepgram/Cartesia/Pipecat), re-engineered GitHub indexing for ~50M profiles, and improved profile matching accuracy from 45% to 89%.",
+    dotColor: "teal",
+  },
+  {
+    id: "motilaloswal",
+    title: "Motilal Oswal — SVP, Engineering",
+    period: "2026 — Present",
+    description:
+      "Built the e-KYC platform onboarding millions of retail customers, lead agentic AI across teams, and re-architected legacy platforms into a modern, cloud-native stack at one of India's largest financial services firms — improving system performance by up to 80%.",
     badge: { text: "CURRENT", color: "teal" },
     dotColor: "teal",
     dotGlow: true,

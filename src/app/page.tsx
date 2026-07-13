@@ -1,5 +1,5 @@
-import CommandCenter from '@/components/CommandCenter';
+import OrbitalOdyssey from '@/components/OrbitalOdyssey';
 
 export default function Home() {
-  return <CommandCenter />;
+  return <OrbitalOdyssey />;
 }
