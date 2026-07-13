@@ -1,10 +1,15 @@
 'use client'
 
 import { useRef } from 'react'
+import dynamic from 'next/dynamic'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { Reveal, FadeUp, Magnetic, Marquee } from '@/components/motion'
 import { scrollToSection } from '@/components/SmoothScroll'
+import { useMobileDetect } from '@/hooks/useMobileDetect'
+import { useReducedMotion } from '@/hooks/useReducedMotion'
 import styles from './Hero.module.css'
+
+const GlassScene = dynamic(() => import('@/components/GlassHero'), { ssr: false })
 
 const DOMAINS = [
   { name: 'FinTech', note: 'e-KYC' },
@@ -28,9 +33,12 @@ export default function Hero() {
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] })
   const contentY = useTransform(scrollYProgress, [0, 1], [0, -60])
   const contentOpacity = useTransform(scrollYProgress, [0, 0.75], [1, 0])
+  const isMobile = useMobileDetect()
+  const reduced = useReducedMotion()
 
   return (
     <section id="home" className={styles.hero} ref={ref}>
+      {!isMobile && !reduced && <GlassScene />}
       <motion.div className={styles.inner} style={{ y: contentY, opacity: contentOpacity }}>
         <FadeUp className={styles.eyebrow} delay={0.1}>
           <span className={styles.dot} /> Senior Vice President, Engineering — Motilal Oswal
@@ -47,7 +55,7 @@ export default function Hero() {
         <div className={styles.lower}>
           <FadeUp className={styles.statement} delay={0.32}>
             Using <span className={styles.accent}>agentic AI</span> to build fintech platforms that
-            onboard millions — in record time.
+            onboard millions.
           </FadeUp>
 
           <div className={styles.lowerRight}>

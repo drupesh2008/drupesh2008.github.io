@@ -7,8 +7,7 @@ import { setLenisInstance } from './lenisInstance'
 
 /**
  * Side-effect-only component that drives Lenis smooth scrolling for the whole
- * page. Disabled entirely when the user prefers reduced motion — native
- * scrolling takes over and scrollToSection falls back to scrollIntoView.
+ * page. Disabled entirely when the user prefers reduced motion.
  */
 export default function SmoothScroll() {
   const reduced = useReducedMotion()
