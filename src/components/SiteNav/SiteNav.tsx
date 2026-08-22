@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Link from 'next/link'
 import { motion, useScroll } from 'framer-motion'
 import { scrollToSection } from '@/components/SmoothScroll'
 import { useScrollSpy } from '@/hooks/useScrollSpy'
@@ -31,9 +32,10 @@ export default function SiteNav() {
     <>
       <motion.div className={styles.progress} style={{ scaleX: scrollYProgress }} aria-hidden="true" />
       <header className={`${styles.nav} ${scrolled ? styles.navScrolled : ''}`}>
-        <button className={styles.mark} onClick={() => scrollToSection('home')} aria-label="Back to top">
+        {/* the mark goes back to the landing, not just to the top of this page */}
+        <Link className={styles.mark} href="/" aria-label="Back to the ground station">
           <span className={styles.markName}>D. Rupesh Kumar</span>
-        </button>
+        </Link>
         <nav className={styles.links} aria-label="Sections">
           {LINKS.map((l) => (
             <button
