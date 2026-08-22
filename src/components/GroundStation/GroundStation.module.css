@@ -1,0 +1,226 @@
+/* ══════════════════════════════════════════════════════════════════
+   GROUND STATION — the landing.
+   The camera never moves; beacons rotate into view one after another
+   and each opens an uplink with a HUD readout pinned beside it.
+   Deliberately a single dark world — every colour is painted here so
+   it never borrows the light theme the rest of the site uses.
+   ══════════════════════════════════════════════════════════════════ */
+.root {
+  --void: #04060b;
+  --edge: #161c29;
+  --edgeHi: #2a3444;
+  --signal: #5ee9d5;
+  --chalk: #eaeef6;
+  --dim: #96a1b8;
+  --faint: #5b6579;
+
+  --serif: var(--font-serif), Georgia, "Times New Roman", serif;
+  --sans: var(--font-inter), system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  --mono: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  background: var(--void);
+  color: var(--chalk);
+  font-family: var(--sans);
+  font-weight: 300;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+.root ::selection { background: rgba(94, 233, 213, 0.26); color: #fff; }
+.root :focus-visible { outline: 1.5px solid var(--signal); outline-offset: 3px; border-radius: 4px; }
+
+.scene {
+  position: relative;
+  width: 100%;
+  height: 100svh;
+  min-height: 620px;
+  overflow: hidden;
+  background: radial-gradient(120% 90% at 62% 52%, #080c16 0%, #05070d 55%, #03040a 100%);
+}
+.scene canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.overlay { z-index: 2; }
+
+.scrim {
+  position: absolute; inset: 0; z-index: 3; pointer-events: none;
+  background: linear-gradient(96deg,
+    rgba(4, 6, 11, 0.95) 0%, rgba(4, 6, 11, 0.86) 20%,
+    rgba(4, 6, 11, 0.4) 42%, rgba(4, 6, 11, 0) 60%);
+}
+
+.corner { position: absolute; width: 13px; height: 13px; border: 1px solid var(--edgeHi); z-index: 5; opacity: 0.65; }
+.tl { top: 20px; left: 20px; border-right: 0; border-bottom: 0; }
+.tr { top: 20px; right: 20px; border-left: 0; border-bottom: 0; }
+.bl { bottom: 20px; left: 20px; border-right: 0; border-top: 0; }
+.br { bottom: 20px; right: 20px; border-left: 0; border-top: 0; }
+
+.topbar {
+  position: absolute; top: 0; left: 0; right: 0; z-index: 8;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 18px; padding: 30px clamp(22px, 4vw, 52px); pointer-events: none;
+}
+.mark { font-family: var(--mono); font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; }
+.topnav { display: flex; gap: 20px; pointer-events: auto; }
+.topnav a {
+  font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.15em;
+  text-transform: uppercase; color: var(--faint); text-decoration: none; transition: color 0.25s;
+}
+.topnav a:hover { color: var(--signal); }
+
+.statement {
+  position: absolute; z-index: 4; left: clamp(22px, 4vw, 52px);
+  top: 50%; transform: translateY(-50%);
+  max-width: min(38ch, 38vw); pointer-events: none;
+}
+.coords {
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--faint); display: flex; align-items: center; gap: 9px; margin-bottom: 18px;
+}
+.live {
+  width: 5px; height: 5px; border-radius: 50%; background: var(--signal);
+  box-shadow: 0 0 9px var(--signal); animation: blip 2.6s ease-in-out infinite; flex: none;
+}
+@keyframes blip { 0%, 100% { opacity: 1 } 50% { opacity: 0.25 } }
+.statement h1 {
+  font-family: var(--serif); font-weight: 400; font-size: clamp(42px, 6.4vw, 90px);
+  line-height: 0.94; letter-spacing: -0.018em; margin: 0 0 18px; color: #fff; text-wrap: balance;
+}
+.statement h1 em { font-style: italic; color: var(--signal); }
+.statement p {
+  margin: 0; max-width: 34ch; color: var(--dim);
+  font-size: clamp(13px, 1.2vw, 15.5px); line-height: 1.7;
+}
+
+/* the readout that rides beside the live beacon — a target tag, not a card */
+.hud {
+  position: absolute; z-index: 6; pointer-events: none;
+  width: 186px; padding: 9px 11px 10px;
+  background: rgba(5, 8, 14, 0.86);
+  backdrop-filter: blur(11px); -webkit-backdrop-filter: blur(11px);
+  box-shadow: 0 10px 34px -14px rgba(0, 0, 0, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  opacity: 0; transition: opacity 0.34s ease; transform: translate(0, -50%);
+  clip-path: polygon(0 0, calc(100% - 7px) 0, 100% 7px, 100% 100%, 7px 100%, 0 calc(100% - 7px));
+}
+.hudOn { opacity: 1; }
+.hstat {
+  font-family: var(--mono); font-size: 7.5px; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--dim); margin-bottom: 5px; display: flex; align-items: center; gap: 5px;
+}
+.hdot { width: 4px; height: 4px; border-radius: 50%; flex: none; }
+.hco { font-family: var(--sans); font-weight: 500; font-size: 13px; line-height: 1.15; color: #fff; margin-bottom: 2px; }
+.hrole { font-size: 10.5px; line-height: 1.3; color: var(--dim); margin-bottom: 5px; }
+.hmeta {
+  font-family: var(--mono); font-size: 7.5px; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--faint); border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 5px;
+  display: flex; justify-content: space-between; gap: 8px;
+}
+.hmeta b { font-weight: 400; }
+
+.legend { position: absolute; z-index: 8; left: clamp(22px, 4vw, 52px); bottom: clamp(72px, 11vh, 102px); pointer-events: auto; }
+.legendCap {
+  font-family: var(--mono); font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--faint); margin-bottom: 10px; display: flex; align-items: center; gap: 9px;
+}
+.legendBar { width: 18px; height: 1px; background: var(--edgeHi); }
+.legendList { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 1px; }
+.legendBtn {
+  display: flex; align-items: center; gap: 10px; background: none; border: 0;
+  padding: 4px 8px 4px 0; cursor: pointer; font-family: var(--mono); font-size: 10.5px;
+  letter-spacing: 0.05em; color: var(--faint); transition: color 0.22s; text-align: left; width: 100%;
+}
+.legendBtn:hover { color: var(--chalk); }
+.sw { width: 7px; height: 7px; border-radius: 50%; flex: none; transition: box-shadow 0.25s, transform 0.25s; }
+.legendBtn.active { color: #fff; }
+.legendBtn.active .sw { transform: scale(1.4); box-shadow: 0 0 12px currentColor; }
+.yr { margin-left: auto; color: var(--faint); font-size: 9.5px; padding-left: 14px; }
+
+.enter {
+  position: absolute; z-index: 8; left: clamp(22px, 4vw, 52px); bottom: clamp(24px, 4.2vh, 40px);
+  display: flex; align-items: center; gap: 11px; text-decoration: none; font-family: var(--mono);
+  font-size: 10.5px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--dim); transition: color 0.25s;
+}
+.enter:hover { color: var(--chalk); }
+.arr { transition: transform 0.3s; }
+.enter:hover .arr, .readme:hover .arr { transform: translateX(5px); }
+
+.telemetry {
+  position: absolute; z-index: 8; right: clamp(22px, 4vw, 52px); bottom: clamp(24px, 4.2vh, 40px);
+  font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.11em; color: var(--faint);
+  font-variant-numeric: tabular-nums; text-align: right; pointer-events: none; line-height: 1.85;
+}
+
+@media (max-width: 900px) {
+  .scrim {
+    background: linear-gradient(0deg,
+      rgba(4, 6, 11, 0.97) 0%, rgba(4, 6, 11, 0.88) 30%,
+      rgba(4, 6, 11, 0.34) 56%, rgba(4, 6, 11, 0) 74%);
+  }
+  .statement {
+    left: 0; right: 0; top: auto; bottom: 11vh; transform: none;
+    max-width: none; padding: 0 22px; text-align: center;
+  }
+  .statement h1 { font-size: clamp(38px, 11vw, 58px); }
+  .statement p { margin: 0 auto; max-width: 32ch; }
+  .coords { justify-content: center; }
+  /* the legend sits between the globe and the statement, never over either */
+  .legend { left: 0; right: 0; top: auto; bottom: 39vh; padding: 0 16px; }
+  .legendList { flex-direction: row; flex-wrap: wrap; gap: 5px; justify-content: center; }
+  .legendCap { display: none; }
+  .legendBtn {
+    width: auto; padding: 4px 10px; border: 1px solid var(--edgeHi); border-radius: 999px;
+    font-size: 9px; background: rgba(6, 10, 17, 0.78);
+    backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  }
+  .yr { display: none; }
+  .telemetry { display: none; }
+  .enter { left: 0; right: 0; justify-content: center; bottom: 20px; }
+  /* small enough to sit beside the globe rather than across it */
+  .hud { width: 124px; padding: 6px 8px 7px; }
+  .hco { font-size: 10.5px; }
+  .hrole { font-size: 8.5px; margin-bottom: 4px; }
+  .hstat { font-size: 6.5px; margin-bottom: 4px; }
+  .hmeta { font-size: 6.5px; padding-top: 4px; }
+}
+@media (max-width: 560px) {
+  .topbar { padding: 20px; }
+  .mark { font-size: 9.5px; letter-spacing: 0.13em; }
+  .topnav { gap: 12px; }
+  .topnav a { font-size: 9.5px; letter-spacing: 0.07em; }
+}
+
+/* ── the log below the fold ──────────────────────────────────────── */
+.index { padding: clamp(80px, 12vh, 140px) clamp(22px, 4vw, 52px) clamp(60px, 9vh, 100px); max-width: 1180px; margin: 0 auto; }
+.indexHead { display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap; padding-bottom: 26px; border-bottom: 1px solid var(--edge); }
+.indexHead h2 { font-family: var(--serif); font-weight: 400; font-size: clamp(26px, 3.4vw, 38px); margin: 0; }
+.indexHead span { font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--faint); }
+.row {
+  display: grid; grid-template-columns: 14px minmax(0, 1fr) 128px minmax(0, 1.5fr);
+  gap: clamp(14px, 2.6vw, 36px); align-items: baseline; padding: 24px 0; border-bottom: 1px solid var(--edge);
+}
+.rowSw { width: 8px; height: 8px; border-radius: 50%; align-self: center; }
+.rowCo { font-family: var(--serif); font-size: clamp(20px, 2.6vw, 28px); line-height: 1.15; }
+.rowYr { font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; color: var(--faint); text-transform: uppercase; }
+.rowLn { color: var(--dim); font-size: 14px; line-height: 1.7; }
+@media (max-width: 760px) {
+  .row { grid-template-columns: 14px 1fr; gap: 8px 12px; }
+  .rowYr, .rowLn { grid-column: 2; }
+}
+.outro { display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; padding-top: clamp(46px, 7vh, 76px); }
+.outro p { font-family: var(--serif); font-size: clamp(24px, 3.6vw, 42px); line-height: 1.2; margin: 0; max-width: 17ch; }
+.readme {
+  display: inline-flex; align-items: center; gap: 12px; text-decoration: none; flex: none;
+  border: 1px solid var(--edgeHi); border-radius: 999px; padding: 14px 26px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--chalk); transition: border-color 0.25s, background 0.25s;
+}
+.readme:hover { border-color: var(--signal); background: rgba(94, 233, 213, 0.06); }
+.colophon { max-width: 1180px; margin: 0 auto; padding: 0 clamp(22px, 4vw, 52px) 70px; font-size: 12.5px; color: var(--faint); line-height: 1.75; }
+.colophon a { color: var(--dim); text-decoration: underline; text-underline-offset: 3px; }
+.colophon a:hover { color: var(--chalk); }
+
+@media (prefers-reduced-motion: reduce) {
+  .root *, .root *::before, .root *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
