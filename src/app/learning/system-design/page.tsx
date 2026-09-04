@@ -347,23 +347,17 @@ export default function SystemDesignPage() {
           </>
         ),
 
-        /* ── Stage 5 ─────────────────────────────────────────────── */
-        streams: (
+        /* ── Sharding ────────────────────────────────────────────── */
+        sharding: (
           <>
             <p>
-              Somewhere past the first few million users, two pressures arrive together: writes
-              outgrow one machine, and every write starts owing side effects — update the search
-              index, invalidate the cache, notify a service. This stage is the pair of instruments
-              that tame both: partitioning the data, and putting the changes on a log.
-            </p>
-
-            <h3>Sharding — splitting the write path</h3>
-            <p>
-              <strong>Sharding</strong> splits data across databases by a <strong>shard key</strong>,
-              and the key choice is the whole game: it decides which queries stay single-shard
-              (fast, transactional) and which become scatter-gather. Shard a social product by user
-              ID and a profile page is one shard, but “everyone who liked this post” touches all of
-              them. Choose the key from your top queries, not from aesthetics.
+              Somewhere past the first few million users, writes outgrow one machine — vertical
+              scaling buys time, never escape. <strong>Sharding</strong> splits data across
+              databases by a <strong>shard key</strong>, and the key choice is the whole game: it
+              decides which queries stay single-shard (fast, transactional) and which become
+              scatter-gather. Shard a social product by user ID and a profile page is one shard,
+              but “everyone who liked this post” touches all of them. Choose the key from your top
+              queries, not from aesthetics.
             </p>
             <Fig caption="Fig 3 · Consistent hashing — growth moves one arc of keys, not all of them">
               <HashRing />
@@ -381,6 +375,23 @@ export default function SystemDesignPage() {
               scatter-gather at the tail), cross-shard transactions (sagas, previous stage), and{' '}
               <strong>resharding</strong> — the migration you should design for on day one, because
               it is miserable to retrofit under load.
+            </p>
+            <Callout>
+              The shard key is a product decision wearing an infrastructure costume: it encodes
+              which questions your system answers cheaply, forever. Pick it from the top queries —
+              and design the resharding path before you need it.
+            </Callout>
+          </>
+        ),
+
+        /* ── Streams ─────────────────────────────────────────────── */
+        streams: (
+          <>
+            <p>
+              Sharding split the data; a second pressure arrives with it: every write starts owing
+              side effects — update the search index, invalidate the cache, notify a service. Doing
+              that synchronously makes users wait on your bookkeeping; doing it “later, somehow”
+              loses updates on the first bad day. The instrument that tames it is old and perfect.
             </p>
 
             <h3>The log — one ordered history</h3>

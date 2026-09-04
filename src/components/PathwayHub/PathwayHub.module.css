@@ -111,6 +111,8 @@
   border-top: 1px solid var(--edge); color: var(--dim); font-size: 13.5px; line-height: 1.5;
 }
 .stageNo { font-family: var(--mono); font-size: 9.5px; color: var(--faint); font-variant-numeric: tabular-nums; flex: none; }
+.stageDraft { color: var(--faint); }
+.draftDot { width: 4px; height: 4px; border-radius: 50%; background: var(--accent); align-self: center; flex: none; opacity: 0.8; }
 
 .cardFoot {
   margin-top: auto; display: flex; align-items: center; justify-content: space-between; gap: 12px;

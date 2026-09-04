@@ -100,6 +100,10 @@
 }
 .railList a:hover { color: var(--bright); }
 .railNo { font-family: var(--mono); font-size: 9.5px; color: var(--faint); font-variant-numeric: tabular-nums; flex: none; }
+/* a stage whose chapter is still an outline — present, findable, visibly lighter */
+.railList a.railDraft { color: var(--faint); }
+.railList a.railDraft::after { content: "·"; color: var(--accent); margin-left: 6px; }
+.railList a.railDraft:hover { color: var(--dim); }
 .railFoot { font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--faint); line-height: 2; }
 .railFoot a { color: var(--dim); text-decoration: none; }
 .railFoot a:hover { color: var(--signal); }
@@ -162,6 +166,27 @@
   color: var(--accent); margin-bottom: 6px;
 }
 .callout p { margin: 0; color: var(--chalk); font-size: 14px; line-height: 1.7; }
+
+/* ── a stage that is still a syllabus ────────────────────────────── */
+.syllabus {
+  border: 1px dashed var(--edgeHi); border-radius: 14px;
+  padding: 16px 20px 18px; max-width: 68ch;
+}
+.syllabusBadge {
+  font-family: var(--mono); font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
+}
+.syllabusBadge::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: var(--accent); }
+.syllabusList { list-style: none; margin: 0; padding: 0; }
+.syllabusList li {
+  position: relative; padding: 8px 0 8px 22px; color: var(--dim);
+  font-size: 14px; line-height: 1.6; border-top: 1px solid var(--edge);
+}
+.syllabusList li:first-child { border-top: 0; }
+.syllabusList li::before {
+  content: "▸"; position: absolute; left: 2px; top: 8px;
+  color: var(--accent); font-family: var(--mono); font-size: 11px;
+}
 
 /* ── figures ─────────────────────────────────────────────────────── */
 .fig { margin: 26px 0; max-width: 760px; }
