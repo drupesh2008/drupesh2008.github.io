@@ -206,11 +206,34 @@ export default function FoundationsPage() {
               you claim is durable, exactly which line of code makes it so.
             </p>
 
-            <h3>Sharing memory without lying to yourself</h3>
+            <h3>Where it bites</h3>
+            <ul>
+              <li>“Durable” systems with no <code>fsync</code> in sight — find the line or stop using the word.</li>
+              <li>A working set that quietly outgrows RAM — major page faults turn memory reads into disk reads, and the service feels broken rather than slow.</li>
+              <li>Container memory limits treated as decoration — exceed one and the OOM killer ends the process mid-request, no exception thrown.</li>
+            </ul>
+            <Callout>
+              <code>write()</code> returning is a promise by the OS, not the disk. Every durability
+              story you will ever audit reduces to: where, exactly, is the fsync — and what is
+              replayed after a crash?
+            </Callout>
+          </>
+        ),
+
+        /* ── Concurrency ─────────────────────────────────────────── */
+        concurrency: (
+          <>
             <p>
-              The CPU lie has a sharp edge: threads share the heap, and the scheduler interleaves
-              them wherever it pleases. Two threads that each do <code>read, add one, write</code> on
-              the same counter can interleave so that one increment vanishes:
+              The scheduler lie has a sharp edge, sharp enough to deserve its own stage: threads
+              share the heap, and the scheduler interleaves them wherever it pleases. Correct
+              sequential code, run concurrently, becomes a lottery — and the discipline that removes
+              the lottery is small, learnable, and non-negotiable.
+            </p>
+
+            <h3>The lost update</h3>
+            <p>
+              Two threads that each do <code>read, add one, write</code> on the same counter can
+              interleave so that one increment vanishes:
             </p>
             <Fig caption="Fig 2 · The lost update — the interleaving the scheduler is allowed to pick">
               <LostUpdate />
@@ -248,13 +271,14 @@ export default function FoundationsPage() {
             <ul>
               <li>Holding a lock across an <code>await</code> or a network call — you have serialised the system on your slowest dependency.</li>
               <li>CPU-heavy work on the event loop — one busy handler and every connection stalls.</li>
-              <li>“Durable” systems with no <code>fsync</code> in sight — find the line or stop using the word.</li>
-              <li>Unbounded thread or connection creation under load — the fix is a pool with a queue, which is Stage 6 of System Design in miniature.</li>
+              <li>Unbounded thread or connection creation under load — the fix is a pool with a queue, which is System Design’s failure stage in miniature.</li>
+              <li>Sprinkling locks until the race “goes away” — without knowing which invariant each lock guards, you have traded a race for a deadlock on layaway.</li>
             </ul>
             <Callout>
-              <code>write()</code> returning is a promise by the OS, not the disk. Every durability
-              story you will ever audit reduces to: where, exactly, is the fsync — and what is
-              replayed after a crash?
+              Every concurrency tool is an answer to one question: <em>who is allowed to touch this
+              data right now?</em> If you cannot answer it for a piece of state, that state is a bug
+              that has not happened yet. Hold onto the question — the Distributed Systems pathway is
+              the same question with the machines pulled apart.
             </Callout>
           </>
         ),

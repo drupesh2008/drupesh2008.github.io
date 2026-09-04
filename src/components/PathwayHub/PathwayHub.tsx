@@ -8,7 +8,7 @@
  */
 
 import Link from 'next/link'
-import { PATHWAYS, STAGE_COUNT, RESOURCE_COUNT } from '@/data/pathways'
+import { PATHWAYS, STAGE_COUNT, RESOURCE_COUNT, WRITTEN_COUNT } from '@/data/pathways'
 import { accVars } from '@/data/accents'
 import ThemeToggle from '@/components/ThemeToggle'
 import styles from './PathwayHub.module.css'
@@ -31,14 +31,15 @@ export default function PathwayHub() {
           <h1>Learning</h1>
           <p>
             Four pathways from <strong>zero to professional</strong> — through the machine, distributed
-            systems, system design and AI engineering. The courses are written and hosted on this
-            site, and every stage ends with the best free reading on the open web, linked straight to
-            the people who wrote it. Walk the pathways in order, or jump to the one your work needs
-            this week.
+            systems, system design and AI engineering. The full curriculum is mapped below: chapters
+            marked with a dot are still outlines, being written in the open, and every stage ends
+            with the best free reading on the web, linked straight to the people who wrote it. Walk
+            the pathways in order, or jump to the one your work needs this week.
           </p>
           <div className={styles.stats}>
             <span><b>{PATHWAYS.length}</b> pathways</span>
-            <span><b>{STAGE_COUNT}</b> stages</span>
+            <span><b>{STAGE_COUNT}</b> stages mapped</span>
+            <span><b>{WRITTEN_COUNT}</b> written in full</span>
             <span><b>{RESOURCE_COUNT}</b> links out</span>
             <span><b>0</b> accounts required</span>
           </div>
@@ -55,15 +56,16 @@ export default function PathwayHub() {
               <p className={styles.cardBlurb}>{p.blurb}</p>
               <ol className={styles.stageList}>
                 {p.stages.map((s, i) => (
-                  <li key={s.id}>
+                  <li key={s.id} className={s.topics ? styles.stageDraft : undefined}>
                     <span className={styles.stageNo}>{String(i + 1).padStart(2, '0')}</span>
                     {s.title}
+                    {s.topics && <span className={styles.draftDot} aria-label="outline" />}
                   </li>
                 ))}
               </ol>
               <div className={styles.cardFoot}>
                 <span>
-                  {p.stages.length} stages · ~{p.minutes} min ·{' '}
+                  {p.stages.filter((s) => !s.topics).length}/{p.stages.length} written ·{' '}
                   {p.stages.reduce((n, s) => n + s.resources.length, 0)} links
                 </span>
                 <span className={styles.begin}>

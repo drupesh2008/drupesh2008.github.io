@@ -53,9 +53,12 @@ export default function Pathway({
   const track = pathwayById(trackId)
   const next = nextPathway(trackId)
   const resourceCount = track.stages.reduce((n, s) => n + s.resources.length, 0)
+  const writtenCount = track.stages.filter((s) => sections[s.id]).length
 
   for (const s of track.stages) {
-    if (!sections[s.id]) throw new Error(`pathway ${trackId}: no prose for stage "${s.id}"`)
+    // a stage must be a written chapter or carry its syllabus — never a hole
+    if (!sections[s.id] && !s.topics?.length)
+      throw new Error(`pathway ${trackId}: stage "${s.id}" has neither prose nor a topics outline`)
   }
 
   return (
@@ -78,8 +81,9 @@ export default function Pathway({
           <p className={styles.tagline}>{track.tagline}</p>
           <p className={styles.blurb}>{track.blurb}</p>
           <div className={styles.meta}>
-            <span><b>{track.stages.length}</b> stages</span>
-            <span><b>~{track.minutes}</b> min read</span>
+            <span><b>{track.stages.length}</b> stages mapped</span>
+            <span><b>{writtenCount}</b> written in full</span>
+            <span><b>~{track.minutes}</b> min of writing so far</span>
             <span><b>{resourceCount}</b> links out</span>
             <span><b>0</b> accounts required</span>
           </div>
@@ -91,7 +95,7 @@ export default function Pathway({
             <ol className={styles.railList}>
               {track.stages.map((s, i) => (
                 <li key={s.id}>
-                  <a href={`#${s.id}`}>
+                  <a href={`#${s.id}`} className={sections[s.id] ? undefined : styles.railDraft}>
                     <span className={styles.railNo}>{String(i + 1).padStart(2, '0')}</span>
                     {s.title}
                   </a>
@@ -119,7 +123,20 @@ export default function Pathway({
                 </div>
                 <h2>{s.title}</h2>
                 <p className={styles.lede}>{s.lede}</p>
-                <div className={styles.prose}>{sections[s.id]}</div>
+                {sections[s.id] ? (
+                  <div className={styles.prose}>{sections[s.id]}</div>
+                ) : (
+                  <div className={styles.syllabus}>
+                    <div className={styles.syllabusBadge}>
+                      Chapter outline — the full write-up is being drafted
+                    </div>
+                    <ul className={styles.syllabusList}>
+                      {s.topics?.map((t) => (
+                        <li key={t}>{t}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
 
                 <div className={styles.reading}>
                   <div className={styles.readingCap}><span className={styles.railBar} /> Go deeper — free, no account</div>
