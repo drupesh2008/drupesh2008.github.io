@@ -66,7 +66,7 @@ export const PATHWAYS: Pathway[] = [
     blurb:
       'Memory, operating systems, networks and the cost model underneath every framework. The slowest track to pay off, and the one that makes the other three legible.',
     hex: '#7BD88F',
-    minutes: 45,
+    minutes: 80,
     outcomes: [
       'Predict roughly what a line of code costs before running it',
       'Explain what the OS is doing for — and to — your process',
@@ -177,7 +177,7 @@ export const PATHWAYS: Pathway[] = [
     blurb:
       'Partial failure, disagreement about time, and how a group of unreliable machines pretends to be one reliable one. The theory track — everything in System Design leans on it.',
     hex: '#5EE9D5',
-    minutes: 50,
+    minutes: 90,
     outcomes: [
       'Treat a timeout as ambiguity, not as an answer',
       'Order events without trusting anyone’s clock',
@@ -323,13 +323,14 @@ export const PATHWAYS: Pathway[] = [
     blurb:
       'The applied track, and the widest: requests, caching, storage engines, transactions, streams and failure. What used to be a separate Data & Storage track lives here now, because a database only makes sense inside the system around it.',
     hex: '#4C8BF5',
-    minutes: 70,
+    minutes: 120,
     outcomes: [
       'Sketch a latency budget for a request before writing code',
       'Say which cache and which invalidation you chose, and why',
       'Predict whether a workload wants a B-tree or an LSM engine',
       'Name the isolation level you need, not the one you inherited',
       'Design the failure path with the same care as the success path',
+      'Take a vague product ask to a justified design in forty-five minutes',
     ],
     stages: [
       {
@@ -458,6 +459,20 @@ export const PATHWAYS: Pathway[] = [
           },
         ],
       },
+      {
+        id: 'worked',
+        title: 'A worked design, end to end',
+        lede: 'Everything in one sitting: a real problem taken from requirements to a defensible architecture, out loud.',
+        resources: [
+          {
+            title: 'System Design in a Hurry',
+            source: 'Hello Interview',
+            url: 'https://www.hellointerview.com/learn/system-design/in-a-hurry/introduction',
+            type: 'docs',
+            note: 'A free, sharp condensation of the interview craft — read it after this stage and the structure will feel familiar.',
+          },
+        ],
+      },
     ],
   },
 
@@ -470,7 +485,7 @@ export const PATHWAYS: Pathway[] = [
     blurb:
       'From what a transformer actually computes to retrieval, agents and evaluation. Weighted towards building and measuring rather than training from scratch.',
     hex: '#A78BFA',
-    minutes: 55,
+    minutes: 90,
     outcomes: [
       'Reason about context, cost and failure from how the model works',
       'Build retrieval that you can measure, not just demo',

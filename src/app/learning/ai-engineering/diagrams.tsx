@@ -49,6 +49,36 @@ export function ContextAssembly() {
   )
 }
 
+/** where inference time goes: one parallel prefill, then a token-by-token decode */
+export function PrefillDecode() {
+  return (
+    <svg viewBox="0 0 660 176" role="img" aria-label="Prefill processes the whole prompt in one parallel pass; decode then produces one token at a time, each step reading the KV cache">
+      <text x="8" y="20" className={s.dgTextS}>time →</text>
+      {/* prefill block */}
+      <rect x="8" y="34" width="150" height="34" rx="7" className={s.dgBoxHi} strokeWidth="1.2" />
+      <text x="83" y="50" textAnchor="middle" className={s.dgTextHi} style={{ fontSize: 10.5 }}>prefill</text>
+      <text x="83" y="63" textAnchor="middle" className={s.dgTextS} style={{ fontSize: 8 }}>whole prompt, one pass</text>
+      {/* decode steps */}
+      {[0, 1, 2, 3, 4, 5, 6].map((i) => (
+        <g key={i}>
+          <rect x={178 + i * 62} y="34" width="48" height="34" rx="7" className={s.dgBox} strokeWidth="1.1" />
+          <text x={202 + i * 62} y="55" textAnchor="middle" className={s.dgText} style={{ fontSize: 10 }}>t{i + 1}</text>
+        </g>
+      ))}
+      <text x="640" y="55" textAnchor="end" className={s.dgText} style={{ fontSize: 12 }}>…</text>
+      {/* annotations */}
+      <line x1="8" y1="84" x2="158" y2="84" className={s.dgAcc} strokeWidth="1.1" />
+      <text x="8" y="102" className={s.dgText} style={{ fontSize: 10 }}>sets time-to-first-token</text>
+      <line x1="178" y1="84" x2="612" y2="84" className={`${s.dgLine} ${s.dgDash}`} strokeWidth="1.1" />
+      <text x="178" y="102" className={s.dgText} style={{ fontSize: 10 }}>one token per step · sets tokens-per-second</text>
+      <rect x="8" y="118" width="230" height="26" rx="6" className={s.dgBox} strokeWidth="1.1" />
+      <text x="123" y="135" textAnchor="middle" className={s.dgText} style={{ fontSize: 9.5 }}>KV cache · attention state</text>
+      <text x="252" y="135" className={s.dgTextS} style={{ fontSize: 9 }}>grows with context — and every decode step re-reads it</text>
+      <text x="8" y="168" className={s.dgTextAcc}>stream the decode — the user reads t1 while t9 is still being made</text>
+    </svg>
+  )
+}
+
 /** the agent loop — act, observe, decide again, with an exit that you own */
 export function AgentLoop() {
   return (

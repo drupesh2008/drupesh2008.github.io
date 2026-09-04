@@ -127,9 +127,29 @@
   font-family: var(--mono); font-size: 0.85em; color: var(--chalk);
   background: var(--panel); border: 1px solid var(--edge); border-radius: 5px; padding: 1px 5px;
 }
-.prose ul { margin: 0 0 16px; padding-left: 18px; color: var(--dim); font-size: 15px; line-height: 1.75; }
-.prose li { margin-bottom: 6px; }
+.prose ul, .prose ol { margin: 0 0 16px; padding-left: 20px; color: var(--dim); font-size: 14.5px; line-height: 1.75; }
+.prose li { margin-bottom: 7px; }
 .prose li::marker { color: var(--accent); }
+.prose ol li::marker { font-family: var(--mono); font-size: 0.85em; }
+
+/* subheads inside a stage — long stages need waypoints */
+.prose h3 {
+  font-family: var(--sans); font-weight: 500; font-size: 16px; letter-spacing: -0.005em;
+  color: var(--bright); margin: 30px 0 10px; display: flex; align-items: center; gap: 10px;
+}
+.prose h3::before { content: ""; width: 14px; height: 1px; background: var(--accent); flex: none; }
+
+/* comparison tables — the fastest way to hold a tradeoff still */
+.tblWrap { overflow-x: auto; margin: 18px 0; max-width: 760px; }
+.tblWrap table { border-collapse: collapse; width: 100%; min-width: 480px; font-size: 13px; line-height: 1.55; }
+.tblWrap th {
+  font-family: var(--mono); font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--faint); text-align: left; padding: 8px 12px 8px 0; border-bottom: 1px solid var(--edgeHi);
+  font-weight: 500; white-space: nowrap;
+}
+.tblWrap td { padding: 9px 12px 9px 0; border-bottom: 1px solid var(--edge); color: var(--dim); vertical-align: top; }
+.tblWrap td:first-child { color: var(--chalk); white-space: nowrap; }
+.tblWrap td code { font-size: 0.85em; }
 
 /* a boxed aside for the one idea the stage stands on */
 .callout {

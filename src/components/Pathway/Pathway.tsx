@@ -35,6 +35,11 @@ export function Fig({ caption, children }: { caption: string; children: ReactNod
   )
 }
 
+/** a horizontally-scrollable comparison table; children = <table>…</table> */
+export function Tbl({ children }: { children: ReactNode }) {
+  return <div className={styles.tblWrap}>{children}</div>
+}
+
 /* re-exported so diagram files can share the vocabulary without a second import */
 export { styles as pathwayStyles }
 

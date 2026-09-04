@@ -78,6 +78,70 @@ export function BTreeVsLsm() {
   )
 }
 
+/** consistent hashing — a ring of key space; a node's arrival moves one arc */
+export function HashRing() {
+  const cx = 190, cy = 108, r = 78
+  const node = (deg: number, label: string, hot = false) => {
+    const a = ((deg - 90) * Math.PI) / 180
+    const x = cx + r * Math.cos(a), y = cy + r * Math.sin(a)
+    const lx = cx + (r + 26) * Math.cos(a), ly = cy + (r + 26) * Math.sin(a)
+    return (
+      <g>
+        <circle cx={x} cy={y} r="9" className={hot ? s.dgBoxHi : s.dgBox} strokeWidth="1.2" />
+        <text x={lx} y={ly + 3} textAnchor="middle" className={hot ? s.dgTextAcc : s.dgText} style={{ fontSize: 9.5 }}>{label}</text>
+      </g>
+    )
+  }
+  return (
+    <svg viewBox="0 0 660 216" role="img" aria-label="Keys hash onto a ring owned in arcs by nodes; adding a node takes over one arc instead of reshuffling everything">
+      <circle cx={cx} cy={cy} r={r} className={s.dgLine} strokeWidth="1.2" fill="none" />
+      {/* the arc the new node takes over */}
+      <path d={`M ${cx + r * Math.cos(((-90 + 300) * Math.PI) / 180)} ${cy + r * Math.sin(((-90 + 300) * Math.PI) / 180)}
+               A ${r} ${r} 0 0 1 ${cx + r * Math.cos(((-90 + 352) * Math.PI) / 180)} ${cy + r * Math.sin(((-90 + 352) * Math.PI) / 180)}`}
+        className={s.dgAcc} strokeWidth="3" fill="none" opacity="0.85" />
+      {node(0, 'A')}
+      {node(105, 'B')}
+      {node(215, 'C')}
+      {node(300, 'D · new', true)}
+      {/* a key hashing clockwise to its owner */}
+      <circle cx={cx + r * Math.cos(((-90 + 330) * Math.PI) / 180)} cy={cy + r * Math.sin(((-90 + 330) * Math.PI) / 180)} r="3" className={s.dgAccFill} />
+      <text x="352" y="52" className={s.dgText} style={{ fontSize: 10.5 }}>a key hashes to a point on the ring and</text>
+      <text x="352" y="68" className={s.dgText} style={{ fontSize: 10.5 }}>belongs to the next node clockwise</text>
+      <text x="352" y="98" className={s.dgText} style={{ fontSize: 10.5 }}>D arriving claims only the marked arc —</text>
+      <text x="352" y="114" className={s.dgText} style={{ fontSize: 10.5 }}>~1/N of keys move; the rest stay put</text>
+      <text x="352" y="144" className={s.dgTextS}>vs hash(key) mod N: nearly every key moves</text>
+      <text x="352" y="176" className={s.dgTextS}>virtual nodes: each machine owns many small</text>
+      <text x="352" y="190" className={s.dgTextS}>arcs, smoothing load and rebalancing</text>
+    </svg>
+  )
+}
+
+/** circuit breaker — the three states and what moves between them */
+export function CircuitStates() {
+  const box = (x: number, label: string, sub: string, hot = false) => (
+    <g>
+      <rect x={x} y="70" width="150" height="46" rx="9" className={hot ? s.dgBoxHi : s.dgBox} strokeWidth="1.2" />
+      <text x={x + 75} y="90" textAnchor="middle" className={s.dgTextHi} style={{ fontSize: 11.5 }}>{label}</text>
+      <text x={x + 75} y="106" textAnchor="middle" className={s.dgTextS} style={{ fontSize: 8.5 }}>{sub}</text>
+    </g>
+  )
+  return (
+    <svg viewBox="0 0 660 190" role="img" aria-label="A circuit breaker moves from closed to open on repeated failures, to half-open after a cooldown, and back to closed on a successful probe">
+      {box(20, 'closed', 'calls flow · failures counted')}
+      {box(255, 'open', 'calls refused instantly', true)}
+      {box(490, 'half-open', 'a few probes allowed')}
+      <path d="M 170 82 C 200 70, 225 70, 255 82" className={s.dgAcc} strokeWidth="1.2" fill="none" />
+      <text x="212" y="58" textAnchor="middle" className={s.dgText} style={{ fontSize: 9.5 }}>failure rate trips</text>
+      <path d="M 405 82 C 435 70, 460 70, 490 82" className={s.dgAcc} strokeWidth="1.2" fill="none" />
+      <text x="447" y="58" textAnchor="middle" className={s.dgText} style={{ fontSize: 9.5 }}>cooldown expires</text>
+      <path d="M 492 112 C 434 148, 324 148, 262 114" className={`${s.dgLine} ${s.dgDash}`} strokeWidth="1.1" fill="none" />
+      <text x="374" y="124" textAnchor="middle" className={s.dgTextS} style={{ fontSize: 8.5 }}>probe fails → open again</text>
+      <path d="M 500 118 C 380 190, 160 182, 88 122" className={s.dgAcc} strokeWidth="1.1" fill="none" />
+      <text x="300" y="186" textAnchor="middle" className={s.dgText} style={{ fontSize: 9.5 }}>probe succeeds → closed</text>
+    </svg>
+  )
+}
+
 /** an append-only log with consumers at their own offsets */
 export function TheLog() {
   return (
