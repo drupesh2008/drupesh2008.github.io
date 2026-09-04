@@ -86,61 +86,101 @@ const tagTopics = (text) => {
   return topics.filter((t) => t.keywords.some((k) => hay.includes(k.toLowerCase()))).map((t) => t.id)
 }
 
-/* ── fetch one feed ───────────────────────────────────────────────── */
+/* ── fetching ─────────────────────────────────────────────────────── */
 
-async function pull(feed) {
+const UA =
+  'drupesh2008.github.io feed reader (+https://github.com/drupesh2008/drupesh2008.github.io)'
+
+async function get(url, accept) {
   const ctrl = new AbortController()
   const timer = setTimeout(() => ctrl.abort(), TIMEOUT_MS)
   try {
-    const res = await fetch(feed.url, {
+    const res = await fetch(url, {
       signal: ctrl.signal,
       redirect: 'follow',
-      headers: {
-        // some publishers 403 an unidentified client; say who we are and where to complain
-        'user-agent':
-          'drupesh2008.github.io feed reader (+https://github.com/drupesh2008/drupesh2008.github.io)',
-        accept: 'application/rss+xml, application/atom+xml, application/xml, text/xml, */*',
-      },
+      // some publishers 403 an unidentified client; say who we are and where to complain
+      headers: { 'user-agent': UA, accept },
     })
     if (!res.ok) throw new Error(`HTTP ${res.status}`)
-    const xml = await res.text()
-    const items = splitItems(xml)
-    if (!items.length) throw new Error('no items parsed')
-
-    const cutoff = Date.now() - MAX_AGE_DAYS * 864e5
-    const posts = []
-    for (const item of items) {
-      const title = decode(tag(item, 'title'))
-      const url = linkOf(item)
-      if (!title || !url || !/^https?:/i.test(url)) continue
-
-      const published = dateOf(item)
-      if (published && new Date(published).valueOf() < cutoff) continue
-
-      const rawExcerpt =
-        tag(item, 'description') || tag(item, 'summary') || tag(item, 'content:encoded') || tag(item, 'content')
-      let excerpt = decode(rawExcerpt)
-      if (excerpt.length > 280) excerpt = `${excerpt.slice(0, 277).trimEnd()}…`
-
-      posts.push({
-        id: `${feed.slug}:${url}`,
-        title,
-        url,
-        company: feed.company,
-        slug: feed.slug,
-        sector: feed.sector,
-        published: published || new Date().toISOString(),
-        excerpt,
-        topics: tagTopics(`${title} ${excerpt}`),
-      })
-    }
-    posts.sort((a, b) => b.published.localeCompare(a.published))
-    return { ok: true, posts: posts.slice(0, PER_FEED) }
-  } catch (err) {
-    return { ok: false, reason: err?.message || String(err) }
+    return await res.text()
   } finally {
     clearTimeout(timer)
   }
+}
+
+/**
+ * Feed URLs move. Rather than hard-coding a guess, ask the blog itself: nearly
+ * every one advertises its feed in <head> as
+ *   <link rel="alternate" type="application/rss+xml" href="...">
+ * so on failure we read the site page and take the first feed it declares.
+ */
+async function discover(siteUrl) {
+  const html = await get(siteUrl, 'text/html,application/xhtml+xml,*/*')
+  const links = html.match(/<link\b[^>]*>/gi) ?? []
+  for (const tag of links) {
+    if (!/rel=["']?alternate/i.test(tag)) continue
+    if (!/type=["']?application\/(rss|atom)\+xml/i.test(tag)) continue
+    const href = tag.match(/href=["']([^"']+)["']/i)?.[1]
+    if (href) return new URL(href, siteUrl).toString()
+  }
+  return null
+}
+
+async function readFeed(url) {
+  const xml = await get(url, 'application/rss+xml, application/atom+xml, application/xml, text/xml, */*')
+  const items = splitItems(xml)
+  if (!items.length) throw new Error('no items parsed')
+  return items
+}
+
+async function pull(feed) {
+  let items
+  let via = feed.url
+  try {
+    items = await readFeed(feed.url)
+  } catch (first) {
+    // the configured URL is stale or blocked — ask the site where its feed is
+    try {
+      const found = await discover(feed.site)
+      if (!found || found === feed.url) throw first
+      items = await readFeed(found)
+      via = found
+      process.stdout.write(`  note  ${feed.slug.padEnd(14)} recovered via ${found}\n`)
+    } catch {
+      return { ok: false, reason: first?.message || String(first) }
+    }
+  }
+
+  const cutoff = Date.now() - MAX_AGE_DAYS * 864e5
+  const posts = []
+  for (const item of items) {
+    const title = decode(tag(item, 'title'))
+    const url = linkOf(item)
+    if (!title || !url || !/^https?:/i.test(url)) continue
+
+    const published = dateOf(item)
+    if (published && new Date(published).valueOf() < cutoff) continue
+
+    const rawExcerpt =
+      tag(item, 'description') || tag(item, 'summary') || tag(item, 'content:encoded') || tag(item, 'content')
+    let excerpt = decode(rawExcerpt)
+    if (excerpt.length > 280) excerpt = `${excerpt.slice(0, 277).trimEnd()}…`
+
+    posts.push({
+      id: `${feed.slug}:${url}`,
+      title,
+      url,
+      company: feed.company,
+      slug: feed.slug,
+      sector: feed.sector,
+      published: published || new Date().toISOString(),
+      excerpt,
+      topics: tagTopics(`${title} ${excerpt}`),
+    })
+  }
+
+  posts.sort((a, b) => b.published.localeCompare(a.published))
+  return { ok: true, posts: posts.slice(0, PER_FEED), via }
 }
 
 /* ── run ──────────────────────────────────────────────────────────── */
@@ -155,6 +195,7 @@ for (const p of previous.posts ?? []) {
 const ok = []
 const failed = []
 const collected = []
+const moved = [] // feeds that only worked after discovery — worth writing back into feeds.json
 
 // modest concurrency — enough to be quick, polite enough not to look like a scrape
 const QUEUE = [...feeds]
@@ -164,6 +205,7 @@ async function worker() {
     const r = await pull(feed)
     if (r.ok) {
       ok.push(feed.slug)
+      if (r.via !== feed.url) moved.push({ slug: feed.slug, from: feed.url, to: r.via })
       collected.push(...r.posts)
       process.stdout.write(`  ok    ${feed.slug.padEnd(14)} ${r.posts.length} posts\n`)
     } else {
@@ -192,6 +234,10 @@ fs.writeFileSync(OUT, `${JSON.stringify(index)}\n`)
 console.log(
   `\n${posts.length} posts from ${ok.length}/${feeds.length} feeds → ${path.relative(ROOT, OUT)}`
 )
+if (moved.length) {
+  console.log(`\n${moved.length} feed(s) were found at a new URL — update src/data/feeds.json:`)
+  for (const m of moved) console.log(`  ${m.slug}: ${m.from}\n     -> ${m.to}`)
+}
 if (failed.length) {
   console.log(`\n${failed.length} feed(s) need attention:`)
   for (const f of failed) console.log(`  ${f.slug}: ${f.reason}`)
