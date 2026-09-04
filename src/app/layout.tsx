@@ -48,6 +48,13 @@ export default function RootLayout({
       className={`${inter.variable} ${jetbrainsMono.variable} ${spaceGrotesk.variable} ${instrumentSerif.variable}`}
     >
       <head>
+        {/* Set the theme before first paint so a stored choice never flashes.
+            The dark pages read [data-theme]; /about stays light regardless. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){var t='dark';try{var s=localStorage.getItem('theme');if(s==='light'||s==='dark')t=s}catch(e){}document.documentElement.dataset.theme=t})()`,
+          }}
+        />
         {GA_TRACKING_ID && (
           <>
             <Script

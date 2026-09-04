@@ -11,6 +11,8 @@
 
 import { useMemo, useState } from 'react'
 import Link from 'next/link'
+import { accVars } from '@/data/accents'
+import ThemeToggle from '@/components/ThemeToggle'
 import {
   TRACKS,
   TYPE_LABEL,
@@ -73,6 +75,7 @@ export default function LearningHub() {
           <div className={styles.topLinks}>
             <Link href="/tech-blogs">Tech blogs</Link>
             <Link href="/about">About</Link>
+            <ThemeToggle />
           </div>
         </div>
 
@@ -109,11 +112,11 @@ export default function LearningHub() {
               <button
                 key={t.id}
                 type="button"
-                className={`${styles.chip} ${track === t.id ? styles.on : ''}`}
-                style={track === t.id ? { color: t.hex } : undefined}
+                className={`${styles.chip} ${styles.chipTinted} ${track === t.id ? styles.on : ''}`}
+                style={accVars(t.hex)}
                 onClick={() => setTrack(track === t.id ? null : t.id)}
               >
-                <span className={styles.chipDot} style={{ background: t.hex }} />
+                <span className={styles.chipDot} />
                 {t.title}
               </button>
             ))}
@@ -171,13 +174,14 @@ export default function LearningHub() {
           <section className={styles.track} key={t.id} id={t.id}>
             <div className={styles.trackHead}>
               <div className={styles.trackTitleRow}>
-                <span className={styles.trackDot} style={{ background: t.hex }} />
+                <span className={styles.trackDot} style={accVars(t.hex)} />
                 <h2 className={styles.trackTitle}>{t.title}</h2>
                 <span className={styles.trackTagline}>{t.tagline}</span>
               </div>
               {!filtering && <p className={styles.trackBlurb}>{t.blurb}</p>}
             </div>
 
+            <div className={styles.modules}>
             {t.modules.map((m) => (
               <article className={styles.module} key={m.id} id={m.id}>
                 <div className={styles.modHead}>
@@ -191,7 +195,7 @@ export default function LearningHub() {
                     const Inner = (
                       <>
                         <div className={styles.resTop}>
-                          <span className={styles.resType} style={{ background: t.hex }}>
+                          <span className={styles.resType} style={accVars(t.hex)}>
                             {TYPE_LABEL[r.type]}
                           </span>
                           <span className={styles.resTitle}>{r.title}</span>
@@ -221,6 +225,7 @@ export default function LearningHub() {
                 </ul>
               </article>
             ))}
+            </div>
           </section>
         ))}
 
