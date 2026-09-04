@@ -105,6 +105,8 @@
 }
 .opt:hover { color: var(--chalk); }
 .opt.on { color: #fff; border-color: var(--edgeHi); background: rgba(255, 255, 255, 0.06); }
+.opt:disabled { opacity: 0.38; cursor: default; }
+.opt:disabled:hover { color: var(--faint); background: none; }
 .optCount { margin-left: auto; color: var(--faint); font-size: 9.5px; font-variant-numeric: tabular-nums; padding-left: 8px; }
 .sectorLabel {
   font-family: var(--mono); font-size: 8.5px; letter-spacing: 0.16em; text-transform: uppercase;
