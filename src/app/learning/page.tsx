@@ -1,12 +1,12 @@
 import type { Metadata } from 'next'
-import LearningHub from '@/components/LearningHub'
+import PathwayHub from '@/components/PathwayHub/PathwayHub'
 
 export const metadata: Metadata = {
-  title: 'Learning — free engineering curriculum',
+  title: 'Learning — four pathways, zero to professional',
   description:
-    'A structured, free path through distributed systems, system design, data and storage, AI engineering and CS fundamentals. Curated links to resources that are already free to read. No sign-in, no paywall.',
+    'Free structured courses through computing foundations, distributed systems, system design and AI engineering — written and hosted here, with each stage linking out to the best free reading on the open web. No sign-in, no paywall.',
 }
 
 export default function LearningPage() {
-  return <LearningHub />
+  return <PathwayHub />
 }

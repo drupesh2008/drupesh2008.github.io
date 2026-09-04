@@ -1,0 +1,232 @@
+/* ══════════════════════════════════════════════════════════════════
+   A pathway — one course page under /learning.
+   Long-form reading layout: a sticky stage rail on desktop, a capped
+   prose measure, and figures drawn in the page's own tokens so the
+   diagrams re-ink themselves when the theme flips. Two exposures of
+   the same palette, like every other page here.
+   ══════════════════════════════════════════════════════════════════ */
+.root {
+  --void: #06080d;
+  --panel: #0b0f16;
+  --panel2: #0e131c;
+  --edge: #1a2130;
+  --edgeHi: #2b3547;
+  --signal: #5ee9d5;
+  --chalk: #eaeef6;
+  --bright: #ffffff;
+  --dim: #98a3b8;
+  --faint: #626d82;
+  /* the track's accent, in the exposure this theme wants */
+  --accent: var(--acc);
+
+  --serif: var(--font-serif), Georgia, "Times New Roman", serif;
+  --sans: var(--font-inter), system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  --mono: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  min-height: 100vh;
+  background: var(--void);
+  color: var(--chalk);
+  font-family: var(--sans);
+  font-weight: 300;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+:global([data-theme="light"]) .root {
+  --void: #f4f1ea;
+  --panel: #fbfaf6;
+  --panel2: #ffffff;
+  --edge: rgba(20, 20, 26, 0.12);
+  --edgeHi: rgba(20, 20, 26, 0.26);
+  --signal: #1c31c9;
+  --chalk: #16161a;
+  --bright: #0d0d10;
+  --dim: #45454d;
+  --faint: #63636d;
+  --accent: var(--accInk);
+}
+
+.root ::selection { background: rgba(94, 233, 213, 0.26); color: #fff; }
+:global([data-theme="light"]) .root ::selection { background: rgba(28, 49, 201, 0.22); color: #0d0d10; }
+.root :focus-visible { outline: 1.5px solid var(--signal); outline-offset: 2px; border-radius: 4px; }
+
+.wrap { max-width: 1240px; margin: 0 auto; padding: 0 clamp(18px, 4vw, 44px); }
+
+/* ── masthead ────────────────────────────────────────────────────── */
+.top { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 26px 0 0; }
+.back, .topLinks a {
+  font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--faint); text-decoration: none; transition: color 0.2s;
+}
+.back:hover { color: var(--chalk); }
+.topLinks { display: flex; gap: 16px; align-items: center; }
+.topLinks a:hover { color: var(--signal); }
+
+.head { padding: clamp(34px, 7vh, 60px) 0 clamp(20px, 4vh, 34px); border-bottom: 1px solid var(--edge); }
+.eyebrow {
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--accent); display: flex; align-items: center; gap: 10px; margin-bottom: 16px;
+}
+.eyebrow .bar { width: 22px; height: 1px; background: var(--edgeHi); }
+.head h1 {
+  font-family: var(--serif); font-weight: 400; font-size: clamp(36px, 6vw, 60px);
+  line-height: 1.02; letter-spacing: -0.02em; margin: 0 0 10px; color: var(--bright); text-wrap: balance;
+}
+.tagline { font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--faint); margin: 0 0 18px; }
+.head p.blurb { margin: 0; max-width: 62ch; color: var(--dim); font-size: clamp(14px, 1.5vw, 16px); line-height: 1.72; }
+.meta {
+  display: flex; gap: 20px; flex-wrap: wrap; margin-top: 20px;
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.11em; text-transform: uppercase; color: var(--faint);
+}
+.meta b { color: var(--chalk); font-weight: 500; font-variant-numeric: tabular-nums; }
+
+/* ── columns: rail + course ──────────────────────────────────────── */
+.cols { display: block; padding: clamp(26px, 4vh, 40px) 0 40px; }
+@media (min-width: 980px) {
+  .cols { display: grid; grid-template-columns: 216px minmax(0, 1fr); gap: clamp(36px, 4vw, 64px); align-items: start; }
+  .rail { position: sticky; top: 22px; }
+}
+.railCap {
+  font-family: var(--mono); font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--faint); margin-bottom: 10px; display: flex; align-items: center; gap: 9px;
+}
+.railBar { width: 18px; height: 1px; background: var(--edgeHi); }
+.railList { list-style: none; margin: 0 0 20px; padding: 0; counter-reset: stage; }
+/* on small screens the rail is a compact numbered overview above the course */
+.railList li { border-bottom: 1px solid var(--edge); }
+.railList a {
+  display: flex; gap: 10px; align-items: baseline; padding: 8px 2px; text-decoration: none;
+  color: var(--dim); font-size: 13px; transition: color 0.18s;
+}
+.railList a:hover { color: var(--bright); }
+.railNo { font-family: var(--mono); font-size: 9.5px; color: var(--faint); font-variant-numeric: tabular-nums; flex: none; }
+.railFoot { font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--faint); line-height: 2; }
+.railFoot a { color: var(--dim); text-decoration: none; }
+.railFoot a:hover { color: var(--signal); }
+
+/* ── a stage ─────────────────────────────────────────────────────── */
+.stage { padding: clamp(30px, 5vh, 48px) 0; border-bottom: 1px solid var(--edge); scroll-margin-top: 20px; }
+.stage:first-child { padding-top: 6px; }
+.stageNo {
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 10px;
+}
+.stage h2 {
+  font-family: var(--serif); font-weight: 400; font-size: clamp(26px, 3.6vw, 36px);
+  line-height: 1.08; letter-spacing: -0.015em; margin: 0 0 10px; color: var(--bright); text-wrap: balance;
+}
+.lede { margin: 0 0 22px; color: var(--dim); font-size: 15px; line-height: 1.65; font-style: italic; max-width: 58ch; }
+
+/* ── prose ───────────────────────────────────────────────────────── */
+.prose { max-width: 68ch; }
+.prose p { margin: 0 0 16px; color: var(--dim); font-size: 15px; line-height: 1.78; }
+.prose p:last-child { margin-bottom: 0; }
+.prose strong { color: var(--chalk); font-weight: 500; }
+.prose em { color: var(--chalk); }
+.prose code {
+  font-family: var(--mono); font-size: 0.85em; color: var(--chalk);
+  background: var(--panel); border: 1px solid var(--edge); border-radius: 5px; padding: 1px 5px;
+}
+.prose ul { margin: 0 0 16px; padding-left: 18px; color: var(--dim); font-size: 15px; line-height: 1.75; }
+.prose li { margin-bottom: 6px; }
+.prose li::marker { color: var(--accent); }
+
+/* a boxed aside for the one idea the stage stands on */
+.callout {
+  border: 1px solid var(--edge); border-left: 2px solid var(--accent); border-radius: 0 12px 12px 0;
+  background: var(--panel); padding: 14px 18px; margin: 22px 0;
+  max-width: 68ch;
+}
+.calloutCap {
+  font-family: var(--mono); font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 6px;
+}
+.callout p { margin: 0; color: var(--chalk); font-size: 14px; line-height: 1.7; }
+
+/* ── figures ─────────────────────────────────────────────────────── */
+.fig { margin: 26px 0; max-width: 760px; }
+.figArt {
+  border: 1px solid var(--edge); border-radius: 14px; background: var(--panel);
+  padding: clamp(14px, 2.4vw, 24px); overflow-x: auto;
+}
+.figArt svg { display: block; width: 100%; height: auto; min-width: 520px; font-family: var(--mono); }
+.fig figcaption {
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--faint); margin-top: 10px; line-height: 1.8;
+}
+
+/* diagram vocabulary — every drawing uses only these, so both themes work */
+.dgBox { fill: var(--panel2); stroke: var(--edge); }
+.dgBoxHi { fill: var(--panel2); stroke: var(--accent); }
+.dgLine { stroke: var(--edgeHi); fill: none; }
+.dgAcc { stroke: var(--accent); fill: none; }
+.dgAccFill { fill: var(--accent); stroke: none; }
+.dgInkFill { fill: var(--chalk); stroke: none; }
+.dgFaintFill { fill: var(--faint); stroke: none; }
+.dgText { fill: var(--dim); font-size: 11.5px; letter-spacing: 0.04em; }
+.dgTextS { fill: var(--faint); font-size: 9.5px; letter-spacing: 0.12em; text-transform: uppercase; }
+.dgTextHi { fill: var(--bright); font-size: 12px; letter-spacing: 0.03em; }
+.dgTextAcc { fill: var(--accent); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; }
+.dgDash { stroke-dasharray: 4 5; }
+
+/* ── the reading, per stage ──────────────────────────────────────── */
+.reading { margin-top: 26px; max-width: 760px; }
+.readingCap {
+  font-family: var(--mono); font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--faint); margin-bottom: 9px; display: flex; align-items: center; gap: 9px;
+}
+.res {
+  display: block; text-decoration: none; border-radius: 10px; padding: 11px 12px;
+  border: 1px solid transparent; transition: background 0.18s, border-color 0.18s;
+}
+.res:hover { background: var(--panel); border-color: var(--edge); }
+.resTop { display: flex; align-items: center; gap: 9px; flex-wrap: wrap; margin-bottom: 3px; }
+.resType {
+  font-family: var(--mono); font-size: 8.5px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--void); background: var(--accent); border-radius: 3px; padding: 2px 6px; flex: none;
+}
+.resTitle { color: var(--chalk); font-size: 14.5px; font-weight: 400; line-height: 1.35; }
+.res:hover .resTitle { color: var(--bright); }
+.resSource { font-family: var(--mono); font-size: 10px; letter-spacing: 0.06em; color: var(--faint); }
+.resNote { margin: 0; color: var(--dim); font-size: 13px; line-height: 1.6; max-width: 72ch; }
+.ext { color: var(--faint); font-size: 11px; flex: none; }
+
+/* ── the close: outcomes + next track ────────────────────────────── */
+.outcomes { padding: clamp(30px, 5vh, 48px) 0 0; }
+.outcomes h2 {
+  font-family: var(--serif); font-weight: 400; font-size: clamp(24px, 3.2vw, 32px);
+  margin: 0 0 16px; color: var(--bright);
+}
+.outcomeList { list-style: none; margin: 0 0 30px; padding: 0; max-width: 68ch; }
+.outcomeList li {
+  display: flex; gap: 12px; align-items: baseline; padding: 10px 2px;
+  border-bottom: 1px solid var(--edge); color: var(--dim); font-size: 14.5px; line-height: 1.6;
+}
+.tick { color: var(--accent); font-family: var(--mono); font-size: 12px; flex: none; }
+
+.next {
+  display: block; text-decoration: none; border: 1px solid var(--edge); border-radius: 14px;
+  background: var(--panel); padding: 18px 20px; max-width: 560px;
+  transition: border-color 0.2s, background 0.2s;
+}
+.next:hover { border-color: var(--edgeHi); background: var(--panel2); }
+.nextCap { font-family: var(--mono); font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--faint); margin-bottom: 8px; }
+.nextTitle { font-family: var(--serif); font-size: 22px; color: var(--bright); display: flex; align-items: center; gap: 12px; }
+.nextTitle .arr { transition: transform 0.25s; font-family: var(--sans); font-size: 16px; color: var(--dim); }
+.next:hover .arr { transform: translateX(5px); }
+.nextTag { font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--faint); margin-top: 6px; }
+
+/* ── footer ──────────────────────────────────────────────────────── */
+.foot {
+  border-top: 1px solid var(--edge); margin-top: clamp(40px, 7vh, 64px);
+  padding: 28px 0 70px; color: var(--faint); font-size: 12.5px; line-height: 1.75; max-width: 74ch;
+}
+.foot a { color: var(--dim); text-decoration: underline; text-underline-offset: 3px; }
+.foot a:hover { color: var(--chalk); }
+
+@media (max-width: 560px) {
+  .top { padding-top: 18px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .root *, .root *::before, .root *::after { transition-duration: 0.001ms !important; }
+}

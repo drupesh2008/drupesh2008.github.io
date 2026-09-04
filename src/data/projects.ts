@@ -13,13 +13,13 @@ export interface Project {
 export const projects: Project[] = [
   {
     id: "learning",
-    name: "Learning Hub",
+    name: "Learning Pathways",
     teaser:
-      "A free, structured curriculum through distributed systems, system design, data and AI engineering — every resource hand-picked, every link straight to its author. No sign-in, no paywall.",
+      "Four free courses from zero to professional — foundations, distributed systems, system design and AI engineering — written and hosted here, with each stage linking out to the best free reading. No sign-in, no paywall.",
     status: "Live",
     accentColor: "teal",
     href: "/learning",
-    stats: "5 tracks · 15 modules · 41 resources",
+    stats: "4 pathways · 20 stages · 43 links out",
   },
   {
     id: "tech-blogs",
