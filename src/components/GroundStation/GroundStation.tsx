@@ -63,15 +63,18 @@ void main(){
   vec3 sunDir = normalize(mix(vec3(0.35,0.30,0.86), vec3(0.84,0.17,0.16), u_dark));
   vec3 col;
 
+  vec2 cell = floor(gl_FragCoord.xy/2.0);
+  float sr = hash21(cell);
+  float star = pow(sr,330.0)*(0.70+0.30*sin(u_time*1.6+sr*90.0));
   if(u_dark > 0.5){
     col = vec3(0.005,0.007,0.013);
-    vec2 cell = floor(gl_FragCoord.xy/2.0);
-    float sr = hash21(cell);
-    col += vec3(0.85,0.90,1.0)*pow(sr,330.0)*2.4*(0.70+0.30*sin(u_time*1.6+sr*90.0));
+    col += vec3(0.85,0.90,1.0)*star*2.4;
   } else {
-    /* warm paper, gently vignetted so the globe sits IN the page */
+    /* warm paper, gently vignetted so the globe sits IN the page —
+       and the same starfield printed in ink at low opacity */
     col = vec3(0.955,0.943,0.916);
     col -= 0.05*smoothstep(0.30, 1.20, length(guv));
+    col -= vec3(0.62,0.58,0.50)*star*0.75;
   }
 
   float b=dot(ro,rd), c=dot(ro,ro)-1.0, h=b*b-c;
