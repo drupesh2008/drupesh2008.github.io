@@ -1,0 +1,60 @@
+{
+  "feeds": [
+    { "slug": "netflix", "company": "Netflix", "url": "https://netflixtechblog.com/feed", "site": "https://netflixtechblog.com/", "sector": "Streaming & Media" },
+    { "slug": "spotify", "company": "Spotify", "url": "https://engineering.atspotify.com/feed/", "site": "https://engineering.atspotify.com/", "sector": "Streaming & Media" },
+    { "slug": "discord", "company": "Discord", "url": "https://discord.com/blog/rss.xml", "site": "https://discord.com/blog", "sector": "Streaming & Media" },
+
+    { "slug": "stripe", "company": "Stripe", "url": "https://stripe.com/blog/feed.rss", "site": "https://stripe.com/blog", "sector": "Fintech" },
+    { "slug": "monzo", "company": "Monzo", "url": "https://monzo.com/blog/technology/rss", "site": "https://monzo.com/blog/technology", "sector": "Fintech" },
+    { "slug": "wise", "company": "Wise", "url": "https://medium.com/feed/wise-engineering", "site": "https://medium.com/wise-engineering", "sector": "Fintech" },
+
+    { "slug": "uber", "company": "Uber", "url": "https://www.uber.com/blog/engineering/rss/", "site": "https://www.uber.com/blog/engineering/", "sector": "Marketplace" },
+    { "slug": "airbnb", "company": "Airbnb", "url": "https://medium.com/feed/airbnb-engineering", "site": "https://medium.com/airbnb-engineering", "sector": "Marketplace" },
+    { "slug": "lyft", "company": "Lyft", "url": "https://eng.lyft.com/feed", "site": "https://eng.lyft.com/", "sector": "Marketplace" },
+    { "slug": "doordash", "company": "DoorDash", "url": "https://careersatdoordash.com/engineering-blog/feed/", "site": "https://careersatdoordash.com/engineering-blog/", "sector": "Marketplace" },
+    { "slug": "instacart", "company": "Instacart", "url": "https://tech.instacart.com/feed", "site": "https://tech.instacart.com/", "sector": "Marketplace" },
+    { "slug": "grab", "company": "Grab", "url": "https://engineering.grab.com/feed.xml", "site": "https://engineering.grab.com/", "sector": "Marketplace" },
+    { "slug": "zalando", "company": "Zalando", "url": "https://engineering.zalando.com/feed.xml", "site": "https://engineering.zalando.com/", "sector": "Marketplace" },
+
+    { "slug": "meta", "company": "Meta", "url": "https://engineering.fb.com/feed/", "site": "https://engineering.fb.com/", "sector": "Social" },
+    { "slug": "linkedin", "company": "LinkedIn", "url": "https://engineering.linkedin.com/blog.rss.html", "site": "https://engineering.linkedin.com/blog", "sector": "Social" },
+    { "slug": "pinterest", "company": "Pinterest", "url": "https://medium.com/feed/pinterest-engineering", "site": "https://medium.com/pinterest-engineering", "sector": "Social" },
+    { "slug": "slack", "company": "Slack", "url": "https://slack.engineering/feed/", "site": "https://slack.engineering/", "sector": "Social" },
+
+    { "slug": "cloudflare", "company": "Cloudflare", "url": "https://blog.cloudflare.com/rss/", "site": "https://blog.cloudflare.com/", "sector": "Infrastructure" },
+    { "slug": "aws", "company": "AWS", "url": "https://aws.amazon.com/blogs/architecture/feed/", "site": "https://aws.amazon.com/blogs/architecture/", "sector": "Infrastructure" },
+    { "slug": "dropbox", "company": "Dropbox", "url": "https://dropbox.tech/feed", "site": "https://dropbox.tech/", "sector": "Infrastructure" },
+    { "slug": "fly", "company": "Fly.io", "url": "https://fly.io/blog/feed.xml", "site": "https://fly.io/blog/", "sector": "Infrastructure" },
+    { "slug": "hashicorp", "company": "HashiCorp", "url": "https://www.hashicorp.com/blog/feed.xml", "site": "https://www.hashicorp.com/blog", "sector": "Infrastructure" },
+    { "slug": "digitalocean", "company": "DigitalOcean", "url": "https://www.digitalocean.com/blog/rss.xml", "site": "https://www.digitalocean.com/blog", "sector": "Infrastructure" },
+
+    { "slug": "github", "company": "GitHub", "url": "https://github.blog/engineering/feed/", "site": "https://github.blog/engineering/", "sector": "Developer Tools" },
+    { "slug": "vercel", "company": "Vercel", "url": "https://vercel.com/atom", "site": "https://vercel.com/blog", "sector": "Developer Tools" },
+    { "slug": "sentry", "company": "Sentry", "url": "https://blog.sentry.io/feed.xml", "site": "https://blog.sentry.io/", "sector": "Developer Tools" },
+    { "slug": "gitlab", "company": "GitLab", "url": "https://about.gitlab.com/atom.xml", "site": "https://about.gitlab.com/blog/", "sector": "Developer Tools" },
+    { "slug": "jetbrains", "company": "JetBrains", "url": "https://blog.jetbrains.com/feed/", "site": "https://blog.jetbrains.com/", "sector": "Developer Tools" },
+
+    { "slug": "databricks", "company": "Databricks", "url": "https://www.databricks.com/blog/feed", "site": "https://www.databricks.com/blog", "sector": "Data & AI" },
+    { "slug": "confluent", "company": "Confluent", "url": "https://www.confluent.io/blog/feed/", "site": "https://www.confluent.io/blog/", "sector": "Data & AI" },
+    { "slug": "huggingface", "company": "Hugging Face", "url": "https://huggingface.co/blog/feed.xml", "site": "https://huggingface.co/blog", "sector": "Data & AI" },
+    { "slug": "elastic", "company": "Elastic", "url": "https://www.elastic.co/blog/feed", "site": "https://www.elastic.co/blog", "sector": "Data & AI" },
+    { "slug": "planetscale", "company": "PlanetScale", "url": "https://planetscale.com/blog/rss.xml", "site": "https://planetscale.com/blog", "sector": "Data & AI" },
+    { "slug": "clickhouse", "company": "ClickHouse", "url": "https://clickhouse.com/blog/rss.xml", "site": "https://clickhouse.com/blog", "sector": "Data & AI" },
+
+    { "slug": "shopify", "company": "Shopify", "url": "https://shopify.engineering/blogs/engineering.atom", "site": "https://shopify.engineering/", "sector": "Commerce" },
+    { "slug": "etsy", "company": "Etsy", "url": "https://www.etsy.com/codeascraft/rss", "site": "https://www.etsy.com/codeascraft", "sector": "Commerce" },
+    { "slug": "booking", "company": "Booking.com", "url": "https://blog.booking.com/feed.xml", "site": "https://blog.booking.com/", "sector": "Commerce" }
+  ],
+  "topics": [
+    { "id": "distributed", "label": "Distributed Systems", "keywords": ["distributed", "consensus", "raft", "paxos", "replication", "sharding", "partition", "quorum", "consistency", "microservice"] },
+    { "id": "data", "label": "Data & Databases", "keywords": ["database", "postgres", "mysql", "kafka", "streaming", "warehouse", "etl", "pipeline", "query", "index", "olap", "analytics", "spark"] },
+    { "id": "ai", "label": "AI & ML", "keywords": ["machine learning", "llm", "inference", "embedding", "neural", "genai", "transformer", "recommendation", "ranking", "agent"] },
+    { "id": "infra", "label": "Infrastructure", "keywords": ["kubernetes", "container", "cloud", "serverless", "infrastructure", "deploy", "terraform", "scaling", "capacity", "migration", "network", "edge"] },
+    { "id": "reliability", "label": "Reliability", "keywords": ["outage", "incident", "postmortem", "reliability", "sre", "availability", "resilien", "failure", "chaos", "on-call", "monitoring", "observability"] },
+    { "id": "performance", "label": "Performance", "keywords": ["performance", "latency", "throughput", "optimiz", "optimis", "faster", "speed", "benchmark", "memory", "cache"] },
+    { "id": "security", "label": "Security", "keywords": ["security", "vulnerab", "encryption", "privacy", "attack", "exploit", "zero trust", "cve"] },
+    { "id": "frontend", "label": "Frontend", "keywords": ["frontend", "react", "javascript", "typescript", "css", "browser", "web vitals", "rendering"] },
+    { "id": "mobile", "label": "Mobile", "keywords": ["android", "ios", "mobile", "swift", "kotlin", "react native", "app size"] },
+    { "id": "culture", "label": "Practice & Culture", "keywords": ["culture", "hiring", "process", "productivity", "developer experience", "code review", "onboarding", "career"] }
+  ]
+}
