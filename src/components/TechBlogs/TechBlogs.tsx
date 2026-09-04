@@ -81,6 +81,11 @@ export default function TechBlogs() {
     return m
   }, [posts])
 
+  /* count the sources actually carrying posts, not the ones we ask for — a
+     handful sit behind a WAF or render their blog client-side, so they publish
+     no feed we can read and would otherwise be advertised as live */
+  const liveSources = perCompany.size
+
   const anyFilter = companies.length > 0 || topics.length > 0 || q.length > 0
   const reset = () => { setCompanies([]); setTopics([]); setQuery(''); setLimit(PAGE) }
 
@@ -102,13 +107,13 @@ export default function TechBlogs() {
           <div className={styles.eyebrow}><span className={styles.bar} /> Free · no sign-in · links out</div>
           <h1>Industry tech blogs</h1>
           <p>
-            The engineering writing from {FEEDS.length}+ companies, in one place, filtered by who wrote
+            The engineering writing from the teams worth reading, in one place, filtered by who wrote
             it and what it is about. Every card links <strong>straight to the original</strong> — nothing
             is republished here, and there is no reader wall between you and the author.
           </p>
           <div className={styles.meta}>
             <span><b>{posts.length}</b> posts</span>
-            <span><b>{FEEDS.length}</b> sources</span>
+            <span><b>{liveSources || FEEDS.length}</b> sources</span>
             {updated && <span>updated <b>{updated}</b></span>}
           </div>
         </header>
@@ -160,17 +165,24 @@ export default function TechBlogs() {
                   return (
                     <div key={sector} style={{ display: 'contents' }}>
                       <div className={styles.sectorLabel}>{sector}</div>
-                      {inSector.map((f) => (
-                        <button
-                          key={f.slug}
-                          type="button"
-                          className={`${styles.opt} ${companies.includes(f.slug) ? styles.on : ''}`}
-                          onClick={() => toggle(companies, setCompanies, f.slug)}
-                        >
-                          {f.company}
-                          <span className={styles.optCount}>{perCompany.get(f.slug) ?? 0}</span>
-                        </button>
-                      ))}
+                      {inSector.map((f) => {
+                        /* a source with nothing to show is still worth listing — it says we
+                           track it — but clicking it would only ever return an empty page */
+                        const n = perCompany.get(f.slug) ?? 0
+                        return (
+                          <button
+                            key={f.slug}
+                            type="button"
+                            disabled={index != null && n === 0}
+                            title={index != null && n === 0 ? `${f.company} is not publishing a readable feed right now` : undefined}
+                            className={`${styles.opt} ${companies.includes(f.slug) ? styles.on : ''}`}
+                            onClick={() => toggle(companies, setCompanies, f.slug)}
+                          >
+                            {f.company}
+                            <span className={styles.optCount}>{n}</span>
+                          </button>
+                        )
+                      })}
                     </div>
                   )
                 })}
