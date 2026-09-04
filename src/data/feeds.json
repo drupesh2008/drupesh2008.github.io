@@ -17,7 +17,7 @@
     { "slug": "zalando", "company": "Zalando", "url": "https://engineering.zalando.com/feed.xml", "site": "https://engineering.zalando.com/", "sector": "Marketplace" },
 
     { "slug": "meta", "company": "Meta", "url": "https://engineering.fb.com/feed/", "site": "https://engineering.fb.com/", "sector": "Social" },
-    { "slug": "linkedin", "company": "LinkedIn", "url": "https://engineering.linkedin.com/blog.rss.html", "site": "https://engineering.linkedin.com/blog", "sector": "Social" },
+    { "slug": "linkedin", "company": "LinkedIn", "url": "https://www.linkedin.com/blog/engineering/feed", "site": "https://www.linkedin.com/blog/engineering", "sector": "Social" },
     { "slug": "pinterest", "company": "Pinterest", "url": "https://medium.com/feed/pinterest-engineering", "site": "https://medium.com/pinterest-engineering", "sector": "Social" },
     { "slug": "slack", "company": "Slack", "url": "https://slack.engineering/feed/", "site": "https://slack.engineering/", "sector": "Social" },
 
