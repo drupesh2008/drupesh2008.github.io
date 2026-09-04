@@ -20,6 +20,8 @@ import { useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { LAND } from '@/data/land'
 import { POSTINGS } from '@/data/postings'
+import { inkOf, accVars } from '@/data/accents'
+import ThemeToggle from '@/components/ThemeToggle'
 import styles from './GroundStation.module.css'
 
 const CAM_D = 3.2
@@ -38,6 +40,7 @@ const FRAG = `
 precision highp float;
 uniform float u_time; uniform vec2 u_resolution;
 uniform float u_spin; uniform float u_focal; uniform vec2 u_center;
+uniform float u_dark;
 uniform sampler2D u_land; uniform sampler2D u_lights;
 
 const float CAM_D = ${CAM_D};
@@ -53,14 +56,23 @@ void main(){
   vec3 ro  = vec3(0.0,0.0,CAM_D);
   vec3 rd  = normalize(vec3(guv, -u_focal));
 
-  /* Sun behind and to the right, so the face we see is mostly night and the
-     continents are drawn by their own city lights. */
-  vec3 sunDir = normalize(vec3(0.84, 0.17, 0.16));
-  vec3 col = vec3(0.005,0.007,0.013);
+  /* Dark: sun behind and to the right, so the face we see is mostly night and
+     the continents are drawn by their own city lights. Light: the sun swings
+     round toward the camera and the same Earth becomes a day-lit marble on
+     paper, with the terminator pushed to the left limb. */
+  vec3 sunDir = normalize(mix(vec3(0.35,0.30,0.86), vec3(0.84,0.17,0.16), u_dark));
+  vec3 col;
 
-  vec2 cell = floor(gl_FragCoord.xy/2.0);
-  float sr = hash21(cell);
-  col += vec3(0.85,0.90,1.0)*pow(sr,330.0)*2.4*(0.70+0.30*sin(u_time*1.6+sr*90.0));
+  if(u_dark > 0.5){
+    col = vec3(0.005,0.007,0.013);
+    vec2 cell = floor(gl_FragCoord.xy/2.0);
+    float sr = hash21(cell);
+    col += vec3(0.85,0.90,1.0)*pow(sr,330.0)*2.4*(0.70+0.30*sin(u_time*1.6+sr*90.0));
+  } else {
+    /* warm paper, gently vignetted so the globe sits IN the page */
+    col = vec3(0.955,0.943,0.916);
+    col -= 0.05*smoothstep(0.30, 1.20, length(guv));
+  }
 
   float b=dot(ro,rd), c=dot(ro,ro)-1.0, h=b*b-c;
   if(h > 0.0){
@@ -78,9 +90,12 @@ void main(){
     float day   = smoothstep(-0.08, 0.36, sun);
     float night = 1.0 - day;
 
-    float grain = hash21(floor(tuv*vec2(900.0,450.0)))*0.09;
+    /* in the dark theme the day face is barely seen, so heavy grain reads as
+       texture; on the light theme's day-lit marble it reads as static — tame it */
+    float grain = hash21(floor(tuv*vec2(900.0,450.0)))*mix(0.03, 0.09, u_dark);
     vec3 ocean = mix(vec3(0.004,0.009,0.022), vec3(0.040,0.115,0.240), day);
-    vec3 crust = mix(vec3(0.011,0.014,0.018), vec3(0.120,0.138,0.114)+grain, day);
+    vec3 dayLand = mix(vec3(0.150,0.160,0.124), vec3(0.120,0.138,0.114), u_dark);
+    vec3 crust = mix(vec3(0.011,0.014,0.018), dayLand+grain, day);
     vec3 surf  = mix(ocean, crust, land);
 
     vec3 rv = reflect(rd, n);
@@ -93,15 +108,22 @@ void main(){
     surf += vec3(1.0,0.50,0.18)*exp(-abs(sun)*30.0)*0.14;
 
     float fres = pow(1.0 - max(dot(n,-rd),0.0), 3.0);
-    surf += vec3(0.30,0.55,1.0)*fres*(0.055 + 0.95*max(sun,0.0));
+    vec3 haze = mix(vec3(0.16,0.28,0.95), vec3(0.30,0.55,1.0), u_dark);
+    surf += haze*fres*(0.055 + 0.95*max(sun,0.0))*mix(0.75, 1.0, u_dark);
     col = surf;
   } else {
     float rim  = u_focal/sqrt(CAM_D*CAM_D - 1.0);
     float d    = max(length(guv) - rim, 0.0);
-    float glow = exp(-d*17.0);
     float side = smoothstep(-0.6, 0.7, guv.x*1.9 + guv.y*0.5);
-    col += vec3(0.24,0.48,0.95)*glow*(0.04 + 0.46*side);
-    col += vec3(0.55,0.72,1.00)*exp(-d*58.0)*side*0.45;
+    if(u_dark > 0.5){
+      float glow = exp(-d*17.0);
+      col += vec3(0.24,0.48,0.95)*glow*(0.04 + 0.46*side);
+      col += vec3(0.55,0.72,1.00)*exp(-d*58.0)*side*0.45;
+    } else {
+      /* on paper the atmosphere is a shadow it casts, plus a cobalt hairline */
+      col -= vec3(0.060,0.052,0.038)*exp(-d*13.0)*(0.30 + 0.55*side);
+      col += vec3(0.16,0.28,0.95)*exp(-d*58.0)*side*0.12;
+    }
   }
   col += (hash21(gl_FragCoord.xy)-0.5)/255.0;
   gl_FragColor = vec4(col,1.0);
@@ -139,6 +161,11 @@ export default function GroundStation() {
     if (!scene || !gCanvas || !oCanvas || !hud) return
 
     const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+    /* ── theme ───────────────────────────────────────────────────── */
+    let dark = document.documentElement.dataset.theme !== 'light'
+    /* the bright accents belong to the void; on paper, their ink counterparts */
+    const accent = (hex: string) => (dark ? hex : inkOf(hex))
 
     /* ── framing ─────────────────────────────────────────────────── */
     let FOCAL = 1.05
@@ -270,6 +297,7 @@ export default function GroundStation() {
             spin: gl.getUniformLocation(prog, 'u_spin'),
             focal: gl.getUniformLocation(prog, 'u_focal'),
             center: gl.getUniformLocation(prog, 'u_center'),
+            dark: gl.getUniformLocation(prog, 'u_dark'),
             land: gl.getUniformLocation(prog, 'u_land'),
             lights: gl.getUniformLocation(prog, 'u_lights'),
           }
@@ -318,16 +346,17 @@ export default function GroundStation() {
       const btns = legendRef.current?.querySelectorAll('button')
       btns?.forEach((b, j) => {
         b.classList.toggle(styles.active, j === idx)
-        b.style.color = j === idx ? POSTINGS[j].hex : ''
+        b.style.color = j === idx ? accent(POSTINGS[j].hex) : ''
       })
     }
     const fillHud = (p: (typeof POSTINGS)[number]) => {
-      if (hDotRef.current) { hDotRef.current.style.background = p.hex; hDotRef.current.style.boxShadow = `0 0 8px ${p.hex}` }
+      const hx = accent(p.hex)
+      if (hDotRef.current) { hDotRef.current.style.background = hx; hDotRef.current.style.boxShadow = `0 0 8px ${hx}` }
       if (hCoRef.current) hCoRef.current.textContent = p.company
       if (hRoleRef.current) hRoleRef.current.textContent = p.role
       if (hYrRef.current) hYrRef.current.textContent = p.years
       if (hPlaceRef.current) hPlaceRef.current.textContent = p.place
-      hud.style.borderColor = `${p.hex}4D`
+      hud.style.borderColor = `${hx}${dark ? '4D' : '66'}`
       if (stationRef.current) stationRef.current.textContent = `Ground station · ${p.place.toLowerCase()}`
     }
     const goTo = (i: number) => { idx = i; phase = ACQUIRE; pt = 0; firstRun = false; hud.classList.remove(styles.hudOn); mark() }
@@ -360,12 +389,13 @@ export default function GroundStation() {
         if (occluded(p)) return
         const { x, y } = project(p, W, H)
         ctx.beginPath(); ctx.arc(x, y, 2.2, 0, Math.PI * 2)
-        ctx.fillStyle = 'rgba(234,238,246,.9)'; ctx.fill()
+        ctx.fillStyle = dark ? 'rgba(234,238,246,.9)' : 'rgba(22,22,26,.82)'; ctx.fill()
         ctx.beginPath(); ctx.arc(x, y, 7.4, 0, Math.PI * 2)
-        ctx.strokeStyle = 'rgba(94,233,213,.20)'; ctx.lineWidth = 1; ctx.stroke()
+        ctx.strokeStyle = dark ? 'rgba(94,233,213,.20)' : 'rgba(28,49,201,.22)'; ctx.lineWidth = 1; ctx.stroke()
       })
 
       const active = POSTINGS[idx]
+      const activeHex = accent(active.hex)
       const ap = surfacePoint(active.lat, active.lon, 1.0, spin)
       const aHidden = occluded(ap)
 
@@ -393,13 +423,13 @@ export default function GroundStation() {
           const s = project(q, W, H)
           if (!started) { ctx.moveTo(s.x, s.y); started = true } else ctx.lineTo(s.x, s.y)
         }
-        ctx.strokeStyle = active.hex; ctx.globalAlpha = 0.75 * fade; ctx.stroke(); ctx.globalAlpha = 1
+        ctx.strokeStyle = activeHex; ctx.globalAlpha = 0.75 * fade; ctx.stroke(); ctx.globalAlpha = 1
 
         const hq = bez(head)
         if (!occluded(hq)) {
           const s = project(hq, W, H)
           ctx.beginPath(); ctx.arc(s.x, s.y, 2.6, 0, Math.PI * 2)
-          ctx.fillStyle = active.hex; ctx.globalAlpha = fade; ctx.fill(); ctx.globalAlpha = 1
+          ctx.fillStyle = activeHex; ctx.globalAlpha = fade; ctx.fill(); ctx.globalAlpha = 1
         }
       }
 
@@ -407,20 +437,21 @@ export default function GroundStation() {
         const wp = surfacePoint(p.lat, p.lon, 1.0, spin)
         if (occluded(wp)) return
         const s = project(wp, W, H)
+        const hx = accent(p.hex)
         const live = i === idx && (phase === OPEN || phase === HOLD)
         const pulse = 0.5 + 0.5 * Math.sin(clock * 2.0 + i * 1.6)
 
         ctx.beginPath(); ctx.arc(s.x, s.y, live ? 3.6 : 2.4, 0, Math.PI * 2)
-        ctx.fillStyle = p.hex; ctx.globalAlpha = live ? 1 : 0.65; ctx.fill(); ctx.globalAlpha = 1
+        ctx.fillStyle = hx; ctx.globalAlpha = live ? 1 : 0.65; ctx.fill(); ctx.globalAlpha = 1
 
         ctx.beginPath(); ctx.arc(s.x, s.y, (live ? 9 : 6) + pulse * (live ? 9 : 4), 0, Math.PI * 2)
-        ctx.strokeStyle = p.hex; ctx.lineWidth = 1
+        ctx.strokeStyle = hx; ctx.lineWidth = 1
         ctx.globalAlpha = (live ? 0.55 : 0.22) * (1 - pulse * 0.7); ctx.stroke(); ctx.globalAlpha = 1
 
         if (live) {
           ctx.beginPath(); ctx.arc(s.x, s.y, 15, 0, Math.PI * 2)
-          ctx.strokeStyle = p.hex; ctx.globalAlpha = 0.45; ctx.stroke(); ctx.globalAlpha = 1
-          hudAnchor = { x: s.x, y: s.y, hex: p.hex }
+          ctx.strokeStyle = hx; ctx.globalAlpha = 0.45; ctx.stroke(); ctx.globalAlpha = 1
+          hudAnchor = { x: s.x, y: s.y, hex: hx }
         }
       })
     }
@@ -492,6 +523,7 @@ export default function GroundStation() {
         gl.uniform1f(U.spin, spin)
         gl.uniform1f(U.focal, FOCAL)
         gl.uniform2f(U.center, CENTER[0], CENTER[1])
+        gl.uniform1f(U.dark, dark ? 1 : 0)
         gl.drawArrays(gl.TRIANGLES, 0, 3)
       }
       drawOverlay(clock)
@@ -510,6 +542,16 @@ export default function GroundStation() {
     const start = () => { if (!raf) { last = performance.now(); raf = requestAnimationFrame(frame) } }
     const stop = () => { if (raf) { cancelAnimationFrame(raf); raf = 0 } }
 
+    const mo = new MutationObserver(() => {
+      const d = document.documentElement.dataset.theme !== 'light'
+      if (d === dark) return
+      dark = d
+      mark()
+      if (hud.classList.contains(styles.hudOn)) fillHud(POSTINGS[idx])
+      if (!raf) requestAnimationFrame(frame)
+    })
+    mo.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
+
     const ro = new ResizeObserver(() => { size(); if (!raf) requestAnimationFrame(frame) })
     ro.observe(scene)
     const io = new IntersectionObserver(([e]) => { visible = !!(e && e.isIntersecting); if (visible) start(); else stop() }, { rootMargin: '100px' })
@@ -523,6 +565,7 @@ export default function GroundStation() {
 
     return () => {
       stop()
+      mo.disconnect()
       ro.disconnect()
       io.disconnect()
       document.removeEventListener('visibilitychange', onVis)
@@ -548,6 +591,7 @@ export default function GroundStation() {
             <Link href="/learning">Learning</Link>
             <Link href="/tech-blogs">Blogs</Link>
             <Link href="/about">About</Link>
+            <ThemeToggle />
           </nav>
         </div>
 
@@ -586,7 +630,7 @@ export default function GroundStation() {
             {POSTINGS.map((p) => (
               <li key={p.id}>
                 <button type="button" className={styles.legendBtn}>
-                  <span className={styles.sw} style={{ background: p.hex }} />
+                  <span className={styles.sw} style={accVars(p.hex)} />
                   <span>{p.company}</span>
                   <span className={styles.yr}>{p.years}</span>
                 </button>
@@ -608,7 +652,7 @@ export default function GroundStation() {
         </div>
         {POSTINGS.map((p) => (
           <div className={styles.row} key={p.id}>
-            <span className={styles.rowSw} style={{ background: p.hex }} />
+            <span className={styles.rowSw} style={accVars(p.hex)} />
             <span className={styles.rowCo}>{p.company}</span>
             <span className={styles.rowYr}>
               {p.years} · {p.place}

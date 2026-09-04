@@ -11,6 +11,7 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
+import ThemeToggle from '@/components/ThemeToggle'
 import { FEEDS, TOPICS, SECTORS, type FeedIndex, type Post } from '@/data/feeds'
 import styles from './TechBlogs.module.css'
 
@@ -100,6 +101,7 @@ export default function TechBlogs() {
           <div className={styles.topLinks}>
             <Link href="/learning">Learning</Link>
             <Link href="/about">About</Link>
+            <ThemeToggle />
           </div>
         </div>
 

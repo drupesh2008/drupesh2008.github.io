@@ -2,8 +2,9 @@
    GROUND STATION — the landing.
    The camera never moves; beacons rotate into view one after another
    and each opens an uplink with a HUD readout pinned beside it.
-   Deliberately a single dark world — every colour is painted here so
-   it never borrows the light theme the rest of the site uses.
+   Two exposures of one palette: the void by default, and — when the
+   visitor flips [data-theme] — the same warm paper /about is set in,
+   with the shader turning the Earth to face the sun.
    ══════════════════════════════════════════════════════════════════ */
 .root {
   --void: #04060b;
@@ -11,8 +12,18 @@
   --edgeHi: #2a3444;
   --signal: #5ee9d5;
   --chalk: #eaeef6;
+  --bright: #ffffff;
   --dim: #96a1b8;
   --faint: #5b6579;
+  --accentSoft: rgba(94, 233, 213, 0.06);
+
+  --sceneBg: radial-gradient(120% 90% at 62% 52%, #080c16 0%, #05070d 55%, #03040a 100%);
+  --scrimRGB: 4, 6, 11;
+  --hudBg: rgba(5, 8, 14, 0.86);
+  --hudEdge: rgba(255, 255, 255, 0.14);
+  --hudLine: rgba(255, 255, 255, 0.1);
+  --hudShadow: 0 10px 34px -14px rgba(0, 0, 0, 0.95);
+  --chipBg: rgba(6, 10, 17, 0.78);
 
   --serif: var(--font-serif), Georgia, "Times New Roman", serif;
   --sans: var(--font-inter), system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
@@ -26,7 +37,30 @@
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
+
+/* the light exposure — the /about page's paper, ink and cobalt */
+:global([data-theme="light"]) .root {
+  --void: #f4f1ea;
+  --edge: rgba(20, 20, 26, 0.12);
+  --edgeHi: rgba(20, 20, 26, 0.26);
+  --signal: #1c31c9;
+  --chalk: #16161a;
+  --bright: #0d0d10;
+  --dim: #45454d;
+  --faint: #63636d;
+  --accentSoft: rgba(28, 49, 201, 0.06);
+
+  --sceneBg: radial-gradient(120% 90% at 62% 52%, #f8f5ee 0%, #f4f1ea 55%, #ece7dc 100%);
+  --scrimRGB: 244, 241, 234;
+  --hudBg: rgba(251, 250, 246, 0.9);
+  --hudEdge: rgba(20, 20, 26, 0.16);
+  --hudLine: rgba(20, 20, 26, 0.1);
+  --hudShadow: 0 14px 34px -18px rgba(20, 20, 26, 0.35);
+  --chipBg: rgba(249, 247, 241, 0.82);
+}
+
 .root ::selection { background: rgba(94, 233, 213, 0.26); color: #fff; }
+:global([data-theme="light"]) .root ::selection { background: rgba(28, 49, 201, 0.22); color: #0d0d10; }
 .root :focus-visible { outline: 1.5px solid var(--signal); outline-offset: 3px; border-radius: 4px; }
 
 .scene {
@@ -35,7 +69,7 @@
   height: 100svh;
   min-height: 620px;
   overflow: hidden;
-  background: radial-gradient(120% 90% at 62% 52%, #080c16 0%, #05070d 55%, #03040a 100%);
+  background: var(--sceneBg);
 }
 .scene canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 .overlay { z-index: 2; }
@@ -43,8 +77,8 @@
 .scrim {
   position: absolute; inset: 0; z-index: 3; pointer-events: none;
   background: linear-gradient(96deg,
-    rgba(4, 6, 11, 0.95) 0%, rgba(4, 6, 11, 0.86) 20%,
-    rgba(4, 6, 11, 0.4) 42%, rgba(4, 6, 11, 0) 60%);
+    rgba(var(--scrimRGB), 0.95) 0%, rgba(var(--scrimRGB), 0.86) 20%,
+    rgba(var(--scrimRGB), 0.4) 42%, rgba(var(--scrimRGB), 0) 60%);
 }
 
 .corner { position: absolute; width: 13px; height: 13px; border: 1px solid var(--edgeHi); z-index: 5; opacity: 0.65; }
@@ -82,7 +116,7 @@
 @keyframes blip { 0%, 100% { opacity: 1 } 50% { opacity: 0.25 } }
 .statement h1 {
   font-family: var(--serif); font-weight: 400; font-size: clamp(42px, 6.4vw, 90px);
-  line-height: 0.94; letter-spacing: -0.018em; margin: 0 0 18px; color: #fff; text-wrap: balance;
+  line-height: 0.94; letter-spacing: -0.018em; margin: 0 0 18px; color: var(--bright); text-wrap: balance;
 }
 .statement h1 em { font-style: italic; color: var(--signal); }
 .statement p {
@@ -94,10 +128,10 @@
 .hud {
   position: absolute; z-index: 6; pointer-events: none;
   width: 186px; padding: 9px 11px 10px;
-  background: rgba(5, 8, 14, 0.86);
+  background: var(--hudBg);
   backdrop-filter: blur(11px); -webkit-backdrop-filter: blur(11px);
-  box-shadow: 0 10px 34px -14px rgba(0, 0, 0, 0.95);
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: var(--hudShadow);
+  border: 1px solid var(--hudEdge);
   opacity: 0; transition: opacity 0.34s ease; transform: translate(0, -50%);
   clip-path: polygon(0 0, calc(100% - 7px) 0, 100% 7px, 100% 100%, 7px 100%, 0 calc(100% - 7px));
 }
@@ -107,11 +141,11 @@
   color: var(--dim); margin-bottom: 5px; display: flex; align-items: center; gap: 5px;
 }
 .hdot { width: 4px; height: 4px; border-radius: 50%; flex: none; }
-.hco { font-family: var(--sans); font-weight: 500; font-size: 13px; line-height: 1.15; color: #fff; margin-bottom: 2px; }
+.hco { font-family: var(--sans); font-weight: 500; font-size: 13px; line-height: 1.15; color: var(--bright); margin-bottom: 2px; }
 .hrole { font-size: 10.5px; line-height: 1.3; color: var(--dim); margin-bottom: 5px; }
 .hmeta {
   font-family: var(--mono); font-size: 7.5px; letter-spacing: 0.1em; text-transform: uppercase;
-  color: var(--faint); border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 5px;
+  color: var(--faint); border-top: 1px solid var(--hudLine); padding-top: 5px;
   display: flex; justify-content: space-between; gap: 8px;
 }
 .hmeta b { font-weight: 400; }
@@ -129,8 +163,9 @@
   letter-spacing: 0.05em; color: var(--faint); transition: color 0.22s; text-align: left; width: 100%;
 }
 .legendBtn:hover { color: var(--chalk); }
-.sw { width: 7px; height: 7px; border-radius: 50%; flex: none; transition: box-shadow 0.25s, transform 0.25s; }
-.legendBtn.active { color: #fff; }
+.sw { width: 7px; height: 7px; border-radius: 50%; flex: none; transition: box-shadow 0.25s, transform 0.25s; background: var(--acc); }
+:global([data-theme="light"]) .sw { background: var(--accInk); }
+.legendBtn.active { color: var(--bright); }
 .legendBtn.active .sw { transform: scale(1.4); box-shadow: 0 0 12px currentColor; }
 .yr { margin-left: auto; color: var(--faint); font-size: 9.5px; padding-left: 14px; }
 
@@ -152,8 +187,8 @@
 @media (max-width: 900px) {
   .scrim {
     background: linear-gradient(0deg,
-      rgba(4, 6, 11, 0.97) 0%, rgba(4, 6, 11, 0.88) 30%,
-      rgba(4, 6, 11, 0.34) 56%, rgba(4, 6, 11, 0) 74%);
+      rgba(var(--scrimRGB), 0.97) 0%, rgba(var(--scrimRGB), 0.88) 30%,
+      rgba(var(--scrimRGB), 0.34) 56%, rgba(var(--scrimRGB), 0) 74%);
   }
   .statement {
     left: 0; right: 0; top: auto; bottom: 11vh; transform: none;
@@ -168,7 +203,7 @@
   .legendCap { display: none; }
   .legendBtn {
     width: auto; padding: 4px 10px; border: 1px solid var(--edgeHi); border-radius: 999px;
-    font-size: 9px; background: rgba(6, 10, 17, 0.78);
+    font-size: 9px; background: var(--chipBg);
     backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
   }
   .yr { display: none; }
@@ -197,7 +232,8 @@
   display: grid; grid-template-columns: 14px minmax(0, 1fr) 128px minmax(0, 1.5fr);
   gap: clamp(14px, 2.6vw, 36px); align-items: baseline; padding: 24px 0; border-bottom: 1px solid var(--edge);
 }
-.rowSw { width: 8px; height: 8px; border-radius: 50%; align-self: center; }
+.rowSw { width: 8px; height: 8px; border-radius: 50%; align-self: center; background: var(--acc); }
+:global([data-theme="light"]) .rowSw { background: var(--accInk); }
 .rowCo { font-family: var(--serif); font-size: clamp(20px, 2.6vw, 28px); line-height: 1.15; }
 .rowYr { font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; color: var(--faint); text-transform: uppercase; }
 .rowLn { color: var(--dim); font-size: 14px; line-height: 1.7; }
@@ -213,7 +249,7 @@
   font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
   color: var(--chalk); transition: border-color 0.25s, background 0.25s;
 }
-.readme:hover { border-color: var(--signal); background: rgba(94, 233, 213, 0.06); }
+.readme:hover { border-color: var(--signal); background: var(--accentSoft); }
 .colophon { max-width: 1180px; margin: 0 auto; padding: 0 clamp(22px, 4vw, 52px) 70px; font-size: 12.5px; color: var(--faint); line-height: 1.75; }
 .colophon a { color: var(--dim); text-decoration: underline; text-underline-offset: 3px; }
 .colophon a:hover { color: var(--chalk); }
