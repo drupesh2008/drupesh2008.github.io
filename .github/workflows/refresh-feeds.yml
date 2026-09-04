@@ -1,0 +1,62 @@
+name: Refresh tech blog feeds
+
+# Pulls the engineering blogs listed in src/data/feeds.json and rewrites
+# public/data/tech-blogs.json. Only titles, dates, publisher-supplied excerpts
+# and canonical links are stored — never article bodies.
+
+on:
+  schedule:
+    # four times a day, offset off the hour so we are not part of the :00 stampede
+    - cron: '17 */6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-feeds
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    outputs:
+      changed: ${{ steps.commit.outputs.changed }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Fetch feeds
+        run: node scripts/fetch-feeds.mjs
+
+      - name: Commit if the index changed
+        id: commit
+        run: |
+          if git diff --quiet -- public/data/tech-blogs.json; then
+            echo "No new posts."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/data/tech-blogs.json
+          COUNT=$(node -p "JSON.parse(require('fs').readFileSync('public/data/tech-blogs.json','utf8')).posts.length")
+          git commit -m "Refresh tech blog index (${COUNT} posts)"
+          git push
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+  # A GITHUB_TOKEN commit will not set off the push-triggered deploy, so call it.
+  deploy:
+    needs: refresh
+    if: needs.refresh.outputs.changed == 'true'
+    uses: ./.github/workflows/deploy.yml
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    secrets: inherit

@@ -5,6 +5,10 @@ on:
     branches:
       - main  # or 'master' if that's your default branch
   workflow_dispatch:
+  # Callable so the feed refresh can deploy directly. A commit pushed with the
+  # default GITHUB_TOKEN does not trigger `push` workflows, so refresh-feeds
+  # calls this job rather than relying on its own commit to set off a deploy.
+  workflow_call:
 
 permissions:
   contents: read

@@ -545,9 +545,9 @@ export default function GroundStation() {
         <div className={styles.topbar}>
           <span className={styles.mark}>D Rupesh Kumar</span>
           <nav className={styles.topnav}>
-            <Link href="/about#experience">Log</Link>
+            <Link href="/learning">Learning</Link>
+            <Link href="/tech-blogs">Blogs</Link>
             <Link href="/about">About</Link>
-            <Link href="/about#contact">Contact</Link>
           </nav>
         </div>
 
@@ -618,9 +618,17 @@ export default function GroundStation() {
         ))}
         <div className={styles.outro}>
           <p>The rest is detail. It&apos;s one page away.</p>
-          <Link className={styles.readme} href="/about">
-            Read about me <span className={styles.arr}>→</span>
-          </Link>
+          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+            <Link className={styles.readme} href="/learning">
+              Learning <span className={styles.arr}>→</span>
+            </Link>
+            <Link className={styles.readme} href="/tech-blogs">
+              Tech blogs <span className={styles.arr}>→</span>
+            </Link>
+            <Link className={styles.readme} href="/about">
+              About me <span className={styles.arr}>→</span>
+            </Link>
+          </div>
         </div>
       </section>
 

@@ -46,6 +46,9 @@ export default function SiteNav() {
               {l.label}
             </button>
           ))}
+          {/* route links, not scroll targets — these live on their own pages */}
+          <Link className={styles.link} href="/learning">Learning</Link>
+          <Link className={styles.link} href="/tech-blogs">Blogs</Link>
           <a className={styles.resume} href="/Rupesh_Resume_SSE.pdf" target="_blank" rel="noopener noreferrer">
             Résumé
           </a>
