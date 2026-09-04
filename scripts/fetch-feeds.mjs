@@ -109,12 +109,21 @@ async function get(url, accept) {
 }
 
 /**
- * Feed URLs move. Rather than hard-coding a guess, ask the blog itself: nearly
- * every one advertises its feed in <head> as
- *   <link rel="alternate" type="application/rss+xml" href="...">
- * so on failure we read the site page and take the first feed it declares.
+ * Feed URLs move — a third of this list broke within a year. Rather than
+ * hard-coding a fresh guess every time, ask the blog itself, in the same two
+ * steps a feed reader would:
+ *
+ *   1. read the site page and take the feed it advertises in <head> as
+ *      <link rel="alternate" type="application/rss+xml" href="...">
+ *   2. failing that, try the conventional paths, since almost every static
+ *      site generator publishes to one of them
+ *
+ * Only ever runs after the configured URL has already failed, and stops at the
+ * first feed that actually parses.
  */
-async function discover(siteUrl) {
+const CONVENTIONAL = ['feed', 'feed.xml', 'rss', 'rss.xml', 'atom.xml', 'index.xml', 'feed/']
+
+async function declaredIn(siteUrl) {
   const html = await get(siteUrl, 'text/html,application/xhtml+xml,*/*')
   const links = html.match(/<link\b[^>]*>/gi) ?? []
   for (const tag of links) {
@@ -124,6 +133,19 @@ async function discover(siteUrl) {
     if (href) return new URL(href, siteUrl).toString()
   }
   return null
+}
+
+/** yields candidate feed URLs, best guess first */
+async function* candidates(feed) {
+  try {
+    const declared = await declaredIn(feed.site)
+    if (declared) yield declared
+  } catch {
+    // the site page itself is unreachable; the conventional paths may still be
+  }
+  // resolve against the blog's own path, so /blog/engineering/ -> /blog/engineering/feed
+  const base = feed.site.endsWith('/') ? feed.site : `${feed.site}/`
+  for (const p of CONVENTIONAL) yield new URL(p, base).toString()
 }
 
 async function readFeed(url) {
@@ -139,16 +161,19 @@ async function pull(feed) {
   try {
     items = await readFeed(feed.url)
   } catch (first) {
-    // the configured URL is stale or blocked — ask the site where its feed is
-    try {
-      const found = await discover(feed.site)
-      if (!found || found === feed.url) throw first
-      items = await readFeed(found)
-      via = found
-      process.stdout.write(`  note  ${feed.slug.padEnd(14)} recovered via ${found}\n`)
-    } catch {
-      return { ok: false, reason: first?.message || String(first) }
+    // the configured URL is stale or blocked — go and find where the feed moved to
+    for await (const candidate of candidates(feed)) {
+      if (candidate === feed.url) continue
+      try {
+        items = await readFeed(candidate)
+        via = candidate
+        process.stdout.write(`  note  ${feed.slug.padEnd(14)} recovered via ${candidate}\n`)
+        break
+      } catch {
+        /* try the next candidate */
+      }
     }
+    if (!items) return { ok: false, reason: first?.message || String(first) }
   }
 
   const cutoff = Date.now() - MAX_AGE_DAYS * 864e5
