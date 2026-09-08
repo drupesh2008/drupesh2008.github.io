@@ -19,7 +19,7 @@ export const projects: Project[] = [
     status: "Live",
     accentColor: "teal",
     href: "/learning",
-    stats: "4 pathways · 48 stages mapped · 23 written",
+    stats: "4 pathways · 56 stages mapped · 95 links out",
   },
   {
     id: "tech-blogs",
