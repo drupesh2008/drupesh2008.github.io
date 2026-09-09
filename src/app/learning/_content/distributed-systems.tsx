@@ -1,18 +1,14 @@
-import type { Metadata } from 'next'
-import Pathway, { Callout, Fig, Tbl } from '@/components/Pathway/Pathway'
-import { TimeoutAmbiguity, QuorumOverlap, ReplicatedLog } from './diagrams'
+/**
+ * The written chapters of the distributed-systems pathway, keyed by stage id.
+ * Rendered one per page by StageView; a stage listed in the data but
+ * missing here fails the static build.
+ */
+import type { ReactNode } from 'react'
+import { Callout, Fig, Tbl } from '@/components/Pathway/Pathway'
+import {TimeoutAmbiguity, QuorumOverlap, ReplicatedLog} from './distributed-systems-diagrams'
 
-export const metadata: Metadata = {
-  title: 'Distributed Systems — a free pathway from zero to professional',
-  description:
-    'Partial failure, time and order, replication, consistency and consensus — a comprehensive free course written for this site, with the canonical papers and lectures linked at every stage.',
-}
+export const sections: Record<string, ReactNode> = {
 
-export default function DistributedSystemsPage() {
-  return (
-    <Pathway
-      trackId="distributed-systems"
-      sections={{
         /* ── Stage 1 ─────────────────────────────────────────────── */
         'partial-failure': (
           <>
@@ -455,7 +451,329 @@ export default function DistributedSystemsPage() {
             </p>
           </>
         ),
-      }}
-    />
-  )
+
+        /* ── Talking between machines ────────────────────────────── */
+        rpc: (
+          <>
+            <p>
+              Before the deep theory, the plumbing: one service calling another. The industry’s
+              recurring mistake here is thirty years old and still shipping — making a remote call{' '}
+              <em>look</em> like a local function call. The 1994 paper in this chapter’s reading
+              demolished the idea for good: a remote call can fail partially, takes ten million
+              times longer, and can succeed invisibly. An API that hides those facts does not
+              remove them; it removes your handling of them.
+            </p>
+
+            <h3>Serialisation and the evolution problem</h3>
+            <p>
+              Bytes on the wire need an agreed shape. JSON is self-describing, human-readable and
+              verbose; binary formats like <strong>Protobuf</strong> and Avro are compact, fast,
+              and schema-first. The schema is the real prize — not the bytes saved, but the{' '}
+              <strong>evolution rules</strong>: numbered fields, unknown fields preserved, and a
+              written definition of what a reader must tolerate. Because here is the deployment
+              fact of life: you can never update every service at once, so <em>old readers meet
+              new messages and new readers meet old messages, every single deploy</em>. The rules
+              that keep that safe fit on a card: add fields as optional, never reuse a removed
+              field’s number or name, never change a field’s type in place, and widen only in ways
+              old code ignores gracefully. Breaking any of them is a distributed outage with a
+              one-deploy fuse.
+            </p>
+
+            <h3>Contracts, discovery, connections</h3>
+            <p>
+              gRPC-style stacks package the good defaults: a schema-defined contract, streaming,
+              and — the underrated one — <strong>deadlines that travel</strong>. A caller with 200
+              ms left tells the callee, which tells <em>its</em> callee, so work abandoned upstream
+              is cancelled downstream instead of completing uselessly (remember the retry-storm
+              spiral in System Design — deadline propagation is its vaccine). Finding the callee at
+              all is <strong>service discovery</strong>: addresses change constantly under
+              autoscaling, so callers resolve a logical name against a registry kept fresh by
+              health checks — DNS at its simplest, a dedicated registry once churn is real. And
+              between any two services, keep <strong>connection pools</strong> warm: the Foundations
+              handshake tax, amortised.
+            </p>
+
+            <h3>Where it bites</h3>
+            <ul>
+              <li>An interface “cleanup” that renumbers Protobuf fields — old readers now parse new messages as garbage, silently.</li>
+              <li>Deadlines set only at the edge: inner services finish work nobody is waiting for, and the queue grows.</li>
+              <li>Retrying a non-idempotent RPC because the client library made it one flag.</li>
+              <li>Treating discovery staleness as impossible — callers holding dead addresses for minutes after a scale-down.</li>
+            </ul>
+            <Callout>
+              A remote call is a message that might not arrive, to a machine that might not answer,
+              about work that might already be done. Good RPC stacks make that legible — contracts,
+              deadlines, explicit retries — rather than pretending it away.
+            </Callout>
+          </>
+        ),
+
+        /* ── Broadcast, gossip and ordering guarantees ────────────── */
+        broadcast: (
+          <>
+            <p>
+              Between “send one message” and “agree on everything” sits a family of primitives that
+              real systems lean on constantly and name rarely. This chapter names them — because
+              once you can say precisely what delivery guarantee a component needs, half of its
+              design argument is over.
+            </p>
+
+            <h3>The guarantee ladder</h3>
+            <Tbl>
+              <table>
+                <thead>
+                  <tr><th>Broadcast</th><th>Every correct node gets…</th><th>Order promise</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>Best-effort</td><td>the message, maybe</td><td>none</td></tr>
+                  <tr><td>Reliable</td><td>the message, definitely (retransmit/relay)</td><td>none</td></tr>
+                  <tr><td>FIFO</td><td>each sender’s messages in that sender’s order</td><td>per sender</td></tr>
+                  <tr><td>Causal</td><td>anything that happened-before a message, first</td><td>respects causality (Lamport, applied)</td></tr>
+                  <tr><td>Total order</td><td>every message, in one agreed sequence</td><td>identical everywhere</td></tr>
+                </tbody>
+              </table>
+            </Tbl>
+            <p>
+              Each rung costs more coordination than the one below, so the skill is buying the
+              cheapest sufficient rung. A metrics fan-out is happy with reliable. A chat room wants
+              causal — the reply must not arrive before the question. Replicated state machines
+              need total order — and here is the punchline this chapter exists for:{' '}
+              <strong>total order broadcast and consensus are the same problem</strong>. If every
+              node delivers the same messages in the same order, you have agreed on a sequence;
+              that is exactly what Raft’s log does. The next chapter is this rung, taken seriously.
+            </p>
+
+            <h3>Gossip — the anti-broadcast</h3>
+            <p>
+              For data that tolerates lag — membership, load hints, configuration — flooding
+              everyone reliably is overkill. <strong>Gossip</strong> spreads it the way rumours
+              spread: each node periodically tells a few random peers what it knows; infected
+              nodes infect others. Convergence is O(log n) rounds, no coordinator, no hot spot,
+              and node failures barely dent it — which is why Dynamo runs membership on gossip and
+              Cassandra still does. The price is the name: eventual, probabilistic, and briefly
+              inconsistent — never put an invariant on it. Its quieter siblings do repair work:{' '}
+              <strong>anti-entropy</strong> (periodically diff replicas — Merkle trees make the
+              diff cheap — and heal), and <strong>read repair</strong> (notice divergence while
+              answering a read, fix it in passing).
+            </p>
+
+            <h3>Where it bites</h3>
+            <ul>
+              <li>Buying total order for telemetry — paying consensus prices where reliable would do.</li>
+              <li>Assuming FIFO across senders: two producers’ messages interleave arbitrarily unless something orders them.</li>
+              <li>Gossip as a source of truth: it is a weather report, not a ledger.</li>
+              <li>Skipping the hands-on: the linked Gossip Glomers challenges turn this whole chapter from vocabulary into muscle memory in a weekend.</li>
+            </ul>
+            <Callout>
+              Name the rung. “This component needs causal delivery; that one is fine with gossip”
+              is a design review in two sentences — and mispricing the rung is how systems end up
+              either flaky or needlessly slow.
+            </Callout>
+          </>
+        ),
+
+        /* ── Membership, failure detection and coordination ───────── */
+        coordination: (
+          <>
+            <p>
+              Consensus gave you a kernel of perfect agreement. This chapter is the machinery that
+              rations it: deciding who is alive, who leads, and who holds which lock — using the
+              expensive kernel as rarely as possible.
+            </p>
+
+            <h3>Deciding who is alive (you can’t, so decide anyway)</h3>
+            <p>
+              Chapter one proved a slow node and a dead node are indistinguishable from outside, so
+              every “failure detector” is really a <em>suspicion policy</em>. Simple heartbeats
+              with a fixed timeout misfire in both directions — too short flags GC pauses as
+              deaths, too long leaves ghosts serving traffic. Better detectors adapt:{' '}
+              <strong>phi-accrual</strong> tracks the arrival-time distribution and emits a
+              continuous suspicion level, so the threshold tunes itself to network reality. At
+              cluster scale, everyone-pings-everyone melts; <strong>SWIM</strong> (this chapter’s
+              paper) fixes it with two tricks — ping a random member each round, and on silence ask
+              k others to ping the suspect for you (routing around a bad link), then piggyback the
+              verdicts on the pings themselves. Membership costs O(1) per node per round, and the
+              design carries Consul and friends today.
+            </p>
+
+            <h3>The coordination service pattern</h3>
+            <p>
+              Rather than every application implementing Raft, one small replicated service —
+              ZooKeeper, etcd, Consul — exposes the agreement kernel as a tiny filesystem with
+              versions and <strong>watches</strong>. The classic recipes are one page each: a{' '}
+              <strong>lock</strong> is an ephemeral node that vanishes if your session dies (no
+              orphaned locks); an <strong>election</strong> is “lowest sequence number wins, watch
+              the one ahead of you” (no thundering herd); <strong>config</strong> is a watched key
+              every instance reacts to. The ZooKeeper paper’s lasting insight is the split: the
+              service orders only the small coordination writes; the bulk data path never touches
+              it.
+            </p>
+
+            <h3>Leases and fencing, revisited where they live</h3>
+            <p>
+              Every grant of authority from such a service is a <strong>lease</strong> — leadership
+              for 10 seconds, renewable — because a grant without expiry plus a dead grantee equals
+              a stuck system. And every lease needs the <strong>fencing token</strong> from the
+              consensus chapter: the pause-and-resume zombie leader is not a hypothetical, it is
+              the canonical outage of this architecture. Downstream systems reject stale tokens;
+              authority you cannot fence is authority you do not have. Say it in reviews until it
+              is boring.
+            </p>
+
+            <h3>Where it bites</h3>
+            <ul>
+              <li>One timeout constant for “dead” across LAN, WAN and a GC-heavy runtime — adaptive detectors exist because this fails.</li>
+              <li>Coordination service on the data path — it orders metadata; route bulk traffic elsewhere or watch it melt.</li>
+              <li>Locks without sessions/ephemerality: the crashed client that owns a lock forever.</li>
+              <li>Deleting the coordination you could have designed out — a partitioned keyspace where each node owns its keys needs no distributed locks at all; the best chapter here is the one you didn’t need.</li>
+            </ul>
+            <Callout>
+              Alive is a suspicion, leadership is a lease, and a lease is only as good as its
+              fencing. The coordination service exists so those three sentences are implemented
+              once, correctly, and rationed.
+            </Callout>
+          </>
+        ),
+
+        /* ── Distributed transactions ─────────────────────────────── */
+        txns: (
+          <>
+            <p>
+              System Design’s writes chapter ended at a cliff edge: one database’s transaction
+              protects one database, and the interesting workflows span three. This chapter is the
+              cliff itself — what atomic commitment across systems really costs, the two serious
+              ways to pay, and the honest alternative most products should choose.
+            </p>
+
+            <h3>Two-phase commit, properly</h3>
+            <p>
+              The protocol is the obvious one, done carefully. <strong>Prepare</strong>: the
+              coordinator asks every participant to get the transaction durable-but-uncommitted and
+              vote; a yes vote is a binding promise — the participant logs it and holds its locks.{' '}
+              <strong>Commit</strong>: unanimous yes → coordinator logs the decision (this log
+              write <em>is</em> the commit) and broadcasts it. The flaw is structural, not an
+              implementation bug: between voting yes and hearing the outcome, a participant is{' '}
+              <strong>in doubt</strong> — it cannot commit, cannot abort, cannot release locks. If
+              the coordinator dies there, participants block, locks pile up, and throughput
+              collapses outward. 2PC converts one node’s failure into everyone’s wait, which is
+              exactly the disease this pathway keeps diagnosing.
+            </p>
+
+            <h3>Making it survivable — the modern moves</h3>
+            <p>
+              The blocking window is a coordinator-availability problem, so both serious fixes
+              attack that. <strong>Spanner’s move</strong>: make every participant and the
+              coordinator a Raft/Paxos <em>group</em> rather than a machine — the coordinator
+              cannot “die” short of losing a majority, so 2PC-over-consensus keeps atomicity and
+              sheds the classic blocking. <strong>Percolator’s move</strong> (this chapter’s
+              paper): no coordinator process at all. Writes go in as locks against a primary row;
+              commit is a <em>single atomic write</em> that flips the primary’s lock to a commit
+              record; every other row’s fate is derived lazily by readers who chase the primary.
+              The commit point moved into the data, so any survivor can finish or roll back an
+              orphaned transaction. Two different budgets, one shared lesson: atomic commitment is
+              exactly as available as its commit record.
+            </p>
+
+            <h3>The honest alternative, and how to choose</h3>
+            <p>
+              Sagas — local transactions plus compensations, driven through the outbox machinery —
+              trade isolation for availability and were covered on the System Design side. The
+              choice between the worlds is not taste; it is one question: <em>can the intermediate
+              state be made honest?</em> “Payment pending” is an honest state a user can see;
+              “seat half-sold to two people” is not. Where every in-between state can be named and
+              survived, take sagas and keep your availability. Where the invariant is truly
+              atomic — ledger balancing, inventory that must never double-sell — pay for real
+              atomic commitment over replicated participants, and keep the transaction as small
+              and short as it can possibly be: fewer participants, fewer locks, less doubt.
+            </p>
+
+            <h3>Where it bites</h3>
+            <ul>
+              <li>2PC across services on the request path, coordinator on one box — the textbook outage, still regularly shipped.</li>
+              <li>Sagas without designed compensations — an undo path invented during the incident is not an undo path.</li>
+              <li>Mixing regimes accidentally: half the workflow atomic, half eventual, and no one able to state the invariant that survives.</li>
+              <li>Forgetting the dedup window: “exactly-once” across systems is at-least-once plus idempotency keys plus a bounded memory of them — chapter one, forever.</li>
+            </ul>
+            <Callout>
+              Atomic commitment is a purchasable good with a posted price: locks held across a
+              round trip, and availability bounded by the commit record’s. Buy it only for
+              invariants that cannot be renamed into honest intermediate states.
+            </Callout>
+          </>
+        ),
+
+        /* ── Breaking it on purpose ───────────────────────────────── */
+        testing: (
+          <>
+            <p>
+              Everything in this pathway so far is a claim: committed entries survive, the lease
+              fences, replicas converge. A distributed system you have not deliberately broken is a
+              stack of such claims awaiting their first audit — scheduled, typically, by
+              production, at night. The professional alternative is to run the audit yourself, and
+              there are four escalating ways.
+            </p>
+
+            <h3>Jepsen-style testing — the empirical audit</h3>
+            <p>
+              The method behind those database autopsies in the replication chapter is simple to
+              state: generate concurrent reads and writes from many clients; inject real faults —
+              partitions, clock skew, process kills — mid-workload; record every operation’s
+              invocation and result; then <em>check the history</em> against the claimed
+              consistency model with a linearizability checker. The last step is the innovation:
+              correctness as a property of the observed history, not of the marketing page. The
+              recurring finding across a decade of analyses: systems keep their promises in calm
+              seas and shed them during partitions and leader elections — precisely where you
+              stopped watching.
+            </p>
+
+            <h3>Deterministic simulation — the time machine</h3>
+            <p>
+              The nastiest bugs need five improbable events in one order, so waiting for them is
+              hopeless. <strong>Deterministic simulation testing</strong> runs the whole cluster in
+              one process with simulated time, network and disks, driven by a seeded RNG: now the
+              five-event catastrophe is just seed 8,412,113 — found by running millions of seeds
+              overnight, and <em>replayed exactly</em> under a debugger. FoundationDB built its
+              reputation on this, and TigerBeetle after it; the buy-in is real (all I/O behind
+              swappable interfaces, no stray nondeterminism), which is why it is an architecture
+              decision, not a test you add later.
+            </p>
+
+            <h3>Chaos engineering — the production audit</h3>
+            <p>
+              Staging cannot reproduce production’s topology, data or traffic, so the discipline in
+              this chapter’s one-page reading runs experiments where the truth lives: state a{' '}
+              <strong>hypothesis</strong> (“steady state survives one zone loss”), minimise{' '}
+              <strong>blast radius</strong> (one instance, small traffic slice, business hours,
+              hand on the abort switch), inject, observe, widen slowly. Chaos without a hypothesis
+              is vandalism; with one, it is the cheapest failover rehearsal you will ever run. The
+              fault menu worth rotating through: partitions (including <em>asymmetric</em> ones — A
+              hears B, B not A), clock jumps, slow-not-dead disks and dependencies (gray failure
+              beats clean death for damage), and the loss of exactly the coordination service the
+              last chapter made you depend on.
+            </p>
+
+            <h3>Formal specification — the audit before the code</h3>
+            <p>
+              For the protocol at your system’s heart, a <strong>TLA+</strong> specification —
+              states, transitions, invariants — lets a model checker enumerate every reachable
+              interleaving of a small instance and hand you the exact trace that violates an
+              invariant. Amazon’s teams famously caught subtle bugs in shipped designs this way,
+              some requiring thirty-plus steps to trigger — planning-poker odds of finding by
+              testing: zero. Spec the consensus usage and the commit path; skip the CRUD.
+            </p>
+
+            <h3>Where it bites</h3>
+            <ul>
+              <li>Testing only clean crashes — gray failure (slow, flaky, half-partitioned) is the production distribution.</li>
+              <li>A failover “tested” once, at launch, two years and forty deploys ago — rehearsals expire.</li>
+              <li>Chaos with no steady-state metric — you cannot see the experiment fail.</li>
+              <li>Trusting the checker’s green on a three-node, five-op model to mean the 200-node deployment is safe — the model checks the <em>protocol</em>; operations remain yours.</li>
+            </ul>
+            <Callout>
+              Every guarantee in this pathway is a hypothesis until something tries to falsify it.
+              Pick the auditor by layer — histories for stores, seeds for protocols you own, chaos
+              for production, specs for the crown jewels — and audit before your users do.
+            </Callout>
+          </>
+        ),
 }

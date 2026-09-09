@@ -1,18 +1,14 @@
-import type { Metadata } from 'next'
-import Pathway, { Callout, Fig, Tbl } from '@/components/Pathway/Pathway'
-import { LatencyLadder, LostUpdate, RoundTrips } from './diagrams'
+/**
+ * The written chapters of the foundations pathway, keyed by stage id.
+ * Rendered one per page by StageView; a stage listed in the data but
+ * missing here fails the static build.
+ */
+import type { ReactNode } from 'react'
+import { Callout, Fig, Tbl } from '@/components/Pathway/Pathway'
+import {LatencyLadder, LostUpdate, RoundTrips} from './foundations-diagrams'
 
-export const metadata: Metadata = {
-  title: 'Foundations — a free pathway from zero to professional',
-  description:
-    'How the machine actually runs your code: memory and caches, operating systems, networks, algorithmic cost and the mathematics behind ML — a comprehensive free course with curated further reading.',
-}
+export const sections: Record<string, ReactNode> = {
 
-export default function FoundationsPage() {
-  return (
-    <Pathway
-      trackId="foundations"
-      sections={{
         /* ── Stage 1 ─────────────────────────────────────────────── */
         machine: (
           <>
@@ -549,7 +545,311 @@ export default function FoundationsPage() {
             </p>
           </>
         ),
-      }}
-    />
-  )
+
+        /* ── From source code to a running process ───────────────── */
+        'how-code-runs': (
+          <>
+            <p>
+              Type <code>python app.py</code> or click Run, and something happens that most working
+              engineers never look at directly. This chapter looks at it once, properly — because
+              every debugging session, every performance question, and every security conversation
+              in this pathway stands on this floor.
+            </p>
+
+            <h3>What a CPU actually executes</h3>
+            <p>
+              A CPU understands a few hundred primitive <strong>instructions</strong>: load a value
+              from memory into a <strong>register</strong>, add two registers, compare, jump to
+              another instruction if the comparison said so. That is the entire vocabulary.
+              Everything you have ever written — classes, closures, async handlers — is eventually
+              this, executed billions of times a second in a loop the hardware never leaves:
+              fetch the next instruction, decode it, execute it, repeat. There is no “if statement”
+              in silicon; there is a compare and a conditional jump. Holding that picture is what
+              lets the later chapters talk about branch prediction and instruction cost without
+              hand-waving.
+            </p>
+
+            <h3>The three roads from source to instructions</h3>
+            <Tbl>
+              <table>
+                <thead>
+                  <tr><th>Strategy</th><th>How</th><th>You feel it as</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>Ahead-of-time compile</td><td>C, C++, Rust, Go — translated to machine code before shipping</td><td>fast start, fast run; a build step; per-platform binaries</td></tr>
+                  <tr><td>Interpret</td><td>classic Python, Ruby — a program reads your program and does what it says</td><td>instant start, 10–100× slower inner loops</td></tr>
+                  <tr><td>Bytecode + JIT</td><td>Java, C#, JavaScript — compile to a portable form, then compile the hot parts to machine code at runtime</td><td>slower warm-up, near-native steady state</td></tr>
+                </tbody>
+              </table>
+            </Tbl>
+            <p>
+              The rows blur in practice — Python compiles to bytecode, JavaScript engines interpret
+              first and JIT later — but the model explains real behaviour: why a Java service needs
+              a warm-up before benchmarking, why a Python hot loop is worth pushing into a library
+              written in C, why “compiled vs interpreted” is a property of the implementation, not
+              the language.
+            </p>
+
+            <h3>From file on disk to process</h3>
+            <p>
+              An executable is mostly a labelled box: machine code in one section, constants in
+              another, a note of which shared libraries it needs. Running it asks the OS to create a
+              <strong> process</strong> — a fresh virtual address space (next chapters’ subject) —
+              into which the <strong>loader</strong> maps the code and libraries, then jumps to the
+              entry point. From that moment the program computes privately until it needs the
+              outside world: reading a file, opening a socket, even asking the time. Each of those
+              is a <strong>system call</strong> — a controlled trap into the kernel, the only door
+              out of the sandbox. User code computes; the kernel does I/O; the boundary between
+              them costs real time and appears on every profile you will ever read.
+            </p>
+
+            <h3>The call stack, physically</h3>
+            <p>
+              When <code>a()</code> calls <code>b()</code>, the machine pushes a <strong>stack
+              frame</strong>: the return address, the arguments, <code>b</code>’s local variables.
+              Return pops it. That is the whole mechanism — and it makes several familiar things
+              suddenly literal. A <em>stack trace</em> is the machine reading you its frames, top
+              of the stack first. A <em>stack overflow</em> is unbounded recursion running out of
+              frame space. And the reason local variables are so much cheaper than heap objects
+              (the previous chapter’s ladder) is that a frame is allocated by moving one pointer.
+            </p>
+
+            <h3>Where it bites</h3>
+            <ul>
+              <li>Benchmarking a JIT runtime cold — the first thousand iterations measure the compiler, not your code.</li>
+              <li>A hot loop making a syscall per iteration (one byte per <code>read()</code>) — the kernel boundary tax, paid maximally.</li>
+              <li>Reading a stack trace bottom-up and “fixing” the frame that merely called the broken one.</li>
+              <li>Treating “Python is slow” as a law rather than a boundary question — the fast path is putting the loop on the other side of it (NumPy, the database, a compiled extension).</li>
+            </ul>
+            <Callout>
+              Everything is instructions, frames and syscalls. When a tool shows you something
+              opaque — a trace, a profile, a core dump — it is showing you one of these three, and
+              the mystery usually dissolves on contact.
+            </Callout>
+          </>
+        ),
+
+        /* ── Bits, numbers and text ──────────────────────────────── */
+        'data-representation': (
+          <>
+            <p>
+              Three bugs follow every engineer around for a whole career: money that is off by a
+              cent, text that renders as <code>Ã©</code> garbage, and a number that silently became
+              negative. All three are one chapter of knowledge, learned once. This is that chapter.
+            </p>
+
+            <h3>Integers — exact, until the edge</h3>
+            <p>
+              An n-bit integer holds exactly 2ⁿ values, and the machine represents negatives in{' '}
+              <strong>two’s complement</strong> — a scheme chosen so addition needs no special
+              cases. Two consequences matter. <strong>Overflow</strong>: one past the maximum wraps
+              to the minimum — a 32-bit counter crosses 2,147,483,647 and becomes profoundly
+              negative (ask anyone who stored view counts in an int32 in 2014). And{' '}
+              <strong>signed/unsigned confusion</strong>: the same bits read as 4,294,967,295 or as
+              −1 depending on the label. Rule of thumb that ages well: use 64-bit integers for
+              anything that counts the real world, and treat every cast as a place a bug can stand.
+            </p>
+
+            <h3>Floats — approximate, by design</h3>
+            <p>
+              A 64-bit float is scientific notation in binary: a sign, 52 bits of digits, an
+              exponent. It can hold astronomically large and small values <em>because</em> it gives
+              up on holding most values exactly — 0.1 has no finite binary representation, so{' '}
+              <code>0.1 + 0.2 === 0.30000000000000004</code>, in every language, forever. That is
+              not a bug; it is the contract. What follows from the contract:
+            </p>
+            <ul>
+              <li><strong>Money is never a float.</strong> Store integer minor units (cents, paise) or a decimal type. An accounting system that drifts by rounding is a system that lies.</li>
+              <li>Never compare floats with <code>==</code>; compare within a tolerance.</li>
+              <li>Adding a tiny number to a huge one may change nothing (the digits do not reach) — summing a large list in naive order loses precision.</li>
+              <li>Integers up to 2⁵³ are exact inside a double — which is precisely why JavaScript, whose only classic number is a double, is safe with ordinary IDs and unsafe past <code>Number.MAX_SAFE_INTEGER</code>. Snowflake-style 64-bit IDs (a later System Design chapter) must travel as strings in JSON for exactly this reason.</li>
+            </ul>
+
+            <h3>Text — numbers wearing costumes</h3>
+            <p>
+              Unicode assigns every character a number — a <strong>code point</strong>. An
+              encoding then decides which <em>bytes</em> carry those numbers, and <strong>UTF-8</strong>{' '}
+              won that contest with a beautiful design: ASCII is unchanged at one byte, everything
+              else uses two to four, and no byte of a multi-byte character looks like ASCII.
+              Mojibake — <code>Ã©</code> for é — is always the same crime: bytes written in one
+              encoding, read in another. The professional posture: UTF-8 everywhere, declared
+              explicitly at every boundary (database, HTTP header, file), and never inferred.
+            </p>
+            <p>
+              One more layer deserves respect: “one character” is a human idea, not a machine one.
+              An emoji with a skin tone is several code points joined; é can be one code point or
+              an e plus a combining accent. So <code>length</code> may count bytes, code points or
+              neither, slicing can cut a character in half, and two visually identical strings can
+              compare unequal until <strong>normalised</strong>. When text weirdness strikes, ask
+              which of the three layers — bytes, code points, graphemes — each side of the bug is
+              talking about.
+            </p>
+
+            <h3>Bytes on the wire</h3>
+            <p>
+              Multi-byte numbers have an order question — most significant byte first (big-endian,
+              the network convention) or last (little-endian, most CPUs). Inside one machine you
+              never notice; the moment bytes cross machines, a serialisation format is what saves
+              you, by pinning the order, the width and the encoding in writing. That is half of
+              what Protobuf and friends are for, and the Distributed Systems pathway picks the
+              thread up properly.
+            </p>
+            <Callout>
+              Integers are exact until they wrap; floats are approximate by contract; text is
+              numbers plus an encoding that must be agreed, not assumed. Most “weird data” bugs are
+              one of these three sentences, violated.
+            </Callout>
+          </>
+        ),
+
+        /* ── Measuring before believing ──────────────────────────── */
+        performance: (
+          <>
+            <p>
+              The cost chapter taught you to estimate; this one teaches you to check. The two
+              skills are a pair: an estimate without measurement hardens into folklore, and a
+              measurement without an estimate has no way to notice it is absurd. The uncomfortable
+              founding fact of the field: <strong>intuition about where time goes is reliably
+              wrong</strong> — even for experts, even about their own code. Nobody is exempt, which
+              is why the profiler exists.
+            </p>
+
+            <h3>A method, before tools</h3>
+            <p>
+              When a system is slow, resist the urge to read code. Interrogate resources instead.
+              The <strong>USE method</strong> asks three questions of every resource — CPU, memory,
+              disk, network, connection pools, thread pools: what is its <strong>Utilisation</strong>{' '}
+              (how busy), its <strong>Saturation</strong> (how much work is queued waiting), and
+              its <strong>Errors</strong>. Saturation is the one intuition misses: a disk at 60%
+              utilisation with a deep queue is a worse citizen than one at 90% with none — queueing
+              is where latency hides. Ten minutes of USE across the resource list usually points at
+              the guilty subsystem before any code is opened.
+            </p>
+
+            <h3>Reading a profile</h3>
+            <p>
+              A CPU profiler samples the call stack hundreds of times a second; the aggregate says
+              where time truly went. The standard picture is the <strong>flame graph</strong>:
+              stacks stacked, width = share of samples. Two habits make it useful. Read{' '}
+              <em>widths, not heights</em> — a tall thin tower is deep but cheap, a short wide
+              plateau is the money. And distinguish <strong>on-CPU</strong> profiles (computing)
+              from <strong>off-CPU</strong> time (waiting on locks, disks, networks): a service at
+              5% CPU that is dog slow is waiting, not working, and needs the off-CPU story —
+              which is usually told by traces (the System Design observability chapter) rather
+              than the CPU profiler.
+            </p>
+
+            <h3>Benchmarking without lying to yourself</h3>
+            <Tbl>
+              <table>
+                <thead>
+                  <tr><th>Sin</th><th>Why it lies</th><th>Instead</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>One run, one number</td><td>variance eats the signal — the same code varies run to run</td><td>many runs; report median and p95, never the best</td></tr>
+                  <tr><td>Cold vs warm confusion</td><td>first runs measure caches filling and JITs compiling</td><td>warm up, then measure; say which regime you report</td></tr>
+                  <tr><td>Averages</td><td>one 2-second outlier hides in a nice mean</td><td>percentiles — the tail is the user experience</td></tr>
+                  <tr><td>The idle-lab benchmark</td><td>production has neighbours, contention, real data sizes</td><td>load-test against realistic data and concurrency</td></tr>
+                  <tr><td>Microbenchmarking a fiction</td><td>the compiler deletes code with unused results</td><td>consume outputs; prefer measuring the real path end to end</td></tr>
+                </tbody>
+              </table>
+            </Tbl>
+            <p>
+              And the discipline that outranks all technique: <strong>change one thing at a
+              time</strong>, keep the numbers, and compare like with like. A performance claim
+              without its conditions attached — dataset size, concurrency, warm or cold — is an
+              anecdote wearing a lab coat.
+            </p>
+
+            <h3>A worked session</h3>
+            <p>
+              “The endpoint is slow.” First: slow how — p50 or p99, since when, correlated with a
+              deploy? Dashboard says p99 tripled at yesterday’s release. USE pass: CPU fine, DB
+              connection pool <em>saturated</em> — queue depth climbing. Off-CPU story: requests
+              waiting for connections. Why now? The deploy added one query per item in a list —
+              the N+1 pattern from the cost chapter, invisible on the five-item test fixture,
+              ruinous on the two-hundred-item production account. Fix the query shape, watch the
+              pool drain, keep the graph in the postmortem. Notice what did the work: a method, a
+              queue depth, and one profile — not a hunch.
+            </p>
+            <Callout>
+              Estimate, measure, reconcile. When the measurement and the estimate disagree, one of
+              them is teaching you something — and it is usually the estimate that graduates.
+            </Callout>
+          </>
+        ),
+
+        /* ── Languages and runtimes ──────────────────────────────── */
+        languages: (
+          <>
+            <p>
+              Your language is not a neutral pipe to the machine — it is a machine of its own, with
+              a memory manager, possibly a JIT, and opinions. You do not need to write compilers to
+              be a professional; you do need to know what the runtime is doing on your behalf,
+              because its costs show up on your profiles wearing your function names.
+            </p>
+
+            <h3>What a compiler does, in one paragraph</h3>
+            <p>
+              Front end: read text into a tree (<strong>parse</strong>), check the tree makes sense
+              (<strong>types, scopes</strong>). Back end: lower the tree to instructions, then{' '}
+              <strong>optimise</strong> — inline small functions, hoist loop-invariant work, delete
+              code whose result is unused. Two practical corollaries: compiler error messages are
+              the front end being honest with you, worth reading slowly; and optimisers are why
+              microbenchmarks lie (previous chapter) and why “cleverly hand-optimised” source often
+              ties with the straightforward version — the back end already did it.
+            </p>
+
+            <h3>Garbage collection — the deal you signed</h3>
+            <p>
+              Managed languages trade manual freeing for a collector that finds unreachable objects
+              and reclaims them. Modern collectors are <strong>generational</strong> — most objects
+              die young, so the nursery is swept often and cheaply while old survivors are visited
+              rarely — and pauses that once stopped the world for seconds are now typically
+              milliseconds. The professional concern has therefore moved: it is rarely “GC pauses”
+              and usually <strong>allocation rate</strong>. A hot path that allocates a million
+              short-lived objects a second keeps the collector permanently busy, and the cost is
+              diffuse — a few percent everywhere, a warmer cache nowhere. The fixes are the memory
+              chapter’s: reuse buffers, prefer flat arrays of values, hoist allocation out of
+              loops. Rust’s ownership model and reference-counting runtimes strike the same deal
+              with different coins; the invariant across all of them is that <em>someone</em> must
+              know when memory is done, and that someone is on your profile.
+            </p>
+
+            <h3>Types, and the boundary tax</h3>
+            <p>
+              Static versus dynamic typing is an engineering dial, not a religion. Static types are
+              executable documentation and a refactoring safety net that pays off superlinearly
+              with team size and codebase age; dynamic types buy iteration speed at small scale —
+              which is why the industry pattern is gradual typing bolted onto successful dynamic
+              codebases (TypeScript, Python type hints), adopted exactly when the maintenance bill
+              arrives. Separately, know the <strong>FFI boundary tax</strong>: crossing between
+              runtimes (Python↔C, JS↔native) costs conversion and bookkeeping per call. The fast
+              pattern everywhere is coarse crossings — hand NumPy the whole array, not a million
+              floats one call at a time. It is the syscall lesson and the network lesson a third
+              time: batch at boundaries.
+            </p>
+
+            <h3>The one exercise worth its weekend</h3>
+            <p>
+              Build a tiny interpreter once — a calculator with variables is enough, the linked
+              book if you want the full journey. Not for the artefact: because afterwards,
+              stack traces, scoping rules, “undefined is not a function”, and what a REPL even is
+              all stop being folklore. It is the single densest exercise per hour in this pathway.
+            </p>
+
+            <h3>Where it bites</h3>
+            <ul>
+              <li>Allocation inside the hot loop — the collector charges everyone a little, so nobody suspects it.</li>
+              <li>Chatty FFI: a thousand tiny calls across a runtime boundary instead of one batched call.</li>
+              <li>Benchmarking before JIT warm-up, or comparing a warmed run against a cold one.</li>
+              <li>Untyped success: the 100k-line dynamic codebase where every refactor is an act of faith — adopt gradual types before that line, not after.</li>
+            </ul>
+            <Callout>
+              The runtime is part of your system. Budget its collector, respect its boundaries,
+              and read its error messages as design feedback — it is the one dependency you cannot
+              swap out under load.
+            </Callout>
+          </>
+        ),
 }
