@@ -80,46 +80,68 @@
 }
 .meta b { color: var(--chalk); font-weight: 500; font-variant-numeric: tabular-nums; }
 
-/* ── columns: rail + course ──────────────────────────────────────── */
-.cols { display: block; padding: clamp(26px, 4vh, 40px) 0 40px; }
-@media (min-width: 980px) {
-  .cols { display: grid; grid-template-columns: 216px minmax(0, 1fr); gap: clamp(36px, 4vw, 64px); align-items: start; }
-  .rail { position: sticky; top: 22px; }
-}
-.railCap {
-  font-family: var(--mono); font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase;
-  color: var(--faint); margin-bottom: 10px; display: flex; align-items: center; gap: 9px;
-}
+/* ── the course cover ────────────────────────────────────────────── */
 .railBar { width: 18px; height: 1px; background: var(--edgeHi); }
-.railList { list-style: none; margin: 0 0 20px; padding: 0; counter-reset: stage; }
-/* on small screens the rail is a compact numbered overview above the course */
-.railList li { border-bottom: 1px solid var(--edge); }
-.railList a {
-  display: flex; gap: 10px; align-items: baseline; padding: 8px 2px; text-decoration: none;
-  color: var(--dim); font-size: 13px; transition: color 0.18s;
+.ovCols { display: block; padding: clamp(26px, 4vh, 40px) 0 30px; }
+@media (min-width: 980px) {
+  .ovCols { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: clamp(36px, 4vw, 72px); align-items: start; }
+  .ovSide { position: sticky; top: 22px; }
 }
-.railList a:hover { color: var(--bright); }
-.railNo { font-family: var(--mono); font-size: 9.5px; color: var(--faint); font-variant-numeric: tabular-nums; flex: none; }
-/* a stage whose chapter is still an outline — present, findable, visibly lighter */
-.railList a.railDraft { color: var(--faint); }
-.railList a.railDraft::after { content: "·"; color: var(--accent); margin-left: 6px; }
-.railList a.railDraft:hover { color: var(--dim); }
-.railFoot { font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--faint); line-height: 2; }
-.railFoot a { color: var(--dim); text-decoration: none; }
-.railFoot a:hover { color: var(--signal); }
+.ovCap {
+  font-family: var(--mono); font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--faint); margin-bottom: 12px; display: flex; align-items: center; gap: 9px;
+}
+.ovList { list-style: none; margin: 0 0 26px; padding: 0; }
+.ovRow {
+  display: flex; gap: 14px; align-items: baseline; text-decoration: none;
+  padding: 13px 6px; border-top: 1px solid var(--edge);
+  transition: background 0.16s;
+}
+.ovList li:last-child .ovRow { border-bottom: 1px solid var(--edge); }
+.ovRow:hover { background: var(--panel); }
+.ovNo { font-family: var(--mono); font-size: 10px; color: var(--accent); font-variant-numeric: tabular-nums; flex: none; }
+.ovBody { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.ovTitle { color: var(--chalk); font-size: 15.5px; font-weight: 400; line-height: 1.4; }
+.ovRow:hover .ovTitle { color: var(--bright); }
+.ovLede { color: var(--faint); font-size: 12.5px; line-height: 1.55; font-style: italic; }
+.ovGo { margin-left: auto; color: var(--faint); font-size: 13px; flex: none; align-self: center; transition: transform 0.2s, color 0.2s; }
+.ovRow:hover .ovGo { color: var(--accent); transform: translateX(3px); }
+.ovSide .outcomeList { margin-bottom: 26px; }
 
-/* ── a stage ─────────────────────────────────────────────────────── */
-.stage { padding: clamp(30px, 5vh, 48px) 0; border-bottom: 1px solid var(--edge); scroll-margin-top: 20px; }
-.stage:first-child { padding-top: 6px; }
+/* ── one chapter, one page ───────────────────────────────────────── */
+.stagePage { max-width: 820px; padding: clamp(28px, 5vh, 48px) 0 30px; }
 .stageNo {
   font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
   color: var(--accent); margin-bottom: 10px;
 }
-.stage h2 {
-  font-family: var(--serif); font-weight: 400; font-size: clamp(26px, 3.6vw, 36px);
-  line-height: 1.08; letter-spacing: -0.015em; margin: 0 0 10px; color: var(--bright); text-wrap: balance;
+.progress { height: 2px; background: var(--edge); border-radius: 2px; margin: 0 0 22px; max-width: 300px; }
+.progress span { display: block; height: 100%; background: var(--accent); border-radius: 2px; }
+.stageTitle {
+  font-family: var(--serif); font-weight: 400; font-size: clamp(30px, 4.6vw, 44px);
+  line-height: 1.06; letter-spacing: -0.015em; margin: 0 0 12px; color: var(--bright); text-wrap: balance;
 }
-.lede { margin: 0 0 22px; color: var(--dim); font-size: 15px; line-height: 1.65; font-style: italic; max-width: 58ch; }
+.lede { margin: 0 0 24px; color: var(--dim); font-size: 15.5px; line-height: 1.65; font-style: italic; max-width: 58ch; }
+
+/* ── the pager ───────────────────────────────────────────────────── */
+.pager { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: clamp(30px, 5vh, 44px); }
+@media (min-width: 640px) { .pager { grid-template-columns: 1fr 1fr; } }
+.pagerCard {
+  display: flex; flex-direction: column; gap: 6px; text-decoration: none;
+  border: 1px solid var(--edge); border-radius: 14px; background: var(--panel);
+  padding: 15px 18px; transition: border-color 0.2s, background 0.2s;
+}
+.pagerCard:hover { border-color: var(--edgeHi); background: var(--panel2); }
+.pagerNext { border-color: var(--edgeHi); }
+.pagerNext:hover { border-color: var(--accent); }
+.pagerCap { font-family: var(--mono); font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--faint); }
+.pagerNext .pagerCap { color: var(--accent); }
+.pagerTitle { font-family: var(--serif); font-size: 19px; color: var(--bright); line-height: 1.25; }
+.pagerAll { margin-top: 14px; padding-bottom: 10px; }
+.pagerAll a {
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--faint); text-decoration: none;
+}
+.pagerAll a:hover { color: var(--signal); }
 
 /* ── prose ───────────────────────────────────────────────────────── */
 .prose { max-width: 68ch; }
@@ -166,27 +188,6 @@
   color: var(--accent); margin-bottom: 6px;
 }
 .callout p { margin: 0; color: var(--chalk); font-size: 14px; line-height: 1.7; }
-
-/* ── a stage that is still a syllabus ────────────────────────────── */
-.syllabus {
-  border: 1px dashed var(--edgeHi); border-radius: 14px;
-  padding: 16px 20px 18px; max-width: 68ch;
-}
-.syllabusBadge {
-  font-family: var(--mono); font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase;
-  color: var(--accent); margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
-}
-.syllabusBadge::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: var(--accent); }
-.syllabusList { list-style: none; margin: 0; padding: 0; }
-.syllabusList li {
-  position: relative; padding: 8px 0 8px 22px; color: var(--dim);
-  font-size: 14px; line-height: 1.6; border-top: 1px solid var(--edge);
-}
-.syllabusList li:first-child { border-top: 0; }
-.syllabusList li::before {
-  content: "▸"; position: absolute; left: 2px; top: 8px;
-  color: var(--accent); font-family: var(--mono); font-size: 11px;
-}
 
 /* ── figures ─────────────────────────────────────────────────────── */
 .fig { margin: 26px 0; max-width: 760px; }

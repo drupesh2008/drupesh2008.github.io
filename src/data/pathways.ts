@@ -1,12 +1,11 @@
 /**
  * /learning — the full curriculum, four pathways, written and hosted here.
  *
- * This file holds the structure: every pathway, every stage, the topic
- * outline of stages whose full write-up is still being drafted, and the free
- * external reading attached to each stage. The course prose itself lives in
- * the per-track pages under src/app/learning/ — a stage with prose there is
- * "written"; a stage with only a `topics` outline here renders as a syllabus
- * entry until its chapter lands.
+ * This file holds the structure: every pathway, every chapter, and the free
+ * external reading attached to each. The chapter prose itself lives in the
+ * content modules under src/app/learning/_content — every chapter is written
+ * in full, one page per chapter, and a chapter listed here without prose
+ * there fails the static build.
  *
  * The old "Data & Storage" track did not survive as a separate pathway — a
  * storage engine only matters in the context of the system around it, so its
@@ -31,11 +30,6 @@ export interface Stage {
   title: string
   /** where the reader stands when the stage begins — one sentence */
   lede: string
-  /**
-   * the syllabus for a stage whose full chapter is not written yet; a stage
-   * with prose in the page ignores this, a stage without prose renders it
-   */
-  topics?: string[]
   resources: Resource[]
 }
 
@@ -49,7 +43,7 @@ export interface Pathway {
   hex: string
   /** what "professional" means at the end of this track */
   outcomes: string[]
-  /** reading time of the written chapters so far */
+  /** total reading time of the course */
   minutes: number
   stages: Stage[]
 }
@@ -76,7 +70,7 @@ export const PATHWAYS: Pathway[] = [
     blurb:
       'From source code to silicon and back: execution, data representation, memory, the operating system, concurrency, networks, cost, and the mathematics behind ML. The slowest track to pay off, and the one that makes the other three legible.',
     hex: '#7BD88F',
-    minutes: 85,
+    minutes: 110,
     outcomes: [
       'Predict roughly what a line of code costs before running it',
       'Explain what the OS is doing for — and to — your process',
@@ -89,14 +83,6 @@ export const PATHWAYS: Pathway[] = [
         id: 'how-code-runs',
         title: 'From source code to a running process',
         lede: 'Before pricing anything, know what actually happens between hitting run and code executing.',
-        topics: [
-          'What a CPU executes: instructions, registers, the fetch–decode–execute loop',
-          'Compilation vs interpretation vs JIT — and what your language really does',
-          'What an executable contains, and what the loader does with it',
-          'Syscalls: the doorway between your program and the kernel',
-          'The stack frame: how function calls, arguments and returns physically work',
-          'Reading a stack trace as a map of this machinery',
-        ],
         resources: [
           {
             title: 'Putting the “You” in CPU',
@@ -111,14 +97,6 @@ export const PATHWAYS: Pathway[] = [
         id: 'data-representation',
         title: 'Bits, numbers and text',
         lede: 'Every mysterious bug involving 0.1 + 0.2, mojibake or overflow is this stage, unlearned.',
-        topics: [
-          'Binary, hex, and why byte layouts leak into everything',
-          'Integers: two’s complement, overflow, and signed/unsigned traps',
-          'Floating point: what IEEE 754 can and cannot represent, and where 0.1 + 0.2 goes wrong',
-          'When to use integers-in-cents, decimals, and floats — money is not a float',
-          'Text: Unicode code points vs bytes vs graphemes; UTF-8’s design',
-          'Endianness, serialisation and why “it works on my machine” sometimes doesn’t',
-        ],
         resources: [
           {
             title: 'The Absolute Minimum Every Software Developer Must Know About Unicode',
@@ -224,15 +202,6 @@ export const PATHWAYS: Pathway[] = [
         id: 'performance',
         title: 'Measuring before believing',
         lede: 'Estimates start the argument; profilers end it.',
-        topics: [
-          'Why intuition about “the slow part” is reliably wrong',
-          'The USE method: utilisation, saturation, errors — for every resource',
-          'CPU profiling and flame graphs: reading where the time actually goes',
-          'Benchmarking honestly: warm-up, variance, percentiles, and the lies of averages',
-          'Micro vs macro benchmarks — and why the microbenchmark that “proves” it is usually wrong',
-          'Memory profiling: allocation rates, leaks, and GC pressure',
-          'A worked session: from “the endpoint is slow” to the guilty line',
-        ],
         resources: [
           {
             title: 'The USE Method',
@@ -254,15 +223,6 @@ export const PATHWAYS: Pathway[] = [
         id: 'languages',
         title: 'Languages and runtimes',
         lede: 'Your language is a machine too — garbage collector, JIT and all — and it has a cost model of its own.',
-        topics: [
-          'What a compiler actually does: parsing, checking, code generation',
-          'Interpreters, bytecode VMs and JITs — the spectrum your languages live on',
-          'Garbage collection: tracing vs reference counting, pauses, and generational bets',
-          'Why GC pressure — not GC — is usually the performance problem',
-          'Static vs dynamic types as an engineering (not tribal) tradeoff',
-          'FFI and the boundary tax: what crossing between runtimes costs',
-          'Build one tiny interpreter, once — the single highest-leverage exercise here',
-        ],
         resources: [
           {
             title: 'Crafting Interpreters',
@@ -308,7 +268,7 @@ export const PATHWAYS: Pathway[] = [
     blurb:
       'Partial failure, communication, disagreement about time, replication, consensus, coordination — and how to test any of it. The theory track: everything in System Design leans on it.',
     hex: '#5EE9D5',
-    minutes: 95,
+    minutes: 115,
     outcomes: [
       'Treat a timeout as ambiguity, not as an answer',
       'Order events without trusting anyone’s clock',
@@ -349,14 +309,6 @@ export const PATHWAYS: Pathway[] = [
         id: 'rpc',
         title: 'Talking between machines',
         lede: 'Before the deep theory: the mechanics of one service calling another, and why it can never feel local.',
-        topics: [
-          'Why RPC is not a function call — the seminal argument, still true',
-          'Serialisation: JSON vs Protobuf vs Avro; schema evolution without breakage',
-          'Interface contracts: forward and backward compatibility as a discipline',
-          'Service discovery: how callers find callees when addresses keep changing',
-          'Connection pools, multiplexing and per-hop deadlines in practice',
-          'Partial-failure hygiene applied: deadline propagation and cancellation',
-        ],
         resources: [
           {
             title: 'A Note on Distributed Computing',
@@ -420,14 +372,6 @@ export const PATHWAYS: Pathway[] = [
         id: 'broadcast',
         title: 'Broadcast, gossip and ordering guarantees',
         lede: 'Between “send one message” and “agree on everything” sits a family of primitives systems quietly rely on.',
-        topics: [
-          'Delivery guarantees named precisely: best-effort, reliable, FIFO, causal, total order',
-          'Why total order broadcast and consensus are the same problem in different clothes',
-          'Gossip protocols: epidemic spread, convergence time, and where they shine (membership, metadata)',
-          'Anti-entropy and read repair: convergence as a background job',
-          'Causal delivery in practice: what chat apps and collaborative editors actually need',
-          'Hands-on: the Gossip Glomers challenges, from echo to a replicated log',
-        ],
         resources: [
           {
             title: 'Gossip Glomers — distributed systems challenges',
@@ -470,14 +414,6 @@ export const PATHWAYS: Pathway[] = [
         id: 'coordination',
         title: 'Membership, failure detection and coordination',
         lede: 'Consensus gave you a kernel of agreement; this stage is the machinery that puts it to work.',
-        topics: [
-          'Failure detectors: heartbeats, phi-accrual, and why “suspected” beats “dead”',
-          'SWIM-style membership: scalable gossip about who is alive',
-          'Coordination services (ZooKeeper, etcd): the recipes — locks, elections, config, watches',
-          'Leases and fencing tokens, in production shape',
-          'Split-brain war stories: how real systems double-led, and which safeguard was missing',
-          'When to coordinate at all — the best coordination is the coordination you deleted',
-        ],
         resources: [
           {
             title: 'SWIM: Scalable Weakly-consistent Infection-style Process Group Membership',
@@ -499,14 +435,6 @@ export const PATHWAYS: Pathway[] = [
         id: 'txns',
         title: 'Distributed transactions',
         lede: 'One database promised you atomicity; now the write spans three systems that each promise nothing about the others.',
-        topics: [
-          'Two-phase commit properly: the protocol, the coordinator log, and the blocking window',
-          'Why 2PC over consensus groups changes the story (the Spanner move)',
-          'Percolator: transactions built on a key-value store with nothing but locks and timestamps',
-          'Sagas as the availability-first alternative — and where they genuinely cannot substitute',
-          'Exactly-once effects, revisited end-to-end: dedup windows, transactional outbox, idempotent consumers',
-          'Choosing per workflow: invariants that need atomicity vs flows that need progress',
-        ],
         resources: [
           {
             title: 'Large-scale Incremental Processing Using Distributed Transactions (Percolator)',
@@ -549,14 +477,6 @@ export const PATHWAYS: Pathway[] = [
         id: 'testing',
         title: 'Breaking it on purpose',
         lede: 'A distributed system you have not deliberately broken is a system whose failure modes you are saving for customers.',
-        topics: [
-          'What Jepsen actually does: generative workloads, fault injection, linearizability checking',
-          'Deterministic simulation testing: running a whole cluster inside one controllable process',
-          'Chaos engineering as hypothesis testing, not vandalism — steady state, blast radius, abort switch',
-          'Fault menus worth rehearsing: partitions, clock skew, slow disks, asymmetric links, gray failure',
-          'Lightweight formal methods: what a TLA+ spec buys you before a line of code exists',
-          'Game days: turning “we think failover works” into “we watched it work on Tuesday”',
-        ],
         resources: [
           {
             title: 'The TLA+ Home Page',
@@ -588,7 +508,7 @@ export const PATHWAYS: Pathway[] = [
     blurb:
       'The applied track, and the widest: requests, APIs, load balancing, caching, storage, transactions, sharding, streams, derived data, probabilistic structures, geo-indexing, IDs, files, realtime, background jobs, rate limiting, security, resilience, delivery — closing with a worked design and an atlas of the classic problems.',
     hex: '#4C8BF5',
-    minutes: 130,
+    minutes: 250,
     outcomes: [
       'Sketch a latency budget for a request before writing code',
       'Design an API that survives its clients and its own v2',
@@ -618,15 +538,6 @@ export const PATHWAYS: Pathway[] = [
         id: 'api',
         title: 'Designing the API',
         lede: 'The API outlives every implementation behind it; design it like the permanent thing it is.',
-        topics: [
-          'Resources, verbs and status codes: REST that clients can guess',
-          'Pagination: offset vs cursor, and why cursors win at scale',
-          'Idempotency keys on every unsafe endpoint — the contract, spelled out',
-          'Versioning and deprecation: evolving without breaking anyone',
-          'Error design: machine-readable problems, retryable vs terminal, partial failure shapes',
-          'gRPC and GraphQL: what each buys, what each costs, when each earns its place',
-          'Rate limit headers, timeouts and retries as part of the contract, not an afterthought',
-        ],
         resources: [
           {
             title: 'Zalando RESTful API Guidelines',
@@ -648,14 +559,6 @@ export const PATHWAYS: Pathway[] = [
         id: 'gateway',
         title: 'Load balancing, gateways and discovery',
         lede: 'The boxes between the internet and your code deserve to be understood, not inherited.',
-        topics: [
-          'L4 vs L7 balancing in real depth: connection vs request, what each can see and do',
-          'Algorithms that matter: round robin, least-outstanding, consistent-hash affinity',
-          'Health checks and outlier ejection — and how they amplify outages when naive',
-          'API gateways: authn, rate limits, routing — and the risk of a smart single point of failure',
-          'Service discovery and the control plane / data plane split',
-          'TLS termination, connection reuse and the sidecar/mesh question, priced honestly',
-        ],
         resources: [
           {
             title: 'Introduction to modern network load balancing and proxying',
@@ -684,14 +587,6 @@ export const PATHWAYS: Pathway[] = [
         id: 'cdn',
         title: 'The edge: CDNs and static delivery',
         lede: 'The fastest request is one that never crosses an ocean; the edge is how you arrange that at scale.',
-        topics: [
-          'What a CDN actually is: anycast, points of presence, and the cache hierarchy',
-          'Cache-Control, ETags and revalidation — the headers that do the work',
-          'Static vs dynamic acceleration; edge compute and where it genuinely helps',
-          'Invalidation strategies: versioned URLs beat purges almost every time',
-          'Origin shielding and thundering herds on cache miss',
-          'Signed URLs and private content at the edge',
-        ],
         resources: [
           {
             title: 'What is a CDN?',
@@ -734,14 +629,6 @@ export const PATHWAYS: Pathway[] = [
         id: 'modeling',
         title: 'Data modelling across paradigms',
         lede: 'The engine was half the story; the shape you store is the other half, and it is chosen, not discovered.',
-        topics: [
-          'Relational modelling that serves queries: normalisation, then deliberate denormalisation',
-          'The N+1 problem and its whole family of access-pattern mismatches',
-          'NoSQL modelling inverted: start from the access patterns, design the keys (single-table thinking)',
-          'Wide-column and document tradeoffs; when relations were the right answer all along',
-          'Schema migrations at scale: expand–migrate–contract, backfills, dual writes',
-          'Soft deletes, audit trails and time: modelling history without drowning in it',
-        ],
         resources: [
           {
             title: 'SQLBolt',
@@ -819,14 +706,6 @@ export const PATHWAYS: Pathway[] = [
         id: 'derived',
         title: 'Derived data: search, analytics and event sourcing',
         lede: 'One source of truth, many read-optimised shadows — kept honest by the log you just built.',
-        topics: [
-          'The derived-data mindset: every index, cache and warehouse is a projection you can rebuild',
-          'Full-text search: the inverted index, analysis/tokenisation, relevance basics (BM25)',
-          'Keeping search and caches in sync via CDC — freshness lag as an SLO',
-          'OLTP vs OLAP for real: columnar formats, star schemas, the lakehouse in one paragraph',
-          'Batch vs streaming pipelines; backfills and reprocessing as first-class operations',
-          'Event sourcing and CQRS: when the log is the truth, and the real costs of that commitment',
-        ],
         resources: [
           {
             title: 'Inverted index',
@@ -848,15 +727,6 @@ export const PATHWAYS: Pathway[] = [
         id: 'sketches',
         title: 'Counting at scale: probabilistic structures',
         lede: 'Exact answers cost memory linear in the data; a whole family of structures trades a tunable error for constant space.',
-        topics: [
-          'Bloom filters: set membership in bits — false positives, never false negatives — and where they already sit in your LSMs, caches and crawlers',
-          'Cuckoo and counting variants: deletion and better density',
-          'HyperLogLog: billions of distinct values counted in kilobytes (unique visitors, cardinality alerts)',
-          'Count–min sketch: frequencies and heavy hitters on streams (trending topics, hot-key detection)',
-          'Reservoir sampling: a fair sample from a stream you cannot store',
-          'Top-K of the unbounded: sketches plus heaps for leaderboards',
-          'Sizing the error: the formulas, and what ±2% honestly costs downstream',
-        ],
         resources: [
           {
             title: 'Bloom Filters by Example',
@@ -878,15 +748,6 @@ export const PATHWAYS: Pathway[] = [
         id: 'geo',
         title: 'Geospatial indexing and proximity',
         lede: '“Find drivers near me” breaks every index you have met so far; space needs structures of its own.',
-        topics: [
-          'Why B-trees fail at two dimensions: nearness is not an ordering',
-          'Geohash: interleaving lat/lon into sortable prefixes — and the edge-of-cell problem',
-          'Quadtrees and R-trees: adaptive subdivision for skewed density (Manhattan vs Montana)',
-          'Hexagonal grids (H3): uniform neighbours for rides, deliveries and coverage analytics',
-          'The moving-object problem: absorbing a million location updates a second',
-          'Radius and k-nearest queries: candidate cells first, exact filtering second',
-          'Sharding geo data: by region vs by cell, and the hot-city problem',
-        ],
         resources: [
           {
             title: 'H3 documentation',
@@ -908,14 +769,6 @@ export const PATHWAYS: Pathway[] = [
         id: 'ids',
         title: 'Identity, time and unique IDs',
         lede: 'Auto-increment dies with the single database; whatever replaces it must be unique, fast, and ideally sortable.',
-        topics: [
-          'The requirements matrix: uniqueness, ordering, opacity, size, coordination cost',
-          'UUIDv4: coordination-free but random — and what randomness does to index locality',
-          'K-sortable schemes: Snowflake-style timestamp + worker + sequence; ULID; UUIDv7',
-          'Clock skew and sequence overflow: the failure modes of time-based IDs',
-          'Ticket servers and pre-allocated ranges: central issuance without per-write coordination',
-          'IDs as API surface: enumeration attacks, and why public IDs differ from storage keys',
-        ],
         resources: [
           {
             title: 'RFC 9562 — UUIDv7',
@@ -937,14 +790,6 @@ export const PATHWAYS: Pathway[] = [
         id: 'blob',
         title: 'Files, media and blob storage',
         lede: 'The database stores who uploaded the video; something else entirely stores the video.',
-        topics: [
-          'Object storage: why blobs live outside the database, and what S3-style semantics promise',
-          'Direct-to-storage uploads with presigned URLs — never proxy bytes through your app tier',
-          'Multipart and resumable uploads; content addressing and dedup',
-          'Media pipelines: async transcode/thumbnail via the queue you built in streams',
-          'Serving: CDN in front, signed URLs for private content, range requests for video',
-          'Lifecycle: storage classes, expiry, and the economics of hot vs cold bytes',
-        ],
         resources: [
           {
             title: 'Finding a needle in Haystack: Facebook’s photo storage',
@@ -959,14 +804,6 @@ export const PATHWAYS: Pathway[] = [
         id: 'realtime',
         title: 'Realtime: websockets, presence and push',
         lede: 'Request–response assumed the client asks; now the server has something to say first.',
-        topics: [
-          'The options ladder: polling, long-polling, server-sent events, WebSockets — costs of each',
-          'What a million idle connections actually costs (Foundations’ event loops, cashed in)',
-          'Fan-out to connected clients: pub/sub between your socket tier and your app tier',
-          'Presence, typing indicators and ephemeral state — where not to involve the database',
-          'Reconnection, resume tokens and missed-message catch-up (offsets again)',
-          'Mobile push as the fallback path, and the delivery guarantees it does not make',
-        ],
         resources: [
           {
             title: 'The WebSocket API',
@@ -981,15 +818,6 @@ export const PATHWAYS: Pathway[] = [
         id: 'jobs',
         title: 'Background work: queues, schedulers and cron at scale',
         lede: 'Not everything happens in a request; the work that happens later needs the same design care, and usually gets none.',
-        topics: [
-          'Task queues vs event streams: acknowledge/retry/dead-letter semantics for work, not facts',
-          'Idempotent workers under at-least-once execution — the request-path rules, applied to jobs',
-          'Delayed and scheduled work: timer wheels, priority queues, and “9am local time” across timezones',
-          'Distributed cron: exactly-one-runner via leases and fencing, surviving the runner’s death',
-          'Long workflows: checkpointing, compensation, and when a workflow engine earns its adoption',
-          'Fairness and backpressure: per-tenant queues, starvation, priority inversion',
-          'Observability for the invisible: queue lag, age-of-oldest, retry storms',
-        ],
         resources: [
           {
             title: 'Distributed periodic scheduling with cron',
@@ -1004,14 +832,6 @@ export const PATHWAYS: Pathway[] = [
         id: 'ratelimit',
         title: 'Rate limiting and abuse protection',
         lede: 'Your API will be called too much — by bugs, by scrapers, by your own retries. Decide the rules before the flood.',
-        topics: [
-          'Token bucket and leaky bucket, and why fixed windows burst at the edges',
-          'Sliding window counters: accuracy vs memory',
-          'What to key on: user, API key, IP, tenant — and layered limits',
-          'Distributed limiting: local buckets vs a shared store, and the consistency you can afford',
-          'Communicating limits: 429s, Retry-After, and limit headers clients can obey',
-          'Beyond volume: cost-based limits, concurrency caps, and abuse/bot signals',
-        ],
         resources: [
           {
             title: 'Scaling your API with rate limiters',
@@ -1026,15 +846,6 @@ export const PATHWAYS: Pathway[] = [
         id: 'security',
         title: 'Identity, authorisation and the security basics',
         lede: 'Every design so far assumed the caller is who they claim; that assumption is a subsystem.',
-        topics: [
-          'Sessions vs tokens: cookies, JWTs, and where each stores its risk',
-          'OAuth 2 and OIDC without the fog: the flows you will actually use',
-          'Authorisation models: RBAC, ABAC, and resource-level checks that do not rot',
-          'Secrets management: rotation, least privilege, and never-in-env-forever',
-          'The transport layer you already bought: TLS everywhere, mTLS between services',
-          'The OWASP top ten as a design review checklist, not a compliance chore',
-          'Multi-tenancy isolation: the queries, keys and blast radii that keep tenants apart',
-        ],
         resources: [
           {
             title: 'OAuth 2.0 Simplified',
@@ -1084,14 +895,6 @@ export const PATHWAYS: Pathway[] = [
         id: 'multiregion',
         title: 'Multi-region and disaster recovery',
         lede: 'One region is a single point of failure with excellent marketing; going beyond it is a design, not a checkbox.',
-        topics: [
-          'RTO and RPO: the two numbers every DR conversation is secretly about',
-          'The posture ladder: backups → pilot light → warm standby → active-active',
-          'Active-active honestly: conflict surfaces, data gravity, and what latency physics permits',
-          'Static stability: surviving a zone or region loss without control-plane heroics',
-          'Failover you can trust: DNS vs anycast, health-based routing, and rehearsed runbooks',
-          'Data residency and the compliance constraints that shape topology before engineering does',
-        ],
         resources: [
           {
             title: 'Static stability using Availability Zones',
@@ -1106,14 +909,6 @@ export const PATHWAYS: Pathway[] = [
         id: 'delivery',
         title: 'Shipping safely: deploys, flags and migrations',
         lede: 'Most outages walk in through the front door, wearing a deploy. Ship in a way that assumes so.',
-        topics: [
-          'Blue–green and canary releases: bounded blast radius as a deployment property',
-          'Feature flags: decoupling deploy from release — and the flag-debt hygiene that keeps it sane',
-          'Backwards/forwards compatibility during rollout: N and N+1 always run together',
-          'Database migrations without downtime: expand–migrate–contract, online backfills',
-          'Rollback as a first-class path: if you cannot roll it back, you have not finished designing it',
-          'Progressive delivery tied to SLOs: automatic halt when the canary burns budget',
-        ],
         resources: [
           {
             title: 'Feature Toggles (aka Feature Flags)',
@@ -1149,16 +944,6 @@ export const PATHWAYS: Pathway[] = [
         id: 'atlas',
         title: 'The problem atlas: classic designs decomposed',
         lede: 'The canonical problems, each reduced to the stages that make it hard — the map from prompt to chapter.',
-        topics: [
-          'News feed: fan-out on write vs read, the celebrity hybrid, ranking as derived data',
-          'Chat: per-conversation ordering through one partition, presence, delivery receipts as idempotent state',
-          'Ride matching: the geo index, locking under contention, surge as backpressure',
-          'Ticketing and flash sales: inventory as the invariant — reservations with expiry, queues at the door',
-          'Web crawler: frontier queues, politeness limits, dedup via Bloom filters, DNS at scale',
-          'Video platform: upload pipeline, transcoding fan-out, CDN economics, view counts via sketches',
-          'Notification system: multi-channel fan-out, per-user rate limits, collapsing and preferences',
-          'Distributed counter / metrics: sharded counters, sketches, and the cost of exactness',
-        ],
         resources: [
           {
             title: 'Awesome Scalability',
@@ -1183,7 +968,7 @@ export const PATHWAYS: Pathway[] = [
     blurb:
       'The whole arc: learning from data, the classical ML toolbox and deep learning fundamentals first — then transformers, serving economics, prompting, retrieval, customisation, agents, security and evaluation. Weighted towards building and measuring.',
     hex: '#A78BFA',
-    minutes: 95,
+    minutes: 135,
     outcomes: [
       'Ship a defensible classical baseline before reaching for a model API',
       'Train and debug a small network by hand, and read its curves',
@@ -1198,15 +983,6 @@ export const PATHWAYS: Pathway[] = [
         id: 'ml-basics',
         title: 'Learning from data',
         lede: 'Before any neural network: what it means for a machine to learn, and the discipline that keeps you from fooling yourself.',
-        topics: [
-          'Supervised learning in one frame: features in, prediction out, a loss to score it',
-          'Regression vs classification — and the linear models that still win on tabular data',
-          'Generalisation: train/validation/test, cross-validation, and why you never touch test twice',
-          'Overfitting and the bias–variance tradeoff, read off a learning curve',
-          'Data leakage: the silent killer behind most “95% accuracy” claims — canonical cases and defences',
-          'Metrics that match the problem: precision/recall/F1, ROC-AUC, calibration, class imbalance',
-          'Baselines first: the constant predictor and the linear model every fancy model must beat',
-        ],
         resources: [
           {
             title: 'Machine Learning Crash Course',
@@ -1228,15 +1004,6 @@ export const PATHWAYS: Pathway[] = [
         id: 'ml-toolbox',
         title: 'The classical toolbox',
         lede: 'Most production ML is not deep: trees, ensembles and linear models carry tabular data, and knowing them keeps you honest.',
-        topics: [
-          'Decision trees, then the two ensembles that dominate tabular ML: random forests and gradient boosting',
-          'k-nearest neighbours and the curse of dimensionality — intuition that transfers straight to embeddings',
-          'Unsupervised structure: k-means, hierarchical clustering, PCA',
-          'Feature engineering: encodings, scaling, interactions — where domain knowledge enters the model',
-          'Regularisation (L1/L2) as the dial between fitting and generalising',
-          'When classical beats deep: small data, tabular data, interpretability, tight latency budgets',
-          'Interpreting models: feature importance, partial dependence, and their honest limits',
-        ],
         resources: [
           {
             title: 'An Introduction to Statistical Learning',
@@ -1258,15 +1025,6 @@ export const PATHWAYS: Pathway[] = [
         id: 'deep-learning',
         title: 'Deep learning fundamentals',
         lede: 'Stack linear layers with nonlinearities and train by gradient descent; the questions become why it works, and which knobs matter.',
-        topics: [
-          'The multilayer perceptron: layers, activations, and why depth composes features',
-          'Backpropagation as the chain rule with bookkeeping — build it once by hand',
-          'The training loop: minibatches, SGD and Adam, learning-rate schedules',
-          'What goes wrong, and the standard fixes: initialisation, normalisation, dropout, residual connections',
-          'Embeddings: discrete things as geometry — the bridge to retrieval and language models',
-          'Architectures in one pass: CNNs for space, RNNs for sequence, and why attention replaced recurrence',
-          'Hardware reality: why GPUs, what batching buys, and the memory/compute budget of training',
-        ],
         resources: [
           {
             title: 'Neural Networks: Zero to Hero',
@@ -1323,15 +1081,6 @@ export const PATHWAYS: Pathway[] = [
         id: 'inference',
         title: 'Serving and inference economics',
         lede: 'Between the model and your users sits a serving stack with its own physics; its numbers set your product’s.',
-        topics: [
-          'Prefill vs decode revisited as a serving problem: compute-bound vs memory-bandwidth-bound',
-          'Continuous batching: why throughput serving is a scheduling problem',
-          'KV cache management: paged attention, prefix sharing, and what limits concurrency',
-          'Quantisation in practice: what 8-bit and 4-bit actually trade away',
-          'Speculative decoding and distillation: cheaper tokens without a cheaper model',
-          'Self-host vs API: the honest spreadsheet — utilisation, ops burden, data constraints',
-          'Capacity planning for token workloads: tokens/sec, not requests/sec',
-        ],
         resources: [
           {
             title: 'Large Transformer Model Inference Optimization',
@@ -1346,15 +1095,6 @@ export const PATHWAYS: Pathway[] = [
         id: 'prompting',
         title: 'Prompting and structured output',
         lede: 'The lowest rung of the leverage ladder — and the one that solves more problems than its reputation suggests.',
-        topics: [
-          'System prompts as specifications: role, constraints, refusals, tone — versioned like code',
-          'Few-shot examples: when three good examples beat three paragraphs of instructions',
-          'Chain-of-thought and its limits: when asking for reasoning helps, and when it just costs tokens',
-          'Structured output for real: JSON schemas, function-calling formats, constrained decoding',
-          'Parsing defensively anyway: the retry-on-invalid loop every production caller has',
-          'Prompt caching economics: stable prefixes, variable suffixes',
-          'A prompt-review checklist: ambiguity, injection surface, untested paths',
-        ],
         resources: [
           {
             title: 'Prompt engineering overview',
@@ -1390,15 +1130,6 @@ export const PATHWAYS: Pathway[] = [
         id: 'finetune',
         title: 'Customisation: fine-tuning and when not to',
         lede: 'The escalation ladder’s top rung — expensive, powerful, and reached far less often than assumed.',
-        topics: [
-          'The ladder, priced: prompting → retrieval → fine-tuning, and the evidence needed for each step',
-          'What fine-tuning is good at (format, tone, narrow tasks) and bad at (adding knowledge)',
-          'SFT mechanics: datasets, loss, and how quality of examples dominates quantity',
-          'Parameter-efficient methods: LoRA and friends — why they changed the economics',
-          'Preference tuning in one pass: RLHF and DPO, what they shape and what they cannot add',
-          'Distillation: a big model teaching a small one your task',
-          'The operational tail: eval sets per checkpoint, regression risk, and hosting the thing',
-        ],
         resources: [
           {
             title: 'Deep Dive into LLMs like ChatGPT',
@@ -1434,15 +1165,6 @@ export const PATHWAYS: Pathway[] = [
         id: 'ai-security',
         title: 'Security: injection, leakage and sandboxing',
         lede: 'The model reads everything and believes most of it; the systems around it must not.',
-        topics: [
-          'Prompt injection, direct and indirect: why it works on a next-token predictor, with live examples',
-          'The lethal trifecta: private data + untrusted content + exfiltration paths, and breaking the triangle',
-          'Provenance in the prompt: separating instructions from data, and its honest limits',
-          'Least privilege for models: scoped credentials, allow-listed tools, read-mostly defaults',
-          'Sandboxing execution: code interpreters, browsers and the blast radius of each tool',
-          'Output as attack surface: markdown links, rendered HTML, SQL — inject-through-the-answer',
-          'Data leakage: what enters logs, caches, and other people’s context windows',
-        ],
         resources: [
           {
             title: 'Prompt injection series',
@@ -1478,15 +1200,6 @@ export const PATHWAYS: Pathway[] = [
         id: 'online',
         title: 'In production: feedback, drift and improvement loops',
         lede: 'Offline evals said ship it; now the system meets users, and the measuring must continue.',
-        topics: [
-          'Online measurement: A/B tests and guardrail metrics for non-deterministic features',
-          'Implicit feedback: accept/edit/retry/abandon as labels you already have',
-          'Human-in-the-loop review queues: sampling strategies that find failures, not confirmation',
-          'Drift, twice: your users change, and your provider’s model changes under you',
-          'The data flywheel: production traffic → eval cases → prompt/retrieval fixes → better traffic',
-          'Incident response for AI features: kill switches, fallbacks, and postmortems for bad outputs',
-          'Cost and latency dashboards per feature — tokens as a first-class production metric',
-        ],
         resources: [
           {
             title: 'Your AI product needs evals',
@@ -1516,10 +1229,5 @@ export const nextPathway = (id: string) => {
 export const STAGE_COUNT = PATHWAYS.reduce((n, p) => n + p.stages.length, 0)
 export const RESOURCE_COUNT = PATHWAYS.reduce(
   (n, p) => n + p.stages.reduce((k, s) => k + s.resources.length, 0),
-  0
-)
-/** stages whose full chapter is drafted in the page (no topics outline needed) */
-export const WRITTEN_COUNT = PATHWAYS.reduce(
-  (n, p) => n + p.stages.filter((s) => !s.topics).length,
   0
 )
