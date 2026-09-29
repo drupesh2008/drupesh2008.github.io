@@ -16,10 +16,12 @@ export type Sector =
   | 'Fintech'
   | 'Marketplace'
   | 'Social'
-  | 'Infrastructure'
-  | 'Developer Tools'
-  | 'Data & AI'
   | 'Commerce'
+  | 'Enterprise & SaaS'
+  | 'Developer Tools'
+  | 'Infrastructure'
+  | 'Data & AI'
+  | 'Security'
 
 export interface Feed {
   /** stable id, also used as the filter key */
@@ -29,6 +31,10 @@ export interface Feed {
   /** where a human should go to browse it */
   site: string
   sector: Sector
+  /** other addresses the feed has lived at; tried before discovery when `url` fails */
+  alt?: string[]
+  /** lower per-source cap for prolific vendor blogs, so one source cannot crowd out the rest */
+  max?: number
 }
 
 export interface Topic {
@@ -46,10 +52,12 @@ export const SECTORS: Sector[] = [
   'Fintech',
   'Marketplace',
   'Social',
-  'Infrastructure',
-  'Developer Tools',
-  'Data & AI',
   'Commerce',
+  'Enterprise & SaaS',
+  'Developer Tools',
+  'Infrastructure',
+  'Data & AI',
+  'Security',
 ]
 
 /** one entry in public/data/tech-blogs.json */
