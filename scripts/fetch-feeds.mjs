@@ -220,6 +220,8 @@ async function pull(feed) {
   try {
     items = await readFeed(feed.url)
   } catch (first) {
+    // rate-limited, not moved: discovery would only burn more requests on the same host
+    if (/HTTP 429/.test(first?.message)) return { ok: false, reason: first.message }
     // the configured URL is stale or blocked — go and find where the feed moved to
     const tried = new Set([feed.url])
     for await (const candidate of candidates(feed)) {
