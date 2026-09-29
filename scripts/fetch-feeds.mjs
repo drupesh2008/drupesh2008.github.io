@@ -28,15 +28,25 @@ import path from 'node:path'
 
 const ROOT = process.cwd()
 const SOURCE = path.join(ROOT, 'src/data/feeds.json')
+const PICKS = path.join(ROOT, 'src/data/picks.json')
 const OUT = path.join(ROOT, 'public/data/tech-blogs.json')
 
 const PER_FEED = 80 // newest posts kept per source, across runs (feeds.json can lower it with "max")
-const TOTAL = 1500 // hard cap on the published file
+const TOTAL = 1500 // hard cap on the published file, shared fairly between sources (see fairShare)
 const TIMEOUT_MS = 15000
 const MAX_AGE_DAYS = 730 // two years; anything older ages out of the index
-const WORKERS = 8
+const WORKERS = 6
+const MIN_GAP_MS = 120 // between any two request starts — spreads the load across publishers
 
 const { feeds, topics } = JSON.parse(fs.readFileSync(SOURCE, 'utf8'))
+/**
+ * Hand-picked posts from blogs that publish no feed at all (Uber, LinkedIn,
+ * Stripe's dev blog, Anthropic…). We will not scrape HTML, so these are the
+ * only way such posts reach the index. Each carries its own one-line note in
+ * place of a publisher excerpt, is exempt from the age limit, and is marked
+ * `curated` so the page can say why it is there.
+ */
+const picks = fs.existsSync(PICKS) ? JSON.parse(fs.readFileSync(PICKS, 'utf8')) : []
 
 /* ── tiny XML helpers ─────────────────────────────────────────────── */
 
@@ -116,7 +126,20 @@ const canonical = (raw) => {
 const UA =
   'drupesh2008.github.io feed reader (+https://github.com/drupesh2008/drupesh2008.github.io)'
 
-async function get(url, accept) {
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
+
+// Medium alone hosts a fifth of these feeds and rate-limits a burst from one
+// address, so request starts are spaced out and a 429 is retried after a pause.
+let nextSlot = 0
+async function throttle() {
+  const at = Math.max(Date.now(), nextSlot)
+  nextSlot = at + MIN_GAP_MS
+  const wait = at - Date.now()
+  if (wait > 0) await sleep(wait)
+}
+
+async function get(url, accept, attempt = 0) {
+  await throttle()
   const ctrl = new AbortController()
   const timer = setTimeout(() => ctrl.abort(), TIMEOUT_MS)
   try {
@@ -126,6 +149,12 @@ async function get(url, accept) {
       // some publishers 403 an unidentified client; say who we are and where to complain
       headers: { 'user-agent': UA, accept },
     })
+    if (res.status === 429 && attempt < 2) {
+      const hinted = Number(res.headers.get('retry-after')) * 1000
+      clearTimeout(timer)
+      await sleep(hinted > 0 && hinted < 30000 ? hinted : (attempt + 1) * 5000)
+      return get(url, accept, attempt + 1)
+    }
     if (!res.ok) throw new Error(`HTTP ${res.status}`)
     return await res.text()
   } finally {
@@ -144,8 +173,10 @@ async function get(url, accept) {
  *      site generator publishes to one of them
  *
  * A feed entry may also list `alt` URLs of its own — known previous addresses,
- * regional mirrors — which are tried before either step. This only ever runs
- * after the configured URL has failed, and stops at the first feed that parses.
+ * regional mirrors — which are tried before either step, and `fallback` URLs
+ * (a broader feed from the same company, say) which are tried only after both
+ * steps have failed. This only ever runs after the configured URL has failed,
+ * and stops at the first feed that parses.
  */
 const CONVENTIONAL = ['feed', 'feed.xml', 'rss', 'rss.xml', 'atom.xml', 'index.xml', 'feed/']
 
@@ -173,6 +204,7 @@ async function* candidates(feed) {
   // resolve against the blog's own path, so /blog/engineering/ -> /blog/engineering/feed
   const base = feed.site.endsWith('/') ? feed.site : `${feed.site}/`
   for (const p of CONVENTIONAL) yield new URL(p, base).toString()
+  for (const u of feed.fallback ?? []) yield u
 }
 
 async function readFeed(url) {
@@ -278,8 +310,9 @@ const collected = []
 const moved = [] // feeds that only worked after discovery — worth writing back into feeds.json
 const perSource = []
 
-// modest concurrency — enough to be quick, polite enough not to look like a scrape
-const QUEUE = [...feeds]
+// modest concurrency — enough to be quick, polite enough not to look like a scrape.
+// `manual` sources publish no feed; they are listed for the picks file only.
+const QUEUE = feeds.filter((f) => !f.manual)
 async function worker() {
   while (QUEUE.length) {
     const feed = QUEUE.shift()
@@ -300,16 +333,64 @@ async function worker() {
     }
   }
 }
-console.log(`Fetching ${feeds.length} feeds…`)
+console.log(`Fetching ${QUEUE.length} feeds…`)
 await Promise.all(Array.from({ length: WORKERS }, worker))
 
-// dedupe on canonical URL across sources (cross-posts), newest wins, then sort and cap
+// curated picks join the pool under their company; a pick that a feed also
+// carries is deduped below and the feed's copy wins
+const feedBySlug = new Map(feeds.map((f) => [f.slug, f]))
+for (const pick of picks) {
+  const feed = feedBySlug.get(pick.slug)
+  if (!feed) {
+    console.warn(`  warn  pick "${pick.title}" names unknown source "${pick.slug}" — skipped`)
+    continue
+  }
+  const url = canonical(pick.url)
+  const d = new Date(pick.published)
+  collected.push({
+    id: `${feed.slug}:${url}`,
+    title: pick.title,
+    url,
+    company: feed.company,
+    slug: feed.slug,
+    sector: feed.sector,
+    published: Number.isNaN(d.valueOf()) ? stamp : d.toISOString(),
+    excerpt: pick.note ?? '',
+    topics: tagTopics(`${pick.title} ${pick.note ?? ''}`),
+    curated: true,
+  })
+}
+
+// dedupe on canonical URL across sources (cross-posts), newest wins; a feed's
+// own copy of a post beats the curated one so the publisher's excerpt is shown
 const byUrl = new Map()
 for (const p of collected) {
   const prev = byUrl.get(p.url)
-  if (!prev || p.published > prev.published) byUrl.set(p.url, p)
+  if (!prev || (p.published > prev.published && !p.curated) || (prev.curated && !p.curated)) byUrl.set(p.url, p)
 }
-const posts = [...byUrl.values()].sort((a, b) => b.published.localeCompare(a.published)).slice(0, TOTAL)
+
+/**
+ * Fit TOTAL fairly. Keeping simply the newest TOTAL posts would let a handful
+ * of prolific feeds (a vendor publishing several posts a day) push everything
+ * older than a few months from the quiet sources out of the index. Instead find
+ * the largest per-source allowance such that every source keeps its newest
+ * min(count, allowance) posts and the sum fits — the firehoses are trimmed
+ * first, a blog that posts monthly keeps its whole two-year history.
+ */
+function fairShare(all) {
+  const bySlug = new Map()
+  for (const p of all) {
+    if (!bySlug.has(p.slug)) bySlug.set(p.slug, [])
+    bySlug.get(p.slug).push(p)
+  }
+  const lists = [...bySlug.values()].map((l) => l.sort((a, b) => b.published.localeCompare(a.published)))
+  const fits = (c) => lists.reduce((n, l) => n + Math.min(l.length, c), 0) <= TOTAL
+  let allowance = PER_FEED
+  while (allowance > 1 && !fits(allowance)) allowance--
+  return { posts: lists.flatMap((l) => l.slice(0, allowance)), allowance }
+}
+const { posts: kept, allowance } = fairShare([...byUrl.values()])
+const posts = kept.sort((a, b) => b.published.localeCompare(a.published)).slice(0, TOTAL)
 
 // a dead feed is a maintenance task, not a failed build — only bail if nothing
 // at all could be read, which means the runner itself is offline
@@ -326,7 +407,7 @@ fs.writeFileSync(OUT, `${JSON.stringify(index)}\n`)
 const live = new Set(posts.map((p) => p.slug)).size
 const oldest = posts.length ? posts[posts.length - 1].published.slice(0, 10) : '—'
 console.log(
-  `\n${posts.length} posts from ${live} sources (${ok.length}/${feeds.length} feeds reachable), back to ${oldest} → ${path.relative(ROOT, OUT)}`
+  `\n${posts.length} posts from ${live} sources (${ok.length}/${feeds.length} feeds reachable), back to ${oldest}, at most ${allowance} per source → ${path.relative(ROOT, OUT)}`
 )
 if (moved.length) {
   console.log(`\n${moved.length} feed(s) were found at a new URL — update src/data/feeds.json:`)

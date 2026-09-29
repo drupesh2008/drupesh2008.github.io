@@ -1,0 +1,42 @@
+[
+  { "slug": "uber", "title": "QueryGPT – Natural Language to SQL Using Generative AI", "url": "https://www.uber.com/blog/query-gpt/", "published": "2024-09-19",
+    "note": "How a hackathon text-to-SQL demo became a daily tool for operations teams: curated workspaces, an intent step, a table step with a human confirmation, column pruning, then generation." },
+  { "slug": "uber", "title": "Running a Software Factory Efficiently at Uber Scale", "url": "https://www.uber.com/blog/efficient-software-factory/", "published": "2026-08-28",
+    "note": "The platform under Uber's agentic SDLC: an AI context graph, an MCP gateway over a thousand tool servers, an LLM gateway, and why an ungrounded agent fails slowly rather than cheaply." },
+
+  { "slug": "stripe", "title": "Minions: Stripe's one-shot, end-to-end coding agents", "url": "https://stripe.dev/blog/minions-stripes-one-shot-end-to-end-coding-agents", "published": "2026-02-09",
+    "note": "Task-scoped agents that start from a Slack reaction or a ticket, run in isolated devboxes on a fork of Goose with hundreds of MCP tools, and open tested pull requests for human review." },
+  { "slug": "stripe", "title": "Minions: Stripe's one-shot, end-to-end coding agents — Part 2", "url": "https://stripe.dev/blog/minions-stripes-one-shot-end-to-end-coding-agents-part-2", "published": "2026-02-19",
+    "note": "The Stripe-specific work behind the minions: blueprints that mix deterministic steps with agent loops, verification, and making a large codebase legible to agents." },
+
+  { "slug": "linkedin", "title": "How we engineered LinkedIn's Hiring Assistant", "url": "https://www.linkedin.com/blog/engineering/ai/how-we-engineered-linkedins-hiring-assistant", "published": "2025-10-21",
+    "note": "LinkedIn's first production agent: a supervisor over intake, sourcing, evaluation and outreach sub-agents, message-based orchestration, a skills registry and layered memory." },
+  { "slug": "linkedin", "title": "Engineering LinkedIn's Hiring Assistant for International Markets", "url": "https://www.linkedin.com/blog/engineering/ai/engineering-linkedins-hiring-assistant-for-international-markets", "published": "2026-06-08",
+    "note": "What changed when the same AI agent had to work across languages and markets: localisation, sourcing behaviour and evaluation outside the US." },
+
+  { "slug": "anthropic", "title": "Building effective agents", "url": "https://www.anthropic.com/engineering/building-effective-agents", "published": "2024-12-19",
+    "note": "The workflows-versus-agents taxonomy most teams now use: prompt chaining, routing, parallelisation, orchestrator-workers and evaluator-optimiser, with advice on when not to build an agent." },
+  { "slug": "anthropic", "title": "How we built our multi-agent research system", "url": "https://www.anthropic.com/engineering/multi-agent-research-system", "published": "2025-06-13",
+    "note": "An orchestrator that spawns parallel research subagents: delegation prompts, effort scaling, tool design, evaluation with rubrics and humans, and what production required." },
+  { "slug": "anthropic", "title": "Writing tools for agents", "url": "https://www.anthropic.com/engineering/writing-tools-for-agents", "published": "2025-09-11",
+    "note": "How to design, describe and evaluate the tools an agent calls, including letting the model improve its own tool descriptions." },
+  { "slug": "anthropic", "title": "Effective context engineering for AI agents", "url": "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents", "published": "2025-09-29",
+    "note": "Context as a finite attention budget: system prompt calibration, tool curation, compaction, structured note-taking and sub-agent architectures." },
+
+  { "slug": "cognition", "title": "Don't Build Multi-Agents", "url": "https://cognition.com/blog/dont-build-multi-agents", "published": "2025-06-12",
+    "note": "Two principles from building Devin: share full context, and remember that actions carry implicit decisions, so parallel writers produce incoherent results." },
+  { "slug": "cognition", "title": "Multi-Agents: What's Actually Working", "url": "https://cognition.com/blog/multi-agents-working", "published": "2026-04-22",
+    "note": "A year on: swarms remain a distraction, but map-reduce-and-manage setups where extra agents contribute intelligence and writes stay single-threaded do work." },
+
+  { "slug": "manus", "title": "Context Engineering for AI Agents: Lessons from Building Manus", "url": "https://manus.im/blog/Context-Engineering-for-AI-Agents-Lessons-from-Building-Manus", "published": "2025-07-18",
+    "note": "Six lessons from rebuilding an agent framework four times: design around the KV-cache, mask tools instead of removing them, use the file system as context, recite the plan, keep errors in, avoid few-shot ruts." },
+
+  { "slug": "cloudflare", "title": "Code Mode: the better way to use MCP", "url": "https://blog.cloudflare.com/code-mode/", "published": "2025-09-26",
+    "note": "Turn an MCP server into a typed TypeScript API and let the model write code against it inside a sandbox with bindings instead of credentials." },
+
+  { "slug": "airbnb", "title": "Automation Platform v2: Improving conversational AI at Airbnb", "url": "https://medium.com/airbnb-engineering/automation-platform-v2-improving-conversational-ai-at-airbnb-d86c9386e0cb", "published": "2024-10-29",
+    "note": "A hybrid customer-support platform: chain-of-thought tool use where flexibility helps, static workflows where exactness matters, plus context management, parallel guardrails and observability." },
+
+  { "slug": "ramp", "title": "Integrations That Write Themselves", "url": "https://builders.ramp.com/post/integrations-that-write-themselves", "published": "2026-08-14",
+    "note": "An agent that builds a missing integration for a customer in minutes, and an internal factory where a coding agent researches an API, writes the connector, tests it with real credentials and opens a pull request." }
+]
