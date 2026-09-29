@@ -39,6 +39,8 @@ export interface Feed {
   max?: number
   /** the blog publishes no feed; it is listed so that hand-picked posts (picks.json) have a home */
   manual?: boolean
+  /** hosted on Medium (medium.com or a custom domain): fetched one at a time to stay under its rate limit */
+  lane?: 'medium'
 }
 
 /** one hand-picked post in picks.json, for sources that publish no feed */

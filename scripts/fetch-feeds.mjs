@@ -37,6 +37,7 @@ const TIMEOUT_MS = 15000
 const MAX_AGE_DAYS = 730 // two years; anything older ages out of the index
 const WORKERS = 6
 const MIN_GAP_MS = 120 // between any two request starts — spreads the load across publishers
+const MEDIUM_GAP_MS = 2500 // Medium rate-limits one address hard; its feeds run one at a time, spaced out
 
 const { feeds, topics } = JSON.parse(fs.readFileSync(SOURCE, 'utf8'))
 /**
@@ -335,31 +336,41 @@ const collected = []
 const moved = [] // feeds that only worked after discovery — worth writing back into feeds.json
 const perSource = []
 
-// modest concurrency — enough to be quick, polite enough not to look like a scrape.
-// `manual` sources publish no feed; they are listed for the picks file only.
-const QUEUE = feeds.filter((f) => !f.manual)
-async function worker() {
-  while (QUEUE.length) {
-    const feed = QUEUE.shift()
-    const r = await pull(feed)
-    if (r.ok) {
-      ok.push(feed.slug)
-      if (r.via !== feed.url) moved.push({ slug: feed.slug, from: feed.url, to: r.via })
-      const posts = remember(feed, r.posts)
-      collected.push(...posts)
-      perSource.push({ slug: feed.slug, n: posts.length })
-      process.stdout.write(`  ok    ${feed.slug.padEnd(16)} ${String(r.posts.length).padStart(3)} in feed → ${String(posts.length).padStart(3)} kept\n`)
-    } else {
-      failed.push({ slug: feed.slug, reason: r.reason })
-      const posts = remember(feed, [])
-      collected.push(...posts)
-      perSource.push({ slug: feed.slug, n: posts.length })
-      process.stdout.write(`  FAIL  ${feed.slug.padEnd(16)} ${r.reason}${posts.length ? ` (kept ${posts.length} from earlier runs)` : ''}\n`)
-    }
+async function handle(feed) {
+  const r = await pull(feed)
+  if (r.ok) {
+    ok.push(feed.slug)
+    if (r.via !== feed.url) moved.push({ slug: feed.slug, from: feed.url, to: r.via })
+    const posts = remember(feed, r.posts)
+    collected.push(...posts)
+    perSource.push({ slug: feed.slug, n: posts.length })
+    process.stdout.write(`  ok    ${feed.slug.padEnd(16)} ${String(r.posts.length).padStart(3)} in feed → ${String(posts.length).padStart(3)} kept\n`)
+  } else {
+    failed.push({ slug: feed.slug, reason: r.reason })
+    const posts = remember(feed, [])
+    collected.push(...posts)
+    perSource.push({ slug: feed.slug, n: posts.length })
+    process.stdout.write(`  FAIL  ${feed.slug.padEnd(16)} ${r.reason}${posts.length ? ` (kept ${posts.length} from earlier runs)` : ''}\n`)
   }
 }
-console.log(`Fetching ${QUEUE.length} feeds…`)
-await Promise.all(Array.from({ length: WORKERS }, worker))
+
+// Modest concurrency — enough to be quick, polite enough not to look like a
+// scrape. `manual` sources publish no feed and are listed for the picks file
+// only. Feeds hosted on Medium (`lane: "medium"`, including custom domains)
+// share one rate limit, so they run one after another in a lane of their own.
+const QUEUE = feeds.filter((f) => !f.manual && f.lane !== 'medium')
+const MEDIUM = feeds.filter((f) => !f.manual && f.lane === 'medium')
+async function worker() {
+  while (QUEUE.length) await handle(QUEUE.shift())
+}
+async function mediumLane() {
+  for (const feed of MEDIUM) {
+    await handle(feed)
+    await sleep(MEDIUM_GAP_MS)
+  }
+}
+console.log(`Fetching ${QUEUE.length + MEDIUM.length} feeds (${MEDIUM.length} on the Medium lane)…`)
+await Promise.all([...Array.from({ length: WORKERS }, worker), mediumLane()])
 
 // curated picks join the pool under their company; a pick that a feed also
 // carries is deduped below and the feed's copy wins
