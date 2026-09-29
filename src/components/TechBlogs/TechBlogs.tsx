@@ -118,6 +118,11 @@ export default function TechBlogs() {
             <span><b>{liveSources || FEEDS.length}</b> sources</span>
             {updated && <span>updated <b>{updated}</b></span>}
           </div>
+          <a className={styles.pack} href="/downloads/agentic-ai-reading-pack.pdf" download>
+            <span className={styles.packLabel}>Offline reading pack · PDF</span>
+            <span className={styles.packTitle}>Agentic AI, in production: ten engineering posts, digested</span>
+            <span className={styles.packNote}>Original summaries with links to every post. Sized for a phone; nothing republished.</span>
+          </a>
         </header>
 
         <div className={styles.cols}>
@@ -162,7 +167,10 @@ export default function TechBlogs() {
               </div>
               <div className={styles.opts}>
                 {SECTORS.map((sector) => {
-                  const inSector = FEEDS.filter((f) => f.sector === sector)
+                  /* busiest first within a sector, so the active blogs sit at the top of a long list */
+                  const inSector = FEEDS.filter((f) => f.sector === sector).sort(
+                    (a, b) => (perCompany.get(b.slug) ?? 0) - (perCompany.get(a.slug) ?? 0) || a.company.localeCompare(b.company),
+                  )
                   if (!inSector.length) return null
                   return (
                     <div key={sector} style={{ display: 'contents' }}>
@@ -171,12 +179,17 @@ export default function TechBlogs() {
                         /* a source with nothing to show is still worth listing — it says we
                            track it — but clicking it would only ever return an empty page */
                         const n = perCompany.get(f.slug) ?? 0
+                        const hint = f.manual
+                          ? `${f.company} publishes no feed — only hand-picked posts are listed`
+                          : index != null && n === 0
+                            ? `${f.company} is not publishing a readable feed right now`
+                            : undefined
                         return (
                           <button
                             key={f.slug}
                             type="button"
                             disabled={index != null && n === 0}
-                            title={index != null && n === 0 ? `${f.company} is not publishing a readable feed right now` : undefined}
+                            title={hint}
                             className={`${styles.opt} ${companies.includes(f.slug) ? styles.on : ''}`}
                             onClick={() => toggle(companies, setCompanies, f.slug)}
                           >
@@ -245,6 +258,11 @@ export default function TechBlogs() {
                           <span className={styles.company}>{p.company}</span>
                           <span className={styles.date}>{when(p.published)}</span>
                           {isFresh && <span className={styles.fresh}>New</span>}
+                          {p.curated && (
+                            <span className={styles.curated} title="This blog publishes no feed; the post was picked by hand and the note below is ours">
+                              Curated
+                            </span>
+                          )}
                           <span className={styles.host}>{hostOf(p.url)} ↗</span>
                         </div>
                         <h2 className={styles.cardTitle}>{p.title}</h2>
@@ -274,7 +292,10 @@ export default function TechBlogs() {
               <p>
                 This page is a directory. Titles, dates and excerpts come from each publisher&apos;s own
                 RSS or Atom feed, and every link goes to their site — no article text is copied or
-                rehosted, and nothing is served from here but the index itself.
+                rehosted, and nothing is served from here but the index itself. A few blogs publish no
+                feed at all (Uber, LinkedIn, Stripe&apos;s dev blog, Anthropic); rather than scrape them,
+                a short hand-picked list of their posts is kept in <code>src/data/picks.json</code> and
+                shown with a <em>Curated</em> tag, where the note is ours rather than the publisher&apos;s.
               </p>
               <p>
                 Want your blog added, or removed? Open an issue on{' '}

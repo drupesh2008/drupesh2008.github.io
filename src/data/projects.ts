@@ -25,11 +25,11 @@ export const projects: Project[] = [
     id: "tech-blogs",
     name: "Industry Tech Blogs",
     teaser:
-      "One reader over the engineering blogs worth following. Filter by company or topic; every card links to the original post. A GitHub Action refreshes the index every six hours.",
+      "One reader over the engineering blogs worth following, from Netflix and Stripe to the AI labs. Filter by company or topic — including Agentic AI — and every card links to the original post. A GitHub Action refreshes the index every six hours and keeps history across runs.",
     status: "Live",
     accentColor: "violet",
     href: "/tech-blogs",
-    stats: "500+ posts · 32 sources · self-refreshing",
+    stats: "1,500 posts · 100+ sources · self-refreshing",
   },
   {
     id: "gamma",

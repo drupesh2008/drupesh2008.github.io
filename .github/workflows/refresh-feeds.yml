@@ -51,9 +51,11 @@ jobs:
           echo "changed=true" >> "$GITHUB_OUTPUT"
 
   # A GITHUB_TOKEN commit will not set off the push-triggered deploy, so call it.
+  # Only from main: a dispatch on a feature branch refreshes that branch's index
+  # (useful for trying out new sources) and must not publish the branch.
   deploy:
     needs: refresh
-    if: needs.refresh.outputs.changed == 'true'
+    if: needs.refresh.outputs.changed == 'true' && github.ref == 'refs/heads/main'
     uses: ./.github/workflows/deploy.yml
     permissions:
       contents: read
