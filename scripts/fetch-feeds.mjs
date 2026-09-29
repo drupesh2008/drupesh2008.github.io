@@ -32,7 +32,7 @@ const PICKS = path.join(ROOT, 'src/data/picks.json')
 const OUT = path.join(ROOT, 'public/data/tech-blogs.json')
 
 const PER_FEED = 80 // newest posts kept per source, across runs (feeds.json can lower it with "max")
-const TOTAL = 1500 // hard cap on the published file, shared fairly between sources (see fairShare)
+const TOTAL = 1000 // hard cap on the published file, shared fairly between sources (see fairShare)
 const TIMEOUT_MS = 15000
 const MAX_AGE_DAYS = 730 // two years; anything older ages out of the index
 const WORKERS = 6
@@ -103,6 +103,28 @@ const tagTopics = (text) => {
   const hay = ` ${text.toLowerCase()} `
   return topics.filter((t) => t.keywords.some((k) => hay.includes(k.toLowerCase()))).map((t) => t.id)
 }
+
+/**
+ * This is an index of engineering writing, not a changelog aggregator. Even a
+ * good engineering blog posts release notes, "now available" notices, event
+ * recaps and newsletters; those are dropped by title so that what remains is
+ * the write-ups. Hand-picked posts are never subject to this.
+ */
+const EXCLUDE = new RegExp(
+  [
+    'now (generally )?available', 'generally available', 'general availability', 'is (now )?released',
+    'are (now )?released', 'release notes', 'patch release', 'patch notes', 'changelog', 'product update',
+    'announcing', 'webinar', 'summit', 'keynote', 'meetup', 'conference', 'recap', 'round-?up', 'newsletter',
+    'digest', 'week in review', 'year in review', 'month in review', 'awards?\\b', 'honou?red', 'named a leader',
+    'gartner', 'forrester', 'magic quadrant', 'customer stor(y|ies)', 'partners? with',
+    'partnership', 'collaborat(es|ion) with', 'acquires?\\b', 'acquisition', 'funding', 'series [a-f]\\b',
+    "we'?re hiring", 'join (us|our team)', 'job openings?', 'careers? at', 'holiday', 'black friday',
+    'discount', 'pricing', 'sustainability report', 'expanding (in|to|our)', 'new office', 'deprecat(ion|ed)',
+    'end[- ]of[- ]life', '\\beol\\b', 'maintenance window', 'sponsor', 'giveaway', 'hackathon winners?',
+  ].join('|'),
+  'i',
+)
+const isUpdate = (title) => EXCLUDE.test(title)
 
 /**
  * The same post must dedupe to one entry no matter which run fetched it, so
@@ -244,6 +266,7 @@ async function pull(feed) {
     const title = decode(tag(item, 'title'))
     const url = canonical(linkOf(item))
     if (!title || !url || !/^https?:/i.test(url)) continue
+    if (isUpdate(title)) continue
 
     const rawExcerpt =
       tag(item, 'description') || tag(item, 'summary') || tag(item, 'content:encoded') || tag(item, 'content')
@@ -295,7 +318,7 @@ function remember(feed, fresh) {
     byUrl.set(p.url, { ...p, published: p.published || prev?.published || stamp })
   }
   const posts = [...byUrl.values()]
-    .filter((p) => new Date(p.published).valueOf() >= cutoff)
+    .filter((p) => new Date(p.published).valueOf() >= cutoff && !isUpdate(p.title))
     .map((p) => ({
       ...p,
       company: feed.company,
