@@ -290,12 +290,15 @@ export default function TechBlogs() {
 
             <footer className={styles.foot}>
               <p>
-                This page is a directory. Titles, dates and excerpts come from each publisher&apos;s own
-                RSS or Atom feed, and every link goes to their site — no article text is copied or
-                rehosted, and nothing is served from here but the index itself. A few blogs publish no
-                feed at all (Uber, LinkedIn, Stripe&apos;s dev blog, Anthropic); rather than scrape them,
-                a short hand-picked list of their posts is kept in <code>src/data/picks.json</code> and
-                shown with a <em>Curated</em> tag, where the note is ours rather than the publisher&apos;s.
+                This page is a directory of engineering write-ups. Titles, dates and excerpts come from
+                each company&apos;s own engineering blog feed, and every link goes to their site — no
+                article text is copied or rehosted, and nothing is served from here but the index itself.
+                Release notes, &ldquo;now available&rdquo; notices, event recaps and newsletters are
+                filtered out by title, and blogs that are mostly product news are not indexed at all.
+                A few engineering blogs publish no feed (Uber, LinkedIn, Stripe&apos;s dev blog, Anthropic);
+                rather than scrape them, a short hand-picked list of their posts is kept in{' '}
+                <code>src/data/picks.json</code> and shown with a <em>Curated</em> tag, where the note is
+                ours rather than the publisher&apos;s.
               </p>
               <p>
                 Want your blog added, or removed? Open an issue on{' '}
