@@ -100,6 +100,7 @@ export default function TechBlogs() {
           <Link className={styles.back} href="/">← Ground station</Link>
           <div className={styles.topLinks}>
             <Link href="/learning">Learning</Link>
+            <Link href="/research-papers">Papers</Link>
             <Link href="/about">About</Link>
             <ThemeToggle />
           </div>

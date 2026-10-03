@@ -1,0 +1,125 @@
+/* ══════════════════════════════════════════════════════════════════
+   /research-papers — what the paper pages add on top of the shared
+   reading layout (Pathway.module.css): a paper masthead, and the
+   interactive simulations. Everything is drawn in the page's own
+   tokens, so both theme exposures work without a second stylesheet.
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ── paper masthead ─────────────────────────────────────────────── */
+.authors { margin: 0 0 6px; color: var(--chalk); font-size: 14px; line-height: 1.6; max-width: 70ch; }
+.venue {
+  font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--faint); margin: 0 0 18px;
+}
+.venue b { color: var(--chalk); font-weight: 500; }
+.pdf {
+  display: inline-flex; align-items: center; gap: 9px; text-decoration: none;
+  border: 1px solid var(--accent); border-radius: 999px; padding: 9px 16px; margin: 0 0 26px;
+  font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent);
+  transition: background 0.18s, color 0.18s;
+}
+.pdf:hover { background: var(--accent); color: var(--void); }
+.pdfHint { font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; color: var(--faint); margin-left: 12px; }
+
+/* ── the simulations ────────────────────────────────────────────── */
+.sim {
+  margin: 26px 0; max-width: 760px;
+  border: 1px solid var(--edgeHi); border-radius: 14px; background: var(--panel); overflow: hidden;
+}
+.simHead {
+  display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;
+  padding: 12px 18px; border-bottom: 1px solid var(--edge);
+}
+.simCap {
+  font-family: var(--mono); font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent);
+}
+.simTitle { color: var(--chalk); font-size: 14px; font-weight: 500; }
+.simNote { padding: 0 18px; margin: 12px 0 0; color: var(--dim); font-size: 13px; line-height: 1.65; max-width: 68ch; }
+.simBody { padding: 14px 18px 18px; }
+.simBody svg { display: block; width: 100%; height: auto; font-family: var(--mono); }
+.simRead {
+  margin: 12px 0 0; padding: 10px 12px; border-left: 2px solid var(--accent); background: var(--panel2);
+  border-radius: 0 8px 8px 0; color: var(--chalk); font-size: 13px; line-height: 1.6;
+}
+
+/* controls */
+.controls { display: flex; gap: 10px 18px; flex-wrap: wrap; align-items: flex-end; margin-bottom: 14px; }
+.ctl { display: flex; flex-direction: column; gap: 5px; min-width: 150px; }
+.ctlLabel {
+  font-family: var(--mono); font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--faint);
+  display: flex; justify-content: space-between; gap: 10px;
+}
+.ctlLabel b { color: var(--chalk); font-weight: 500; font-variant-numeric: tabular-nums; }
+.range { width: 100%; accent-color: var(--accent); cursor: pointer; height: 20px; margin: 0; }
+.select {
+  background: var(--panel2); color: var(--chalk); border: 1px solid var(--edge); border-radius: 8px;
+  padding: 7px 10px; font-family: var(--sans); font-size: 13px;
+}
+.input {
+  background: var(--panel2); color: var(--chalk); border: 1px solid var(--edge); border-radius: 8px;
+  padding: 7px 10px; font-family: var(--mono); font-size: 12.5px; min-width: 0;
+}
+.textarea {
+  width: 100%; background: var(--panel2); color: var(--chalk); border: 1px solid var(--edge); border-radius: 8px;
+  padding: 9px 11px; font-family: var(--mono); font-size: 12.5px; line-height: 1.55; resize: vertical; min-height: 64px;
+}
+.btn {
+  cursor: pointer; border: 1px solid var(--edgeHi); border-radius: 999px; background: none; color: var(--chalk);
+  padding: 7px 14px; font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+  transition: border-color 0.16s, background 0.16s, color 0.16s;
+}
+.btn:hover { border-color: var(--accent); color: var(--bright); }
+.btn:disabled { opacity: 0.38; cursor: default; }
+.btnPrimary { border-color: var(--accent); background: var(--accent); color: var(--void); }
+.btnPrimary:hover { color: var(--void); filter: brightness(1.08); }
+.btnRow { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+
+/* readouts */
+.stats { display: flex; gap: 14px 26px; flex-wrap: wrap; margin: 10px 0 0; }
+.stat { display: flex; flex-direction: column; gap: 2px; }
+.statLabel { font-family: var(--mono); font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--faint); }
+.statValue { font-family: var(--serif); font-size: 24px; line-height: 1.1; color: var(--bright); font-variant-numeric: tabular-nums; }
+.statValue small { font-family: var(--mono); font-size: 10px; color: var(--faint); margin-left: 5px; letter-spacing: 0.08em; }
+.statHint { font-size: 12px; color: var(--dim); }
+.ok { color: var(--accent); }
+.bad { color: #ff7a7a; }
+:global([data-theme="light"]) .bad { color: #b42318; }
+
+.legend { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 10px; font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--faint); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.swatch { width: 10px; height: 10px; border-radius: 3px; display: inline-block; border: 1px solid var(--edgeHi); }
+
+/* small data tables inside sims */
+.table { width: 100%; border-collapse: collapse; font-family: var(--mono); font-size: 11.5px; line-height: 1.5; }
+.table th { text-align: left; font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--faint); font-weight: 500; padding: 6px 10px 6px 0; border-bottom: 1px solid var(--edgeHi); }
+.table td { padding: 6px 10px 6px 0; border-bottom: 1px solid var(--edge); color: var(--dim); vertical-align: top; }
+.table td:first-child { color: var(--chalk); }
+.hi { color: var(--accent); }
+.muted { opacity: 0.45; }
+
+/* token/cell grids (attention, convolution, logs) */
+.cells { display: grid; gap: 3px; }
+.cell {
+  aspect-ratio: 1; border-radius: 3px; border: 1px solid var(--edge); display: flex; align-items: center; justify-content: center;
+  font-family: var(--mono); font-size: 9px; color: var(--faint); cursor: pointer; user-select: none;
+}
+.chip {
+  display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--edge); border-radius: 999px;
+  padding: 4px 10px; font-family: var(--mono); font-size: 11px; color: var(--chalk); background: var(--panel2);
+  cursor: pointer; transition: border-color 0.15s, background 0.15s;
+}
+.chip:hover { border-color: var(--edgeHi); }
+.chipOn { border-color: var(--accent); color: var(--accent); }
+.chips { display: flex; gap: 6px; flex-wrap: wrap; }
+
+.log {
+  font-family: var(--mono); font-size: 11.5px; line-height: 1.6; color: var(--dim);
+  background: var(--panel2); border: 1px solid var(--edge); border-radius: 8px; padding: 10px 12px;
+  max-height: 180px; overflow: auto; margin-top: 10px; white-space: pre-wrap;
+}
+.log b { color: var(--chalk); font-weight: 500; }
+
+@media (max-width: 560px) {
+  .simBody { padding: 12px 12px 14px; }
+  .ctl { min-width: 120px; flex: 1; }
+}

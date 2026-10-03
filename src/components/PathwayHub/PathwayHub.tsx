@@ -22,6 +22,7 @@ export default function PathwayHub() {
           <Link className={styles.back} href="/">← Ground station</Link>
           <div className={styles.topLinks}>
             <Link href="/tech-blogs">Tech blogs</Link>
+            <Link href="/research-papers">Papers</Link>
             <Link href="/about">About</Link>
             <ThemeToggle />
           </div>

@@ -32,10 +32,13 @@ export const projects: Project[] = [
     stats: "1,000 posts · 90+ engineering blogs · self-refreshing",
   },
   {
-    id: "gamma",
-    name: "Project Gamma",
-    teaser: "Watch this space...",
-    status: "Stealth",
+    id: "research-papers",
+    name: "Research Papers, Explained",
+    teaser:
+      "Twenty papers that shaped how software is built — MapReduce, Dynamo, Raft, Spanner, Bigtable, Kafka, Borg, AlexNet, the Transformer and more. Each one is told problem-first in plain words, with diagrams, an interactive simulation to play with, and a link to the original paper.",
+    status: "Live",
     accentColor: "amber",
+    href: "/research-papers",
+    stats: "4 fields · 20 papers · 20 interactive sims",
   },
 ];
