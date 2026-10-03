@@ -55,6 +55,7 @@ function TopBar({ backHref, backLabel }: { backHref: string; backLabel: string }
       <div className={styles.topLinks}>
         <Link href="/learning">All pathways</Link>
         <Link href="/tech-blogs">Tech blogs</Link>
+        <Link href="/research-papers">Papers</Link>
         <ThemeToggle />
       </div>
     </div>

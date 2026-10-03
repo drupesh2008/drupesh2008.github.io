@@ -34,7 +34,7 @@ export default function Projects() {
       <div className={styles.header}>
         <h2 className={styles.title}>Projects</h2>
         <div className={styles.underline} />
-        <p className={styles.subtitle}>Built in public — two live, more brewing.</p>
+        <p className={styles.subtitle}>Built in public — three live, more brewing.</p>
       </div>
 
       <motion.div

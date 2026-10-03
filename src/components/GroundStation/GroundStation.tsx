@@ -593,6 +593,7 @@ export default function GroundStation() {
           <nav className={styles.topnav}>
             <Link href="/learning">Learning</Link>
             <Link href="/tech-blogs">Blogs</Link>
+            <Link href="/research-papers">Papers</Link>
             <Link href="/about">About</Link>
             <ThemeToggle />
           </nav>
@@ -671,6 +672,9 @@ export default function GroundStation() {
             </Link>
             <Link className={styles.readme} href="/tech-blogs">
               Tech blogs <span className={styles.arr}>→</span>
+            </Link>
+            <Link className={styles.readme} href="/research-papers">
+              Research papers <span className={styles.arr}>→</span>
             </Link>
             <Link className={styles.readme} href="/about">
               About me <span className={styles.arr}>→</span>
