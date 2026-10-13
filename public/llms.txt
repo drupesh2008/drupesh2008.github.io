@@ -1,0 +1,18 @@
+# D Rupesh Kumar
+
+> Senior Vice President of Engineering at Motilal Oswal Financial Services, building agentic AI and fintech platforms. Previously SeekOut, Skyserve.ai and LocationIQ; founder of CLAY (2017-2019). This site also hosts free learning pathways, an index of engineering blogs and explained research papers.
+
+## Learning (free, no sign-in)
+- [Learning pathways](https://crysthope.com/learning/): four courses from zero to professional - Foundations, Distributed Systems, System Design, AI Engineering.
+- [Research papers, explained](https://crysthope.com/research-papers/): 20 landmark papers (MapReduce, Dynamo, Raft, Spanner and more) with plain-language explainers.
+- [Industry tech blogs](https://crysthope.com/tech-blogs/): one reader over 90+ engineering blogs, engineering write-ups only, refreshed every six hours; every card links to the original.
+
+## About D Rupesh Kumar
+- [About](https://crysthope.com/about/)
+- [Journey](https://crysthope.com/journey/): CLAY, hardware, LocationIQ, Skyserve.ai, SeekOut, Motilal Oswal.
+- [CLAY founder story](https://crysthope.com/journey/clay/)
+- [Work](https://crysthope.com/work/) and [Satellite ML Ops case study](https://crysthope.com/work/satellite-ml-ops/)
+- [Contact](https://crysthope.com/contact/)
+
+## Sitemap
+- https://crysthope.com/sitemap.xml
