@@ -57,11 +57,14 @@ export function PapersHub() {
           <div className={hub.eyebrow}><span className={hub.bar} /> Free · no sign-in · explained here, linked to the originals</div>
           <h1>Research papers</h1>
           <p>
-            Twenty papers that built the software industry, five from each of four fields, each explained
-            on its own page <strong>from the problem outward</strong>: what the world looked like before,
-            what broke, what the authors proposed, and how it works, in plain words, with diagrams and an
-            interactive simulation you can play with. Every page links to the original paper and to the best
-            free explanations elsewhere. Read a category in order, or jump to the one you keep hearing about.
+            Twenty papers that shaped how software is built, five from each of four fields. Each page
+            starts where the authors started, with the problem they could not get around, then walks
+            the mechanism through one small worked example you can check by hand.
+          </p>
+          <p>
+            Every explainer has diagrams, a simulation to play with, notes on what later work changed,
+            and a guide to reading the original. Read a field in order, or start with the paper you
+            keep hearing about.
           </p>
           <div className={hub.stats}>
             <span><b>{CATEGORIES.length}</b> fields</span>

@@ -153,6 +153,11 @@
   font-family: var(--mono); font-size: 0.85em; color: var(--chalk);
   background: var(--panel); border: 1px solid var(--edge); border-radius: 5px; padding: 1px 5px;
 }
+.prose pre {
+  margin: 0 0 18px; padding: 14px 16px; overflow-x: auto; max-width: 760px;
+  background: var(--panel); border: 1px solid var(--edge); border-radius: 10px;
+}
+.prose pre code { background: none; border: 0; padding: 0; font-size: 12.5px; line-height: 1.6; white-space: pre; }
 .prose ul, .prose ol { margin: 0 0 16px; padding-left: 20px; color: var(--dim); font-size: 14.5px; line-height: 1.75; }
 .prose li { margin-bottom: 7px; }
 .prose li::marker { color: var(--accent); }
@@ -188,6 +193,26 @@
   color: var(--accent); margin-bottom: 6px;
 }
 .callout p { margin: 0; color: var(--chalk); font-size: 14px; line-height: 1.7; }
+
+/* predict-then-reveal: the reader commits to an answer before seeing it */
+.predict {
+  border: 1px dashed var(--edgeHi); border-radius: 12px; background: var(--panel);
+  padding: 14px 18px; margin: 22px 0; max-width: 68ch;
+}
+.predictQ { margin: 0 0 10px !important; color: var(--chalk) !important; font-size: 14.5px !important; }
+.predict summary {
+  cursor: pointer; font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--accent);
+}
+.predictA { margin-top: 10px; }
+.predictA p { font-size: 14px !important; }
+
+/* end-of-chapter takeaways */
+.notes {
+  border-top: 1px solid var(--edgeHi); margin: 34px 0 6px; padding-top: 16px; max-width: 68ch;
+}
+.notes ul { margin: 0; padding-left: 18px; }
+.notes li { color: var(--chalk); font-size: 14px; line-height: 1.7; margin-bottom: 6px; }
 
 /* ── figures ─────────────────────────────────────────────────────── */
 .fig { margin: 26px 0; max-width: 760px; }

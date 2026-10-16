@@ -62,10 +62,10 @@ export const CATEGORIES: Category[] = [
     id: 'distributed-systems',
     index: 1,
     title: 'Distributed Systems',
-    tagline: 'time · consensus · scale',
+    tagline: 'order · failure · agreement',
     hex: '#5EE9D5',
     blurb:
-      'Five papers that define how many machines act as one: what "before" means without a shared clock, how a thousand computers run one program, how a store stays up when parts of it are down, how a cluster agrees, and how a database spans the planet.',
+      'Five papers about getting many unreliable machines to behave like one. They start from the same problem, that no clock can be trusted to order events, and answer it differently: a single master, merging conflicting versions, a majority vote, and clocks that report their own error.',
     papers: [
       {
         id: 'lamport-clocks',
@@ -75,8 +75,8 @@ export const CATEGORIES: Category[] = [
         year: 1978,
         venue: 'Communications of the ACM',
         pdf: 'https://lamport.azurewebsites.net/pubs/time-clocks.pdf',
-        lede: 'Machines have no shared clock, so "which happened first" has no obvious answer. This paper defines the only order that matters and shows how to compute it.',
-        minutes: 12,
+        lede: 'Defines “happened before” from messages instead of clocks and builds a counter that respects it. Read it for the state-machine idea in its second half, which every replicated database still uses.',
+        minutes: 11,
         resources: [
           { type: 'video', title: 'Distributed Systems 4.1: Logical time', source: 'Martin Kleppmann · University of Cambridge', url: 'https://www.youtube.com/watch?v=x-D8iFU1d-o', note: 'A clear lecture on happens-before, Lamport clocks and vector clocks, with the same examples drawn out step by step.' },
           { type: 'article', title: 'Lamport on the paper, in his own words', source: 'lamport.azurewebsites.net', url: 'https://lamport.azurewebsites.net/pubs/pubs.html#time-clocks', note: 'His publication page has a short note on how the idea came about and why he thinks people cite it for the wrong reason.' },
@@ -90,8 +90,8 @@ export const CATEGORIES: Category[] = [
         year: 2004,
         venue: 'OSDI',
         pdf: 'https://research.google/pubs/mapreduce-simplified-data-processing-on-large-clusters/',
-        lede: 'Processing a terabyte on a thousand cheap machines used to mean writing a thousand-machine program. MapReduce lets you write two small functions and handles the rest.',
-        minutes: 13,
+        lede: 'Runs a two-function program over terabytes on thousands of failing machines. Read it for the fault-tolerance reasoning: which work is re-run, which is not, and what the programmer must promise.',
+        minutes: 12,
         resources: [
           { type: 'video', title: 'MIT 6.824 Lecture 1: Introduction and MapReduce', source: 'MIT · Robert Morris', url: 'https://www.youtube.com/watch?v=cQP8WApzIQQ', note: 'The opening lecture of the best distributed-systems course on the web walks through this exact paper.' },
           { type: 'course', title: '6.824 Distributed Systems', source: 'MIT', url: 'https://pdos.csail.mit.edu/6.824/', note: 'Lab 1 has you implement MapReduce yourself; nothing teaches the paper better.' },
@@ -105,8 +105,8 @@ export const CATEGORIES: Category[] = [
         year: 2007,
         venue: 'SOSP',
         pdf: 'https://www.allthingsdistributed.com/files/amazon-dynamo-sosp2007.pdf',
-        lede: 'A shopping cart must accept writes even while servers and whole data centres fail. Dynamo shows what you give up to make that true, and how to live with it.',
-        minutes: 14,
+        lede: 'A key-value store that keeps accepting writes during failures and hands conflicting versions to the application. Read it to see exactly what “eventually consistent” costs, measured in production.',
+        minutes: 12,
         resources: [
           { type: 'article', title: 'A Decade of Dynamo', source: 'Werner Vogels · All Things Distributed', url: 'https://www.allthingsdistributed.com/2017/10/a-decade-of-dynamo.html', note: 'The CTO who co-authored the paper on what it got right, what changed, and how it became DynamoDB.' },
           { type: 'paper', title: 'Amazon DynamoDB: A Scalable, Predictably Performant, and Fully Managed NoSQL Database Service', source: 'USENIX ATC 2022', url: 'https://www.usenix.org/conference/atc22/presentation/elhemali', note: 'The sequel: what fifteen years of running the idea as a service taught the team.' },
@@ -120,8 +120,8 @@ export const CATEGORIES: Category[] = [
         year: 2014,
         venue: 'USENIX ATC',
         pdf: 'https://raft.github.io/raft.pdf',
-        lede: 'Getting a cluster to agree on a log while machines crash is the hardest common problem in infrastructure. Raft solves it in a form a working engineer can hold in their head.',
-        minutes: 14,
+        lede: 'A consensus algorithm that keeps a replicated log identical across crashes, designed to be understood. Read it before you operate etcd, Consul or any database that replicates with a leader.',
+        minutes: 12,
         resources: [
           { type: 'tool', title: 'The Secret Lives of Data: Raft', source: 'thesecretlivesofdata.com', url: 'https://thesecretlivesofdata.com/raft/', note: 'An animated walkthrough of elections and log replication; the best ten minutes you can spend on this paper.' },
           { type: 'video', title: 'Designing for Understandability: The Raft Consensus Algorithm', source: 'Diego Ongaro', url: 'https://www.youtube.com/watch?v=vYp4LYbnnW8', note: 'The author presenting the design and the reasoning behind each choice.' },
@@ -136,8 +136,8 @@ export const CATEGORIES: Category[] = [
         year: 2012,
         venue: 'OSDI',
         pdf: 'https://research.google/pubs/spanner-googles-globally-distributed-database-2/',
-        lede: 'Everyone said a database could not be both global and strongly consistent. Spanner did it by admitting that clocks are uncertain, and measuring the uncertainty.',
-        minutes: 13,
+        lede: 'A globally replicated SQL database whose timestamps match real time, achieved by measuring clock error and waiting it out. Read it to see clock accuracy turned directly into write latency.',
+        minutes: 11,
         resources: [
           { type: 'paper', title: 'Spanner, TrueTime and the CAP Theorem', source: 'Eric Brewer · Google', url: 'https://research.google/pubs/spanner-truetime-and-the-cap-theorem/', note: 'The author of the CAP theorem explains how Spanner relates to it, in eight readable pages.' },
           { type: 'docs', title: 'TrueTime and external consistency', source: 'Google Cloud Spanner docs', url: 'https://cloud.google.com/spanner/docs/true-time-external-consistency', note: 'The production documentation for the mechanism this page explains.' },
@@ -149,10 +149,10 @@ export const CATEGORIES: Category[] = [
     id: 'databases',
     index: 2,
     title: 'Databases & Storage',
-    tagline: 'tables · logs · trees',
+    tagline: 'tables · recovery · LSM-trees · row keys · logs',
     hex: '#FFB454',
     blurb:
-      'Five papers under every database you have used: why data became tables, how a crash never loses a committed write, why modern stores write sequentially, how Google kept a sorted map across thousands of machines, and why the log became the centre of data infrastructure.',
+      'Five papers that explain how the databases you run behave: why queries stopped depending on storage layout, how a crash keeps committed writes and drops the rest, why write-heavy stores defer their sorting, how a row key decides where load lands, and how one shared log feeds many systems at once.',
     papers: [
       {
         id: 'relational-model',
@@ -162,7 +162,7 @@ export const CATEGORIES: Category[] = [
         year: 1970,
         venue: 'Communications of the ACM',
         pdf: 'https://dl.acm.org/doi/10.1145/362384.362685',
-        lede: 'In 1970 a program had to know how data was physically stored to read it. Codd proposed describing data as plain tables and asking questions in logic, and every SQL database is the result.',
+        lede: 'Codd defines data as relations related by shared values, so programs stop depending on how records are stored. Read it to see which failures the model was built to remove, and why it made the query optimiser necessary.',
         minutes: 12,
         resources: [
           { type: 'paper', title: 'Relational database: a practical foundation for productivity', source: "Codd's Turing Award lecture, 1981", url: 'https://dl.acm.org/doi/10.1145/358396.358400', note: 'Eleven years on, Codd on what the model had become and what it was always for.' },
@@ -177,8 +177,8 @@ export const CATEGORIES: Category[] = [
         year: 1992,
         venue: 'ACM Transactions on Database Systems',
         pdf: 'https://dl.acm.org/doi/10.1145/128765.128770',
-        lede: 'Pull the plug on a database mid-write and it must come back with every committed change and none of the uncommitted ones. ARIES is the recipe almost every database uses to do that.',
-        minutes: 14,
+        lede: 'ARIES recovers a database after a crash with a write-ahead log, page LSNs and three passes: analysis, redo and undo. Read it to understand commit latency, why redo replays even failed transactions, and how recovery survives crashing again.',
+        minutes: 13,
         resources: [
           { type: 'course', title: 'CMU 15-445 lectures on logging and recovery', source: 'Carnegie Mellon · Andy Pavlo', url: 'https://15445.courses.cs.cmu.edu/', note: 'Two lectures walk through write-ahead logging and the ARIES phases with worked examples.' },
           { type: 'docs', title: 'Write-Ahead Logging', source: 'PostgreSQL documentation', url: 'https://www.postgresql.org/docs/current/wal-intro.html', note: 'How a database you probably run applies the idea.' },
@@ -192,7 +192,7 @@ export const CATEGORIES: Category[] = [
         year: 1996,
         venue: 'Acta Informatica',
         pdf: 'https://www.cs.umb.edu/~poneil/lsmtree.pdf',
-        lede: 'Disks are fast at writing in order and slow at writing in place. The LSM-tree turns every write into an append and sorts later, which is why the stores behind modern systems can absorb a firehose.',
+        lede: 'The LSM-tree batches index inserts in memory and merges them into disk in large sequential passes instead of updating pages in place. Read it to reason about RocksDB, Cassandra and their compaction, tombstones and write stalls.',
         minutes: 12,
         resources: [
           { type: 'article', title: 'Log Structured Merge Trees', source: 'Ben Stopford', url: 'http://www.benstopford.com/2015/02/14/log-structured-merge-trees/', note: 'A patient, diagram-heavy explanation of the structure and its trade-offs.' },
@@ -207,7 +207,7 @@ export const CATEGORIES: Category[] = [
         year: 2006,
         venue: 'OSDI',
         pdf: 'https://research.google/pubs/bigtable-a-distributed-storage-system-for-structured-data/',
-        lede: 'Google needed one storage system for web crawls, Earth imagery and Gmail. Bigtable is a single sorted map, split across thousands of machines, and the ancestor of HBase, Cassandra and more.',
+        lede: 'Bigtable stores a sorted map of rows, columns and timestamps, split by key range across thousands of servers with single-row atomicity. Read it to learn row-key design, which decides scan cost and hot spots in HBase, Cassandra and DynamoDB alike.',
         minutes: 12,
         resources: [
           { type: 'docs', title: 'Cloud Bigtable overview', source: 'Google Cloud', url: 'https://cloud.google.com/bigtable/docs/overview', note: 'The same system as a product; the data-model section matches the paper almost line for line.' },
@@ -222,8 +222,8 @@ export const CATEGORIES: Category[] = [
         year: 2011,
         venue: 'NetDB',
         pdf: 'https://www.microsoft.com/en-us/research/wp-content/uploads/2017/09/Kafka.pdf',
-        lede: 'LinkedIn had dozens of systems that each needed every event. Kafka made the append-only log the one thing everyone reads, and it became the backbone of most data platforms.',
-        minutes: 12,
+        lede: 'Kafka stores events in partitioned append-only logs and lets each consumer group track its own position, so a broker keeps no per-reader state. Read it to understand partitions, consumer lag, per-key ordering and at-least-once delivery.',
+        minutes: 13,
         resources: [
           { type: 'article', title: 'The Log: What every software engineer should know about real-time data’s unifying abstraction', source: 'Jay Kreps · LinkedIn Engineering', url: 'https://engineering.linkedin.com/distributed-systems/log-what-every-software-engineer-should-know-about-real-time-datas-unifying', note: 'The essay the paper grew into; one of the most-recommended pieces of systems writing of the last fifteen years.' },
           { type: 'docs', title: 'Kafka design', source: 'Apache Kafka documentation', url: 'https://kafka.apache.org/documentation/#design', note: 'The design section of the official docs is the paper, updated by a decade of production.' },
@@ -238,7 +238,7 @@ export const CATEGORIES: Category[] = [
     tagline: 'files · traces · tails · schedulers · sandboxes',
     hex: '#4C8BF5',
     blurb:
-      'Five papers from inside the machines the cloud is made of: a file system that expects disks to die, a way to see one request cross a hundred services, why the slowest one per cent decides your latency, the scheduler Kubernetes came from, and the tiny virtual machine under serverless.',
+      'Five papers on running software across thousands of machines: storing files when disks keep failing, following one request through hundreds of services, why waiting for many servers makes the slow case common, sharing one pool of machines between serving and batch work, and isolating strangers’ code on one host without paying for a full VM each.',
     papers: [
       {
         id: 'gfs',
@@ -248,7 +248,7 @@ export const CATEGORIES: Category[] = [
         year: 2003,
         venue: 'SOSP',
         pdf: 'https://research.google/pubs/the-google-file-system/',
-        lede: 'When you run thousands of cheap disks, some are always broken. GFS was designed around that fact, and taught the industry to store files by expecting failure.',
+        lede: 'GFS stores huge, append-heavy files on thousands of unreliable machines with one metadata master and three copies of every chunk. Read it to see a system designed from a written list of workload assumptions, and what a weaker consistency model buys.',
         minutes: 12,
         resources: [
           { type: 'video', title: 'MIT 6.824 Lecture 3: GFS', source: 'MIT · Robert Morris', url: 'https://www.youtube.com/watch?v=EpIgvowZr00', note: 'A lecture devoted to this paper, including its consistency model and what it gave up.' },
@@ -263,7 +263,7 @@ export const CATEGORIES: Category[] = [
         year: 2010,
         venue: 'Google Technical Report',
         pdf: 'https://research.google/pubs/dapper-a-large-scale-distributed-systems-tracing-infrastructure/',
-        lede: 'One search touches hundreds of services, and when it is slow nobody can say where the time went. Dapper follows a request everywhere it goes, cheaply enough to leave on.',
+        lede: 'Dapper records one request across every service it touches as a tree of spans, sampled cheaply enough to leave on in production. Read it to understand the model behind OpenTelemetry and the costs its sampling and collection choices still carry.',
         minutes: 11,
         resources: [
           { type: 'docs', title: 'Traces', source: 'OpenTelemetry documentation', url: 'https://opentelemetry.io/docs/concepts/signals/traces/', note: "Today's open standard for the spans and traces Dapper introduced." },
@@ -278,7 +278,7 @@ export const CATEGORIES: Category[] = [
         year: 2013,
         venue: 'Communications of the ACM',
         pdf: 'https://research.google/pubs/the-tail-at-scale/',
-        lede: 'If one server in a hundred is slow one per cent of the time, a request that touches all hundred is slow most of the time. This paper names that problem and gives the techniques that tame it.',
+        lede: 'This article shows why a request that waits for a hundred servers is usually slow even when each server rarely is, and describes hedged requests, tied requests and other ways to tolerate it. Read it before you design any fan-out or set a percentile target.',
         minutes: 11,
         resources: [
           { type: 'article', title: 'The Tail at Scale', source: 'Communications of the ACM', url: 'https://cacm.acm.org/research/the-tail-at-scale/', note: 'The article itself is short, free and readable in a sitting; this page is a warm-up for it.' },
@@ -293,7 +293,7 @@ export const CATEGORIES: Category[] = [
         year: 2015,
         venue: 'EuroSys',
         pdf: 'https://research.google/pubs/large-scale-cluster-management-at-google-with-borg/',
-        lede: 'Google ran every service and every batch job on one shared pool of machines for a decade before telling anyone how. Borg is that system, and Kubernetes is its open-source grandchild.',
+        lede: 'Borg runs Google’s services and batch jobs on shared cells of about ten thousand machines, using priorities, quota and preemption to decide who gets what. Read it to see where Kubernetes’ model came from and how the savings from sharing were measured.',
         minutes: 12,
         resources: [
           { type: 'article', title: 'Borg, Omega, and Kubernetes', source: 'ACM Queue · Burns, Grant, Oppenheimer, Brewer, Wilkes', url: 'https://queue.acm.org/detail.cfm?id=2898444', note: 'The same authors on the lessons from three generations of cluster managers.' },
@@ -308,7 +308,7 @@ export const CATEGORIES: Category[] = [
         year: 2020,
         venue: 'NSDI',
         pdf: 'https://www.usenix.org/conference/nsdi20/presentation/agache',
-        lede: "Serverless needs thousands of strangers' functions on one machine, isolated like virtual machines and starting like processes. Firecracker is the small VM that made both true.",
+        lede: 'Firecracker is a minimal virtual machine monitor that lets AWS Lambda run thousands of customers’ functions on one host, each in its own KVM-isolated microVM. Read it for a clear comparison of isolation options and an honest account of what a stripped-down VMM gives up.',
         minutes: 11,
         resources: [
           { type: 'docs', title: 'Firecracker', source: 'firecracker-microvm.github.io', url: 'https://firecracker-microvm.github.io/', note: 'The open-source project, with design docs and the getting-started guide.' },
@@ -321,10 +321,10 @@ export const CATEGORIES: Category[] = [
     id: 'ai',
     index: 4,
     title: 'AI & Machine Learning',
-    tagline: 'depth · vectors · attention · scale',
+    tagline: 'learned features · word vectors · attention · prompting · scaling',
     hex: '#A78BFA',
     blurb:
-      'Five papers that explain why the software you use now talks: the network that started the deep-learning era, the trick that turned words into geometry, the architecture under every large language model, the moment models learned tasks from a prompt, and the laws that told labs to keep scaling.',
+      'Five papers that trace how today’s language models came to be built the way they are. Each explainer works the core idea through with small numbers you can check by hand, and says which choices later work kept and which it replaced.',
     papers: [
       {
         id: 'alexnet',
@@ -334,8 +334,8 @@ export const CATEGORIES: Category[] = [
         year: 2012,
         venue: 'NeurIPS',
         pdf: 'https://papers.nips.cc/paper/2012/hash/c399862d3b9d6b76c8436e924a68c45b-Abstract.html',
-        lede: 'Computer vision had plateaued on hand-designed features. A deep network trained on two gaming GPUs beat the field by a margin nobody expected, and the modern era began.',
-        minutes: 12,
+        lede: 'Trains an eight-layer convolutional network on two GPUs and cuts the best ImageNet top-5 error by about 40 per cent. Read it to see how ReLU, dropout, augmentation and GPU code turned an old idea into one that worked.',
+        minutes: 11,
         resources: [
           { type: 'video', title: 'The moment we stopped understanding AI [AlexNet]', source: 'Welch Labs', url: 'https://www.youtube.com/watch?v=UZDiGooFs54', note: 'A visual tour of what AlexNet actually learned, layer by layer.' },
           { type: 'course', title: 'CS231n: Convolutional Networks', source: 'Stanford', url: 'https://cs231n.github.io/convolutional-networks/', note: 'The course notes that taught a generation how convolutions, pooling and depth fit together.' },
@@ -349,8 +349,8 @@ export const CATEGORIES: Category[] = [
         year: 2013,
         venue: 'arXiv / ICLR workshop',
         pdf: 'https://arxiv.org/abs/1301.3781',
-        lede: 'Computers saw words as unrelated symbols. word2vec learned, from nothing but which words appear near which, a geometry where king − man + woman lands on queen.',
-        minutes: 12,
+        lede: 'Learns a vector for every word from raw text by predicting nearby words with a deliberately tiny model. Read it for the cost argument behind that model, and to see what the famous analogies do and do not show.',
+        minutes: 11,
         resources: [
           { type: 'article', title: 'The Illustrated Word2vec', source: 'Jay Alammar', url: 'https://jalammar.github.io/illustrated-word2vec/', note: 'The gentlest complete explanation of skip-gram and negative sampling, with pictures.' },
           { type: 'tool', title: 'Embedding Projector', source: 'TensorFlow', url: 'https://projector.tensorflow.org/', note: 'Fly through real word vectors in three dimensions and search for neighbours.' },
@@ -364,8 +364,8 @@ export const CATEGORIES: Category[] = [
         year: 2017,
         venue: 'NeurIPS',
         pdf: 'https://arxiv.org/abs/1706.03762',
-        lede: 'Sequence models read one word at a time, which made them slow to train and forgetful. The Transformer lets every word look at every other word at once, and it is under every large language model since.',
-        minutes: 15,
+        lede: 'Replaces recurrent networks with attention, so every token reads every other token in parallel. Read it to understand the block inside every large language model, and the n² cost that context windows still pay.',
+        minutes: 11,
         resources: [
           { type: 'video', title: 'Attention in transformers, visually explained', source: '3Blue1Brown', url: 'https://www.youtube.com/watch?v=eMlx5fFNoYc', note: 'The animated explanation of queries, keys and values that this page’s diagrams are a still version of.' },
           { type: 'article', title: 'The Illustrated Transformer', source: 'Jay Alammar', url: 'https://jalammar.github.io/illustrated-transformer/', note: 'The canonical walkthrough of the architecture, block by block.' },
@@ -380,8 +380,8 @@ export const CATEGORIES: Category[] = [
         year: 2020,
         venue: 'NeurIPS',
         pdf: 'https://arxiv.org/abs/2005.14165',
-        lede: 'Every new task used to need a new training run. GPT-3 showed that a large enough model learns a task from a few examples typed into its prompt, which is the interface you use today.',
-        minutes: 12,
+        lede: 'Trains a 175-billion-parameter language model and tests it on tasks described only in the prompt, with no further training. Read it to see where few-shot prompting works, where it fails, and how benchmark leakage was handled.',
+        minutes: 11,
         resources: [
           { type: 'article', title: 'How GPT3 Works: Visualizations and Animations', source: 'Jay Alammar', url: 'https://jalammar.github.io/how-gpt3-works-visualizations-animations/', note: 'A short animated explanation of what the model does with your prompt.' },
           { type: 'video', title: 'But what is a GPT? Visual intro to transformers', source: '3Blue1Brown', url: 'https://www.youtube.com/watch?v=wjZofJX0v4M', note: 'The bigger picture of what a GPT-style model computes, token by token.' },
@@ -395,10 +395,10 @@ export const CATEGORIES: Category[] = [
         year: 2020,
         venue: 'arXiv',
         pdf: 'https://arxiv.org/abs/2001.08361',
-        lede: 'Nobody knew whether bigger models would keep getting better. This paper measured it: loss falls as a smooth power law in model size, data and compute, which is why the labs kept scaling.',
-        minutes: 12,
+        lede: 'Measures how language-model loss falls with parameters, data and compute, and finds simple power laws. Read it with the Chinchilla correction to understand how labs decide a model’s size and how much text to train it on.',
+        minutes: 11,
         resources: [
-          { type: 'paper', title: 'Training Compute-Optimal Large Language Models', source: 'Hoffmann et al. · DeepMind, 2022 ("Chinchilla")', url: 'https://arxiv.org/abs/2203.15556', note: 'The correction: for a fixed budget, models should be smaller and trained on far more data than the original laws suggested.' },
+          { type: 'paper', title: 'Training Compute-Optimal Large Language Models', source: 'Hoffmann et al. · DeepMind, 2022 ("Chinchilla")', url: 'https://arxiv.org/abs/2203.15556', note: 'The correction: with learning-rate schedules matched to each run, the best split is about 20 training tokens per parameter.' },
           { type: 'article', title: 'Scaling laws', source: 'Epoch AI', url: 'https://epoch.ai/blog/scaling-laws-literature-review', note: 'A readable literature review of what has been measured since.' },
         ],
       },

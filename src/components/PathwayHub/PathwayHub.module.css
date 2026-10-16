@@ -67,6 +67,7 @@
   font-family: var(--serif); font-weight: 400; font-size: clamp(36px, 6.4vw, 62px);
   line-height: 1.02; letter-spacing: -0.02em; margin: 0 0 16px; color: var(--bright); text-wrap: balance;
 }
+.head p + p { margin-top: 12px; }
 .head p { margin: 0; max-width: 64ch; color: var(--dim); font-size: clamp(14px, 1.5vw, 16.5px); line-height: 1.72; }
 .head p strong { color: var(--chalk); font-weight: 400; }
 .stats {

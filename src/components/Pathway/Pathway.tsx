@@ -22,7 +22,7 @@ import { accVars } from '@/data/accents'
 import ThemeToggle from '@/components/ThemeToggle'
 import styles from './Pathway.module.css'
 
-export function Callout({ title = 'The load-bearing idea', children }: { title?: string; children: ReactNode }) {
+export function Callout({ title = 'The idea to keep', children }: { title?: string; children: ReactNode }) {
   return (
     <aside className={styles.callout}>
       <div className={styles.calloutCap}>{title}</div>
@@ -37,6 +37,30 @@ export function Fig({ caption, children }: { caption: string; children: ReactNod
       <div className={styles.figArt}>{children}</div>
       <figcaption>{caption}</figcaption>
     </figure>
+  )
+}
+
+/** a question to answer before reading on; the worked answer stays folded until asked for */
+export function Predict({ q, children }: { q: ReactNode; children: ReactNode }) {
+  return (
+    <div className={styles.predict}>
+      <div className={styles.calloutCap}>Predict first</div>
+      <p className={styles.predictQ}>{q}</p>
+      <details>
+        <summary>Show the worked answer</summary>
+        <div className={styles.predictA}>{children}</div>
+      </details>
+    </div>
+  )
+}
+
+/** the chapter's takeaways, one line each — closes every chapter */
+export function Notes({ items }: { items: ReactNode[] }) {
+  return (
+    <aside className={styles.notes}>
+      <div className={styles.calloutCap}>Quick notes</div>
+      <ul>{items.map((it, i) => <li key={i}>{it}</li>)}</ul>
+    </aside>
   )
 }
 

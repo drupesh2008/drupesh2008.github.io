@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono, Space_Grotesk, Instrument_Serif, Newsreader } from 'next/font/google';
+import { Inter, JetBrains_Mono, Space_Grotesk, Instrument_Serif } from 'next/font/google';
 import Script from 'next/script';
 import { GA_TRACKING_ID } from '@/lib/gtag';
 import Analytics from '@/components/Analytics';
@@ -32,13 +32,6 @@ const instrumentSerif = Instrument_Serif({
   display: 'swap',
 });
 
-const newsreader = Newsreader({
-  subsets: ['latin'],
-  weight: ['400', '500', '600'],
-  variable: '--font-newsreader',
-  display: 'swap',
-});
-
 const SITE = 'https://crysthope.com'
 const DESC = 'D Rupesh Kumar, Senior Vice President of Engineering building agentic AI and fintech platforms. Free learning pathways, engineering tech blogs index and explained research papers, plus a 7+ year journey across SpaceTech, geospatial, HR tech and fintech.'
 
@@ -47,8 +40,8 @@ export const metadata: Metadata = {
   title: { default: 'D Rupesh Kumar - Engineering leader, learning pathways, tech blogs and research papers', template: '%s' },
   description: DESC,
   alternates: { canonical: '/' },
-  openGraph: { type: 'website', siteName: 'D Rupesh Kumar', url: SITE, title: 'D Rupesh Kumar - A world of systems', description: DESC, images: [{ url: '/atlas/home-og.jpg', width: 1200, height: 675, alt: 'Atlas of connected terrain islands' }] },
-  twitter: { card: 'summary_large_image', title: 'D Rupesh Kumar - A world of systems', description: DESC, images: ['/atlas/home-og.jpg'] },
+  openGraph: { type: 'website', siteName: 'D Rupesh Kumar', url: SITE, title: 'D Rupesh Kumar', description: DESC },
+  twitter: { card: 'summary', title: 'D Rupesh Kumar', description: DESC },
   robots: { index: true, follow: true },
 };
 
@@ -60,7 +53,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${jetbrainsMono.variable} ${spaceGrotesk.variable} ${instrumentSerif.variable} ${newsreader.variable}`}
+      className={`${inter.variable} ${jetbrainsMono.variable} ${spaceGrotesk.variable} ${instrumentSerif.variable}`}
     >
       <head>
         {/* Set the theme before first paint so a stored choice never flashes.

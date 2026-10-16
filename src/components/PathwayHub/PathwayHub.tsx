@@ -32,11 +32,14 @@ export default function PathwayHub() {
           <div className={styles.eyebrow}><span className={styles.bar} /> Free · no sign-in · written here</div>
           <h1>Learning</h1>
           <p>
-            Four complete pathways from <strong>zero to professional</strong> — through the machine,
-            distributed systems, system design and AI engineering. Every chapter is its own page:
-            open one, finish it, take the next. Each ends with the best free reading on the web,
-            linked straight to the people who wrote it. Walk a pathway in order, or jump to the
-            chapter your work needs this week.
+            Four pathways, each built around one system that grows chapter by chapter: a small
+            service in Foundations, a replicated wallet in Distributed Systems, a food-delivery app
+            in System Design and a support assistant in AI Engineering. Every idea arrives when that
+            system needs it, with the numbers worked out and the tradeoff named.
+          </p>
+          <p>
+            Each chapter is one page and ends with the free reading worth your time, linked to the
+            people who wrote it. Walk a pathway in order, or open the chapter your work needs this week.
           </p>
           <div className={styles.stats}>
             <span><b>{PATHWAYS.length}</b> pathways</span>

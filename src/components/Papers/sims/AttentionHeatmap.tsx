@@ -88,7 +88,7 @@ export default function AttentionHeatmap() {
       </div>
       <Read>
         {tokens[q][0] === 'it'
-          ? `For “it”, the strongest keys are ${top.map((t) => `“${tokens[t.i][0]}” (${(t.w * 100).toFixed(0)}%)`).join(', ')}. The output of this head for “it” is a blend of their value vectors in those proportions, so the word carries the meaning of what it refers to. In the paper's own visualisation, this is exactly the example the authors used.`
+          ? `For “it”, the strongest keys are ${top.map((t) => `“${tokens[t.i][0]}” (${(t.w * 100).toFixed(0)}%)`).join(', ')}. The output of this head for “it” is a blend of their value vectors in those proportions, so the word carries the meaning of what it refers to. Google's 2017 post announcing the Transformer used this same sentence to show attention resolving a pronoun.`
           : `Every token is a query at the same time, in parallel: this is why a Transformer trains so much faster than a model that reads left to right. Lower the temperature to sharpen the weights, raise it to blur them.`}
       </Read>
     </Sim>

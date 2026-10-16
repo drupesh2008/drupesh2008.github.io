@@ -66,23 +66,23 @@ export const PATHWAYS: Pathway[] = [
     id: 'foundations',
     index: 1,
     title: 'Foundations',
-    tagline: 'How the machine actually runs your code',
+    tagline: 'One small service, followed all the way down',
     blurb:
-      'From source code to silicon and back: execution, data representation, memory, the operating system, concurrency, networks, cost, and the mathematics behind ML. The slowest track to pay off, and the one that makes the other three legible.',
+      'We follow hitcount, a small service that counts page views for a blog, from source code to process, through its bytes, caches, kernel, concurrent requests and network path, then estimate, profile and question its numbers. Each chapter starts from something that went wrong with it and works out why.',
     hex: '#7BD88F',
-    minutes: 110,
+    minutes: 115,
     outcomes: [
-      'Predict roughly what a line of code costs before running it',
-      'Explain what the OS is doing for — and to — your process',
-      'Reason about races, locks and event loops without superstition',
-      'Follow a request from socket to socket without hand-waving',
-      'Choose a data structure from the shape of the access pattern',
+      'Pick a representation for a counter, an average or a string knowing where it breaks',
+      'Estimate what a request costs in cache misses, system calls and round trips before building it',
+      'Explain a kill with exit code 137, a throttled container and a lost write from what the kernel does',
+      'Say what each lock in a program protects, and find a lost update or deadlock from its symptoms',
+      'Go from a latency regression to its cause with percentiles, the USE method and the right profile',
     ],
     stages: [
       {
         id: 'how-code-runs',
         title: 'From source code to a running process',
-        lede: 'Before pricing anything, know what actually happens between hitting run and code executing.',
+        lede: 'We meet hitcount and follow it from Go source to machine instructions, a process, its system calls and the stack trace it prints when it crashes.',
         resources: [
           {
             title: 'Putting the “You” in CPU',
@@ -96,7 +96,7 @@ export const PATHWAYS: Pathway[] = [
       {
         id: 'data-representation',
         title: 'Bits, numbers and text',
-        lede: 'Every mysterious bug involving 0.1 + 0.2, mojibake or overflow is this stage, unlearned.',
+        lede: 'A total that went negative, an average that stopped moving and a title that turned into “CafÃ©”: three representation edges, found the hard way.',
         resources: [
           {
             title: 'The Absolute Minimum Every Software Developer Must Know About Unicode',
@@ -117,7 +117,7 @@ export const PATHWAYS: Pathway[] = [
       {
         id: 'machine',
         title: 'The machine underneath',
-        lede: 'You write code that works, but you cannot yet say what it costs.',
+        lede: 'The same code, 2,500 times more pages: why the answer depends on caches and layout more than on the sort.',
         resources: [
           {
             title: 'Teach Yourself Computer Science',
@@ -138,7 +138,7 @@ export const PATHWAYS: Pathway[] = [
       {
         id: 'os',
         title: 'The operating system’s three lies',
-        lede: 'You know memory is slow and caches are fast; now meet the software that hides the machine from you.',
+        lede: 'A throttled container, a silent kill with exit code 137 and a snapshot lost in a power cut, each explained by a promise the kernel keeps imperfectly.',
         resources: [
           {
             title: 'Operating Systems: Three Easy Pieces',
@@ -151,8 +151,8 @@ export const PATHWAYS: Pathway[] = [
       },
       {
         id: 'concurrency',
-        title: 'Concurrency: sharing memory without lying',
-        lede: 'The scheduler interleaves your threads wherever it pleases; correctness under that is a discipline.',
+        title: 'Concurrency: two requests, one counter',
+        lede: '100,000 hits go in and 97,412 come out. Lost updates, the invariants locks protect, and a deadlock in the snapshot code.',
         resources: [
           {
             title: 'Rust Atomics and Locks',
@@ -165,8 +165,8 @@ export const PATHWAYS: Pathway[] = [
       },
       {
         id: 'network',
-        title: 'The network is a machine too',
-        lede: 'Everything so far happened inside one box. Almost nothing you will build stays there.',
+        title: 'One request across the network',
+        lede: 'The handler takes 40 µs and the reader waits 800 ms. Where the rest goes, and what the network loses without telling anyone.',
         resources: [
           {
             title: 'Computer Networks: A Systems Approach',
@@ -187,7 +187,7 @@ export const PATHWAYS: Pathway[] = [
       {
         id: 'cost',
         title: 'Reasoning about cost',
-        lede: 'You know what the machine and the network charge; algorithms are how you decide what to buy.',
+        lede: 'Can one machine count views for 5 million pages? Growth rates, a hidden quadratic, and an estimate that finds the real bottleneck.',
         resources: [
           {
             title: 'Algorithms',
@@ -201,7 +201,7 @@ export const PATHWAYS: Pathway[] = [
       {
         id: 'performance',
         title: 'Measuring before believing',
-        lede: 'Estimates start the argument; profilers end it.',
+        lede: 'p99 jumps from 4 ms to 900 ms after a release while the median stays put. Tracing it to a cause with percentiles, USE and the right profile.',
         resources: [
           {
             title: 'The USE Method',
@@ -222,7 +222,7 @@ export const PATHWAYS: Pathway[] = [
       {
         id: 'languages',
         title: 'Languages and runtimes',
-        lede: 'Your language is a machine too — garbage collector, JIT and all — and it has a cost model of its own.',
+        lede: 'What the compiler and garbage collector do on hitcount’s behalf, what they charge, and whether a rewrite in another language would change anything.',
         resources: [
           {
             title: 'Crafting Interpreters',
@@ -236,7 +236,7 @@ export const PATHWAYS: Pathway[] = [
       {
         id: 'maths',
         title: 'The mathematics you will actually use',
-        lede: 'One stage of maths, scoped to what the AI pathway quietly assumes.',
+        lede: 'Averages, percentiles, sampling error, hash collisions, vectors, gradients and softmax, each worked by hand on hitcount’s own data.',
         resources: [
           {
             title: 'Mathematics for Machine Learning',
@@ -264,23 +264,25 @@ export const PATHWAYS: Pathway[] = [
     id: 'distributed-systems',
     index: 2,
     title: 'Distributed Systems',
-    tagline: 'Why two machines are more than twice as hard as one',
+    tagline: 'One wallet service, from one machine to three in two data centres',
     blurb:
-      'Partial failure, communication, disagreement about time, replication, consensus, coordination — and how to test any of it. The theory track: everything in System Design leans on it.',
+      'A payments wallet carries all ten chapters. It starts on one server; then a transfer times out and nobody knows whether it happened. From there we make retries safe, order updates without trusting clocks, replicate balances, elect a leader, fence the old one, move money between shards, and test whether any of it holds. System Design leans on every chapter here.',
     hex: '#5EE9D5',
-    minutes: 115,
+    minutes: 120,
     outcomes: [
-      'Treat a timeout as ambiguity, not as an answer',
-      'Order events without trusting anyone’s clock',
-      'Name the consistency model a system gives you, and what it permits',
-      'Explain an election and a replicated log without notes',
-      'Say how you would break a distributed system before production does',
+      'Design a money-moving call that is safe to retry after a timeout',
+      'Decide which of two updates came first without comparing timestamps',
+      'Choose a consistency guarantee for each read path and say what it costs',
+      'Trace a Raft election and log commit, and explain why a deposed leader loses nothing committed',
+      'Fence a paused leaseholder so its late writes are rejected',
+      'Pick between two-phase commit and a saga from the invariant you need',
+      'Write a system’s guarantees as checks and choose how to test them',
     ],
     stages: [
       {
         id: 'partial-failure',
         title: 'Partial failure',
-        lede: 'On one machine things either work or crash. Add a network, and a third state appears: unknown.',
+        lede: 'Asha sends ₹500 and the call times out. Did the money move? Across a network, the honest answer is often “not known yet”.',
         resources: [
           {
             title: 'Notes on Distributed Systems for Young Bloods',
@@ -308,7 +310,7 @@ export const PATHWAYS: Pathway[] = [
       {
         id: 'rpc',
         title: 'Talking between machines',
-        lede: 'Before the deep theory: the mechanics of one service calling another, and why it can never feel local.',
+        lede: 'Making the transfer call safe to retry: idempotency keys, deadlines, errors the caller can act on, and messages that survive a rolling deploy.',
         resources: [
           {
             title: 'A Note on Distributed Computing',
@@ -329,7 +331,7 @@ export const PATHWAYS: Pathway[] = [
       {
         id: 'time',
         title: 'Time and order',
-        lede: 'You have accepted that machines fail independently. Now give up on them agreeing what time it is.',
+        lede: 'A freeze and an unfreeze land on two machines whose clocks disagree. Order has to come from messages, and sometimes there is none to find.',
         resources: [
           {
             title: 'Time, Clocks, and the Ordering of Events in a Distributed System',
@@ -343,7 +345,7 @@ export const PATHWAYS: Pathway[] = [
       {
         id: 'replication',
         title: 'Replication and consistency',
-        lede: 'Copies make a system available. They also make “what is the current value?” a real question.',
+        lede: 'Three copies of the wallet in two data centres. Asha sends money, refreshes, and sees her old balance.',
         resources: [
           {
             title: 'Consistency Models',
@@ -371,7 +373,7 @@ export const PATHWAYS: Pathway[] = [
       {
         id: 'broadcast',
         title: 'Broadcast, gossip and ordering guarantees',
-        lede: 'Between “send one message” and “agree on everything” sits a family of primitives systems quietly rely on.',
+        lede: 'Every balance change has several listeners. Each needs a different guarantee about missing and reordered events, at a different price.',
         resources: [
           {
             title: 'Gossip Glomers — distributed systems challenges',
@@ -385,7 +387,7 @@ export const PATHWAYS: Pathway[] = [
       {
         id: 'consensus',
         title: 'Consensus',
-        lede: 'Sometimes “roughly agreed” is not enough. Consensus is how machines commit to one answer together.',
+        lede: 'The wallet’s replicas choose their own leader, never two at once, and never forget a transfer they acknowledged.',
         resources: [
           {
             title: 'In Search of an Understandable Consensus Algorithm (Raft)',
@@ -413,7 +415,7 @@ export const PATHWAYS: Pathway[] = [
       {
         id: 'coordination',
         title: 'Membership, failure detection and coordination',
-        lede: 'Consensus gave you a kernel of agreement; this stage is the machinery that puts it to work.',
+        lede: 'A wallet server pauses for fifteen seconds, loses its lease, and wakes up still acting as owner. The storage has to say no.',
         resources: [
           {
             title: 'SWIM: Scalable Weakly-consistent Infection-style Process Group Membership',
@@ -434,7 +436,7 @@ export const PATHWAYS: Pathway[] = [
       {
         id: 'txns',
         title: 'Distributed transactions',
-        lede: 'One database promised you atomicity; now the write spans three systems that each promise nothing about the others.',
+        lede: 'Asha is on shard 3 and Ravi on shard 11. Moving ₹500 between them means two-phase commit or a saga, and each has a price.',
         resources: [
           {
             title: 'Large-scale Incremental Processing Using Distributed Transactions (Percolator)',
@@ -448,7 +450,7 @@ export const PATHWAYS: Pathway[] = [
       {
         id: 'shipped',
         title: 'Systems that shipped',
-        lede: 'The theory is settled. Now read what happened when three famous systems met production.',
+        lede: 'Dynamo, Spanner, Kafka, etcd and MapReduce read as sets of choices, and what the wallet would get from building on each.',
         resources: [
           {
             title: 'Dynamo: Amazon’s Highly Available Key-value Store',
@@ -476,7 +478,7 @@ export const PATHWAYS: Pathway[] = [
       {
         id: 'testing',
         title: 'Breaking it on purpose',
-        lede: 'A distributed system you have not deliberately broken is a system whose failure modes you are saving for customers.',
+        lede: 'Turning the wallet’s guarantees into checks, then trying to break them with recorded histories, injected faults, simulation and model checking.',
         resources: [
           {
             title: 'The TLA+ Home Page',
@@ -504,17 +506,17 @@ export const PATHWAYS: Pathway[] = [
     id: 'system-design',
     index: 3,
     title: 'System Design',
-    tagline: 'From one server to a defensible architecture',
+    tagline: 'One product, designed end to end, every choice argued',
     blurb:
-      'The applied track, and the widest: requests, APIs, load balancing, caching, storage, transactions, sharding, streams, derived data, probabilistic structures, geo-indexing, IDs, files, realtime, background jobs, rate limiting, security, resilience, delivery — closing with a worked design and an atlas of the classic problems.',
+      'We design Dabba, a food-ordering and delivery app working across Indian cities, from the first request a customer makes to a system that survives its own failures. Each chapter adds what the product needs next and argues the choice from Dabba’s numbers: an order API that is safe to retry, caches and a CDN for a read-heavy menu, storage and a data model for orders, a correct write path, then sharding, streams, live rider locations, background jobs, rate limits, security, failure handling and a second region. It closes with a worked design and an atlas of the classic problems.',
     hex: '#4C8BF5',
-    minutes: 250,
+    minutes: 300,
     outcomes: [
-      'Sketch a latency budget for a request before writing code',
-      'Design an API that survives its clients and its own v2',
-      'Say which cache and which invalidation you chose, and why',
-      'Predict whether a workload wants a B-tree or an LSM engine',
-      'Name the isolation level you need, not the one you inherited',
+      'Turn a product brief into peak rates, storage growth and a latency budget, with the arithmetic shown',
+      'Design an order API whose retries never create a second order or a second charge',
+      'Choose what to cache, for how long and how it is invalidated, from what a stale copy would cause',
+      'Pick a store and its indexes for each data set from its write rate, read pattern and cost of loss',
+      'Name the anomaly your isolation level allows and the smallest mechanism that prevents it',
       'Design the failure path with the same care as the success path',
       'Pick the right sketch, index or ID scheme from the constraint, not the fashion',
       'Take a vague product ask to a justified design in forty-five minutes',
@@ -522,8 +524,8 @@ export const PATHWAYS: Pathway[] = [
     stages: [
       {
         id: 'request',
-        title: 'Anatomy of a request',
-        lede: 'Every system you will ever design is, at bottom, this one picture with more boxes.',
+        title: 'The brief, and one request end to end',
+        lede: 'Who uses Dabba, how much, and at what peak; then where the time goes when a customer opens the app at 8 pm, and how an optional service can take the home screen down.',
         resources: [
           {
             title: 'High Performance Browser Networking',
@@ -537,7 +539,7 @@ export const PATHWAYS: Pathway[] = [
       {
         id: 'api',
         title: 'Designing the API',
-        lede: 'The API outlives every implementation behind it; design it like the permanent thing it is.',
+        lede: 'The contract for placing an order, written so that a lost response and a second tap still produce one order and one charge, and so that months-old app versions keep working.',
         resources: [
           {
             title: 'Zalando RESTful API Guidelines',
@@ -558,7 +560,7 @@ export const PATHWAYS: Pathway[] = [
       {
         id: 'gateway',
         title: 'Load balancing, gateways and discovery',
-        lede: 'The boxes between the internet and your code deserve to be understood, not inherited.',
+        lede: 'Why Dabba runs thirty servers where twenty would do, how the balancer picks one, what the gateway checks first, and how a health check can remove a healthy fleet.',
         resources: [
           {
             title: 'Introduction to modern network load balancing and proxying',
@@ -572,7 +574,7 @@ export const PATHWAYS: Pathway[] = [
       {
         id: 'reads',
         title: 'Scaling reads',
-        lede: 'Traffic grows read-first. The first real architecture most systems grow is a cache in front of a database.',
+        lede: 'The menu is read sixteen times for every order. Caching it means deciding, part by part, how stale each piece may be, and defending against races, stampedes and cold starts.',
         resources: [
           {
             title: 'The System Design Primer',
@@ -586,7 +588,7 @@ export const PATHWAYS: Pathway[] = [
       {
         id: 'cdn',
         title: 'The edge: CDNs and static delivery',
-        lede: 'The fastest request is one that never crosses an ocean; the edge is how you arrange that at scale.',
+        lede: 'Dish photos and public menus served from near the customer, with URLs that never need purging and headers that never show one customer another’s orders.',
         resources: [
           {
             title: 'What is a CDN?',
@@ -600,7 +602,7 @@ export const PATHWAYS: Pathway[] = [
       {
         id: 'storage',
         title: 'Where the data actually lives',
-        lede: 'The database stops being a black box: two families of storage engine, and the workloads each one disappoints.',
+        lede: 'Orders, menus, rider locations and photos behave differently. We open the two common storage engines and give each data set the home that fits it.',
         resources: [
           {
             title: 'CMU 15-445 Database Systems',
@@ -628,7 +630,7 @@ export const PATHWAYS: Pathway[] = [
       {
         id: 'modeling',
         title: 'Data modelling across paradigms',
-        lede: 'The engine was half the story; the shape you store is the other half, and it is chosen, not discovered.',
+        lede: 'Which facts an order copies and freezes, which it references, why a history screen made 141 queries, and what the same data looks like in a key-value store.',
         resources: [
           {
             title: 'SQLBolt',
@@ -649,7 +651,7 @@ export const PATHWAYS: Pathway[] = [
       {
         id: 'writes',
         title: 'Getting writes right',
-        lede: 'Reads can be a little stale and nobody dies. Writes are where correctness lives.',
+        lede: 'Forty customers tap Place order for the last twelve thalis. What the database guarantees, where its guarantees stop, and how to stay correct when payment happens somewhere else.',
         resources: [
           {
             title: 'A Critique of ANSI SQL Isolation Levels',
@@ -670,7 +672,7 @@ export const PATHWAYS: Pathway[] = [
       {
         id: 'sharding',
         title: 'Sharding and partitioning',
-        lede: 'Writes outgrow one machine; how you split the data decides which queries stay easy.',
+        lede: 'Dabba’s orders outgrow one database. Choosing the shard key decides which queries stay on one machine and which must ask them all.',
         resources: [
           {
             title: 'Vitess: sharding concepts',
@@ -684,7 +686,7 @@ export const PATHWAYS: Pathway[] = [
       {
         id: 'streams',
         title: 'Streams and the log',
-        lede: 'Past a certain scale the question changes from “where is the data?” to “in what order did things happen?”',
+        lede: 'Placing an order owes work to six other systems. An append-only log lets the order service record it once and lets each reader catch up in its own time.',
         resources: [
           {
             title: 'The Log: what every software engineer should know about real-time data',
@@ -704,8 +706,8 @@ export const PATHWAYS: Pathway[] = [
       },
       {
         id: 'derived',
-        title: 'Derived data: search, analytics and event sourcing',
-        lede: 'One source of truth, many read-optimised shadows — kept honest by the log you just built.',
+        title: 'Derived data: search, analytics and change capture',
+        lede: 'Search, analytics and per-customer history are copies of the truth. Build them from the commit log, promise how fresh they are, and make sure they can be rebuilt.',
         resources: [
           {
             title: 'Inverted index',
@@ -726,7 +728,7 @@ export const PATHWAYS: Pathway[] = [
       {
         id: 'sketches',
         title: 'Counting at scale: probabilistic structures',
-        lede: 'Exact answers cost memory linear in the data; a whole family of structures trades a tunable error for constant space.',
+        lede: 'Unique menu viewers and trending dishes, live and merged across servers: when a small, calculable error buys kilobytes instead of gigabytes, and when it does not.',
         resources: [
           {
             title: 'Bloom Filters by Example',
@@ -747,7 +749,7 @@ export const PATHWAYS: Pathway[] = [
       {
         id: 'geo',
         title: 'Geospatial indexing and proximity',
-        lede: '“Find drivers near me” breaks every index you have met so far; space needs structures of its own.',
+        lede: 'Restaurants that deliver here, and the nearest free rider right now: two nearness questions that need cells, neighbours and very different storage.',
         resources: [
           {
             title: 'H3 documentation',
@@ -768,7 +770,7 @@ export const PATHWAYS: Pathway[] = [
       {
         id: 'ids',
         title: 'Identity, time and unique IDs',
-        lede: 'Auto-increment dies with the single database; whatever replaces it must be unique, fast, and ideally sortable.',
+        lede: 'Designing Dabba’s order id: unique without coordination, sorted by time, able to find its own shard, and careful about what it reveals.',
         resources: [
           {
             title: 'RFC 9562 — UUIDv7',
@@ -789,7 +791,7 @@ export const PATHWAYS: Pathway[] = [
       {
         id: 'blob',
         title: 'Files, media and blob storage',
-        lede: 'The database stores who uploaded the video; something else entirely stores the video.',
+        lede: 'Ten million dish photos: the database keeps the facts, object storage keeps the bytes, and the upload never passes through our servers.',
         resources: [
           {
             title: 'Finding a needle in Haystack: Facebook’s photo storage',
@@ -802,8 +804,8 @@ export const PATHWAYS: Pathway[] = [
       },
       {
         id: 'realtime',
-        title: 'Realtime: websockets, presence and push',
-        lede: 'Request–response assumed the client asks; now the server has something to say first.',
+        title: 'Realtime: live location and push',
+        lede: 'The rider on the map and the tablet that must ring: when polling is enough, when to hold a connection open, and what open connections cost.',
         resources: [
           {
             title: 'The WebSocket API',
@@ -817,7 +819,7 @@ export const PATHWAYS: Pathway[] = [
       {
         id: 'jobs',
         title: 'Background work: queues, schedulers and cron at scale',
-        lede: 'Not everything happens in a request; the work that happens later needs the same design care, and usually gets none.',
+        lede: 'When the customer stops waiting, the work still has to happen exactly once in effect, on time and visibly: queues, retries, poison messages and scheduled jobs for Dabba’s notifications, refunds and payouts.',
         resources: [
           {
             title: 'Distributed periodic scheduling with cron',
@@ -831,7 +833,7 @@ export const PATHWAYS: Pathway[] = [
       {
         id: 'ratelimit',
         title: 'Rate limiting and abuse protection',
-        lede: 'Your API will be called too much — by bugs, by scrapers, by your own retries. Decide the rules before the flood.',
+        lede: 'An OTP endpoint, a script and an SMS bill: deciding how much each caller may ask for, keying limits on what attackers cannot vary, and counting across many machines.',
         resources: [
           {
             title: 'Scaling your API with rate limiters',
@@ -845,7 +847,7 @@ export const PATHWAYS: Pathway[] = [
       {
         id: 'security',
         title: 'Identity, authorisation and the security basics',
-        lede: 'Every design so far assumed the caller is who they claim; that assumption is a subsystem.',
+        lede: 'Customers, restaurants and riders read the same order row. Who is calling, which slice of it they may see and when, and how to trust a payment webhook.',
         resources: [
           {
             title: 'OAuth 2.0 Simplified',
@@ -866,7 +868,7 @@ export const PATHWAYS: Pathway[] = [
       {
         id: 'failure',
         title: 'Designing for failure',
-        lede: 'The system works. This stage is about the day it doesn’t, designed in advance.',
+        lede: 'The payment provider slows down at dinner peak and the menus stop loading. Timeouts, retries, breakers, bulkheads and load shedding, worked through with Little’s law.',
         resources: [
           {
             title: 'Site Reliability Engineering',
@@ -894,7 +896,7 @@ export const PATHWAYS: Pathway[] = [
       {
         id: 'multiregion',
         title: 'Multi-region and disaster recovery',
-        lede: 'One region is a single point of failure with excellent marketing; going beyond it is a design, not a checkbox.',
+        lede: 'What an hour without Dabba costs, what a second region costs, why cities make active-active practical, and the drills that show whether failover works.',
         resources: [
           {
             title: 'Static stability using Availability Zones',
@@ -908,7 +910,7 @@ export const PATHWAYS: Pathway[] = [
       {
         id: 'delivery',
         title: 'Shipping safely: deploys, flags and migrations',
-        lede: 'Most outages walk in through the front door, wearing a deploy. Ship in a way that assumes so.',
+        lede: 'Most incidents follow a change. Canaries sized from the signal, flags, schema migrations that keep old and new code working, and rollbacks that are tested.',
         resources: [
           {
             title: 'Feature Toggles (aka Feature Flags)',
@@ -929,7 +931,7 @@ export const PATHWAYS: Pathway[] = [
       {
         id: 'worked',
         title: 'A worked design, end to end',
-        lede: 'Everything in one sitting: a real problem taken from requirements to a defensible architecture, out loud.',
+        lede: 'Assigning a rider to an order, taken from invariants and numbers through races and failure modes to a table of decisions another engineer can challenge.',
         resources: [
           {
             title: 'System Design in a Hurry',
@@ -943,7 +945,7 @@ export const PATHWAYS: Pathway[] = [
       {
         id: 'atlas',
         title: 'The problem atlas: classic designs decomposed',
-        lede: 'The canonical problems, each reduced to the stages that make it hard — the map from prompt to chapter.',
+        lede: 'Familiar design problems placed by their invariant, their dominant ratio and their scarce resource, and mapped to the chapters that make each one hard.',
         resources: [
           {
             title: 'Awesome Scalability',
@@ -964,16 +966,18 @@ export const PATHWAYS: Pathway[] = [
     id: 'ai-engineering',
     index: 4,
     title: 'AI Engineering',
-    tagline: 'Shipping systems that use models, not just calling them',
+    tagline: 'One support assistant, built from a first classifier to production',
     blurb:
-      'The whole arc: learning from data, the classical ML toolbox and deep learning fundamentals first — then transformers, serving economics, prompting, retrieval, customisation, agents, security and evaluation. Weighted towards building and measuring.',
+      'We follow a single system through every chapter: a support assistant for a stock-broking app that answers from the help centre, looks up orders and raises tickets. It starts as a message classifier, which teaches how models learn and how to measure them, then becomes a language model with serving costs worked out, prompts written as specifications, retrieval that can be traced, and the customisation, agents, security and evaluation that production needs.',
     hex: '#A78BFA',
-    minutes: 135,
+    minutes: 150,
     outcomes: [
-      'Ship a defensible classical baseline before reaching for a model API',
-      'Train and debug a small network by hand, and read its curves',
-      'Reason about context, cost and failure from how the model works',
-      'Build retrieval that you can measure, not just demo',
+      'Split data by time, catch leakage, and set a threshold from the cost of each kind of error',
+      'Compute a gradient step by hand and say what a pair of training curves is telling you',
+      'Explain a wrong answer, a slow reply or a large bill from what the model computes per token',
+      'Work out the cost of a conversation and the effect of prompt order on caching',
+      'Write a prompt as a specification and get output that code can validate',
+      'Build retrieval you can measure, and trace a wrong answer to the stage that lost the passage',
       'Say when an agent loop earns its complexity — and when it doesn’t',
       'Treat prompt injection as a security boundary, not a curiosity',
       'Ship behind evals, so “it seems better” becomes a number',
@@ -982,7 +986,7 @@ export const PATHWAYS: Pathway[] = [
       {
         id: 'ml-basics',
         title: 'Learning from data',
-        lede: 'Before any neural network: what it means for a machine to learn, and the discipline that keeps you from fooling yourself.',
+        lede: 'We teach a model to sort support messages, and find out how easily a good score can be a false one: splits, leakage, precision, recall and the threshold the fraud desk can staff.',
         resources: [
           {
             title: 'Machine Learning Crash Course',
@@ -1003,7 +1007,7 @@ export const PATHWAYS: Pathway[] = [
       {
         id: 'ml-toolbox',
         title: 'The classical toolbox',
-        lede: 'Most production ML is not deep: trees, ensembles and linear models carry tabular data, and knowing them keeps you honest.',
+        lede: 'Predicting which conversations will need a human, from account fields: what a linear model cannot see, how a tree picks its questions, and why boosting usually wins on tables.',
         resources: [
           {
             title: 'An Introduction to Statistical Learning',
@@ -1024,7 +1028,7 @@ export const PATHWAYS: Pathway[] = [
       {
         id: 'deep-learning',
         title: 'Deep learning fundamentals',
-        lede: 'Stack linear layers with nonlinearities and train by gradient descent; the questions become why it works, and which knobs matter.',
+        lede: 'When customers say the same thing in different words, hand-built features run out. A network learns its own, and we work its gradient steps through with real numbers.',
         resources: [
           {
             title: 'Neural Networks: Zero to Hero',
@@ -1052,7 +1056,7 @@ export const PATHWAYS: Pathway[] = [
       {
         id: 'model',
         title: 'What the model actually does',
-        lede: 'Everything downstream gets easier once the model stops being a black box.',
+        lede: 'Tokens, attention, sampling and frozen weights: what the model computes when it writes a reply, and why a confident wrong answer is its normal output when facts are missing.',
         resources: [
           {
             title: 'Let’s build GPT: from scratch, in code, spelled out',
@@ -1080,7 +1084,7 @@ export const PATHWAYS: Pathway[] = [
       {
         id: 'inference',
         title: 'Serving and inference economics',
-        lede: 'Between the model and your users sits a serving stack with its own physics; its numbers set your product’s.',
+        lede: 'Where a reply’s seconds go, why decode waits on memory, what the KV cache costs, and the price of one support conversation worked out turn by turn.',
         resources: [
           {
             title: 'Large Transformer Model Inference Optimization',
@@ -1094,7 +1098,7 @@ export const PATHWAYS: Pathway[] = [
       {
         id: 'prompting',
         title: 'Prompting and structured output',
-        lede: 'The lowest rung of the leverage ladder — and the one that solves more problems than its reputation suggests.',
+        lede: 'Rewriting the assistant’s instructions as a specification, teaching a boundary with examples, and getting decisions that code can validate, plus the one-line edit that broke fraud handling.',
         resources: [
           {
             title: 'Prompt engineering overview',
@@ -1108,7 +1112,7 @@ export const PATHWAYS: Pathway[] = [
       {
         id: 'context',
         title: 'Context and retrieval',
-        lede: 'The model is fixed; what you control is what it reads. Retrieval is how you control it well.',
+        lede: 'Choosing which few passages of the help centre the model reads for each question, measuring that choice, and tracing a wrong answer back to the stage that lost the right passage.',
         resources: [
           {
             title: 'Retrieval-Augmented Generation for LLMs: A Survey',
@@ -1128,8 +1132,8 @@ export const PATHWAYS: Pathway[] = [
       },
       {
         id: 'finetune',
-        title: 'Customisation: fine-tuning and when not to',
-        lede: 'The escalation ladder’s top rung — expensive, powerful, and reached far less often than assumed.',
+        title: 'Fine-tuning, and when a better prompt wins',
+        lede: 'Retrieval changes what the model reads; fine-tuning changes how it behaves. Find out which problem the assistant has before paying for the second.',
         resources: [
           {
             title: 'Deep Dive into LLMs like ChatGPT',
@@ -1143,7 +1147,7 @@ export const PATHWAYS: Pathway[] = [
       {
         id: 'agents',
         title: 'Agents and tools',
-        lede: 'Give the model the ability to act, and a new discipline appears: deciding when it should.',
+        lede: 'The assistant learns to look up orders and raise tickets. Most of the work is in the loop around the model: tool definitions, budgets, stopping rules and approvals.',
         resources: [
           {
             title: 'Building effective agents',
@@ -1163,8 +1167,8 @@ export const PATHWAYS: Pathway[] = [
       },
       {
         id: 'ai-security',
-        title: 'Security: injection, leakage and sandboxing',
-        lede: 'The model reads everything and believes most of it; the systems around it must not.',
+        title: 'Security: injection, exfiltration and least privilege',
+        lede: 'A forum post or a customer message can steer the model. Design so that a steered model still cannot leak a customer’s data or act against them.',
         resources: [
           {
             title: 'Prompt injection series',
@@ -1177,8 +1181,8 @@ export const PATHWAYS: Pathway[] = [
       },
       {
         id: 'evals',
-        title: 'Evaluation and production',
-        lede: 'The demo works. This stage is the difference between a demo and a system.',
+        title: 'Evaluation: measuring the assistant',
+        lede: 'Build an eval set from real tickets, grade it with checks you can trust, and score retrieval apart from generation so the number says what to fix.',
         resources: [
           {
             title: 'Full Stack Deep Learning',
@@ -1198,8 +1202,8 @@ export const PATHWAYS: Pathway[] = [
       },
       {
         id: 'online',
-        title: 'In production: feedback, drift and improvement loops',
-        lede: 'Offline evals said ship it; now the system meets users, and the measuring must continue.',
+        title: 'In production: monitoring, fallbacks and feedback',
+        lede: 'Trace every turn, hold cost and latency to a budget, survive a provider outage, and turn what customers do next into new eval cases.',
         resources: [
           {
             title: 'Your AI product needs evals',

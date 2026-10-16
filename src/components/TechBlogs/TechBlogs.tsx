@@ -119,11 +119,6 @@ export default function TechBlogs() {
             <span><b>{liveSources || FEEDS.length}</b> sources</span>
             {updated && <span>updated <b>{updated}</b></span>}
           </div>
-          <a className={styles.pack} href="/downloads/agentic-ai-reading-pack.pdf" download>
-            <span className={styles.packLabel}>Offline reading pack · PDF</span>
-            <span className={styles.packTitle}>Agentic AI, in production: ten engineering posts, digested</span>
-            <span className={styles.packNote}>Original summaries with links to every post. Sized for a phone; nothing republished.</span>
-          </a>
         </header>
 
         <div className={styles.cols}>

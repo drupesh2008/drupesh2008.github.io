@@ -7,7 +7,7 @@ const BASE = 'https://crysthope.com'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date()
-  const fixed = ['/', '/work/', '/work/satellite-ml-ops/', '/journey/', '/journey/clay/', '/about/', '/contact/', '/learning/', '/research-papers/', '/tech-blogs/']
+  const fixed = ['/', '/about/', '/learning/', '/research-papers/', '/tech-blogs/']
   const urls = [
     ...fixed,
     ...PATHWAYS.map((p) => `/learning/${p.id}/`),

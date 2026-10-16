@@ -9,10 +9,6 @@
 
 ## About D Rupesh Kumar
 - [About](https://crysthope.com/about/)
-- [Journey](https://crysthope.com/journey/): CLAY, hardware, LocationIQ, Skyserve.ai, SeekOut, Motilal Oswal.
-- [CLAY founder story](https://crysthope.com/journey/clay/)
-- [Work](https://crysthope.com/work/) and [Satellite ML Ops case study](https://crysthope.com/work/satellite-ml-ops/)
-- [Contact](https://crysthope.com/contact/)
 
 ## Sitemap
 - https://crysthope.com/sitemap.xml
